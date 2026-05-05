@@ -81,13 +81,15 @@ export default async function handler(req, res) {
     promptContext = `今天抽到的日签是【${dailyCardName}】(核心含义:${dailyCardMeaning})。
 写一段 60 字左右的绝美散文诗作为今日箴言。不要解释牌意，直接输出文字，不带任何标签。`;
   } 
-  // 模式 B：超长专业解盘模式（动态流派）
+  // 模式 B：结构化专业解盘模式
   else {
-    let styleDesc = "你是一位经验丰富、客观睿智的经典韦特塔罗大师，中正平和，娓娓道来。";
+    let styleDesc = "你是一位经验丰富、判断清晰的咨询式塔罗解读师。说话像成熟咨询师，不像散文作者。";
 
-    if (isNight) styleDesc += " 此时正值深夜，你的语气要变得极度轻柔、催眠，安抚深夜容易焦虑的灵魂。";
+    if (isNight) styleDesc += " 此时正值深夜，语气可以温和，但仍要保持清楚、稳定、不过度煽情。";
     
-    systemRole = styleDesc + (fallbackShort ? " 你需要输出 250 - 450 字的简版解析。" : " 你必须输出 1000 - 1500 字的深度解析。");
+    systemRole = styleDesc + (fallbackShort
+      ? " 你需要输出一版更短、更稳的简版解析。"
+      : " 你需要输出简洁清晰的解析。重点是让用户一眼看懂，不要写成长篇散文，也不要为了显得专业而故意写长。");
     
     const identityLine = userName ? `提问者昵称：${userName}` : "提问者昵称：匿名旅人";
     const compatibilityLine = isCompatibility && partnerName
@@ -104,22 +106,30 @@ TA的疑惑：“${question}”
 ${safeCards.map(c => `- ${c.position}: 抽到 ${c.cardName}。含义：${c.meaning}`).join('\n')}
 
 你的解盘必须严格遵守以下结构：
-1. 先提取3个关键词：**【命运箴言】**：词1 | 词2 | 词3
-2. 然后用 Markdown 引用写2-3句核心结论：
-> 问题的答案 + 关键转折点 + 最该做的一件事。
-3. #### 🔮 神谕总览
-用一句充满哲理的金句定调，并清晰直接地回答TA的问题（是/否/吉/凶）。
-4. #### 🌟 灵魂拆解
-将这几张牌的内在逻辑交织在一起讲故事。过去埋下什么因？现在卡在哪里？
-5. #### 💡 破局之眼
-挑出最关键的一张牌，点破死穴或转机。
-6. #### ✨ 凡尘指南
-给出3条极度具体的现实行动建议。
+1. 先输出：### 结论
+内容必须直接回答问题。能判断就明确判断（例如：能 / 不能 / 值得 / 暂缓 / 有机会但要先处理XX）。
+2. 然后输出：### 关键提醒
+用 2-3 条短句说明最关键的信息，每条都要具体，不要空话。
+3. 然后输出：### 为什么会这样
+用 2 个短段落解释牌面逻辑：现状、阻碍、转机分别是什么。不要讲太多背景故事，不要重复。
+4. 最后输出：### 现在去做
+给出 3 条可执行建议，每条一句话，直接能落地。
 
 排版铁律：
-1. 全部使用纯 Markdown 格式：#### 做标题，> 做引用，**加粗**，- 列表。
+1. 全部使用纯 Markdown 格式：### 或 #### 做标题，> 做引用，**加粗**，- 列表。
 2. 绝对禁止使用任何 HTML 标签（包括 div, h4, p, span, style 等）。
 3. 绝对禁止使用 markdown 代码块。`;
+
+    promptContext += `
+
+表达铁律：
+1. 优先说人话，避免玄而又玄、诗化、重复铺垫。
+2. 句子尽量短，每句只说一个重点。
+3. 不要使用“你要相信宇宙”“命运自有安排”这类空泛表述。
+4. 用户最先看到的前 5 行，必须已经知道答案、风险点和下一步。
+5. 少用“神谕、灵魂、命运、能量、注定”等词，除非牌义确实必须提到。
+6. 不要写安慰废话，不要重复牌名，不要把同一个意思换种说法说三遍。
+7. 如果信息不足以给肯定判断，就明确说“暂时不建议”或“还要观察”，不要含糊。`;
   }
 
   try {
@@ -132,8 +142,8 @@ ${safeCards.map(c => `- ${c.position}: 抽到 ${c.cardName}。含义：${c.meani
           { "role": "system", "content": systemRole || "你是一个严格遵守排版规则的高级占卜助手。" },
           { "role": "user", "content": promptContext }
         ],
-        temperature: isDaily ? 0.9 : 0.8,
-        max_tokens: isDaily ? 150 : (fallbackShort ? 900 : 2500),
+        temperature: isDaily ? 0.9 : 0.65,
+        max_tokens: isDaily ? 150 : (fallbackShort ? 500 : 1200),
         stream: !isDaily && !fallbackShort
       })
     });

@@ -2517,14 +2517,86 @@ function wrapReadingSectionsAsCollapsible() {
   });
 }
 
+function escapeHtml(input = "") {
+  return String(input || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function extractSectionBody(markdown = "", headings = []) {
+  const text = String(markdown || "");
+  if (!text.trim() || !Array.isArray(headings) || !headings.length) return "";
+
+  const escaped = headings.map(item => item.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const pattern = new RegExp(
+    `(?:^|\\n)#{3,4}\\s*(?:${escaped.join("|")})\\s*\\n([\\s\\S]*?)(?=\\n#{3,4}\\s+|$)`,
+    "i"
+  );
+  const match = text.match(pattern);
+  return match?.[1]?.trim() || "";
+}
+
+function extractSummaryModel(rawReading = "") {
+  const reading = String(rawReading || "").trim();
+  if (!reading) return null;
+
+  const answerSection = extractSectionBody(reading, ["结论", "一句话答案", "先看结论", "神谕总览"]);
+  const reminderSection = extractSectionBody(reading, ["关键提醒", "灵魂拆解", "破局之眼"]);
+  const actionSection = extractSectionBody(reading, ["现在去做", "凡尘指南", "行动建议"]);
+
+  const answer = stripRichText(answerSection).split(/(?<=[。！？!?])/).map(s => s.trim()).filter(Boolean)[0] || "";
+  const reminderLines = stripRichText(reminderSection)
+    .split(/(?<=[。！？!?])|\n/)
+    .map(s => s.replace(/^[-*•\d.\s]+/, "").trim())
+    .filter(Boolean)
+    .slice(0, 3);
+  const actionLines = String(actionSection || "")
+    .split("\n")
+    .map(line => stripRichText(line).replace(/^[-*•\d.\s]+/, "").trim())
+    .filter(Boolean)
+    .slice(0, 3);
+
+  if (!answer && !reminderLines.length && !actionLines.length) return null;
+
+  return {
+    answer,
+    reminders: reminderLines,
+    actions: actionLines
+  };
+}
+
 function renderReadingSummary(rawHtml) {
   const box = document.getElementById("readingSummary");
   if (!box) return;
 
-  // Try to extract the AI-generated summary div first
-  const summaryMatch = String(rawHtml || "").match(/<div class="reading-summary">([\s\S]*?)<\/div>/);
-  if (summaryMatch) {
-    box.innerHTML = `<div class="reading-summary">${summaryMatch[1]}</div>`;
+  const summaryModel = extractSummaryModel(rawHtml);
+  if (summaryModel) {
+    const reminderHtml = summaryModel.reminders.length
+      ? `<ul>${summaryModel.reminders.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`
+      : `<p>先处理最卡住你的那一个点，再往下推进。</p>`;
+    const actionHtml = summaryModel.actions.length
+      ? `<ul>${summaryModel.actions.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`
+      : `<p>把答案落成一个今天就能执行的小动作。</p>`;
+
+    box.innerHTML = `
+      <div class="reading-summary-panel">
+        <section class="reading-summary-card reading-summary-card--answer">
+          <div class="reading-summary-card__label">先看答案</div>
+          <p>${escapeHtml(summaryModel.answer || "答案已经浮现，重点在于别再拖延关键一步。")}</p>
+        </section>
+        <section class="reading-summary-card">
+          <div class="reading-summary-card__label">关键提醒</div>
+          ${reminderHtml}
+        </section>
+        <section class="reading-summary-card">
+          <div class="reading-summary-card__label">现在去做</div>
+          ${actionHtml}
+        </section>
+      </div>
+    `;
     box.style.display = "block";
     return;
   }
@@ -2672,7 +2744,7 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
   const injectQuickTakeaways = (source = "") => {
     const markdown = String(source || "").trim();
     if (!markdown) return markdown;
-    if (/###\s*三点速览/.test(markdown)) return markdown;
+    if (/###\s*三点速览|###\s*一句话答案|###\s*先看结论/i.test(markdown)) return markdown;
 
     const plain = stripRichText(markdown);
     if (!plain || plain.length < 48) return markdown;
