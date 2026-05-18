@@ -988,6 +988,12 @@ function updateStatus(text) {
   banner.innerText = text;
 }
 
+function setAiStatusText(text) {
+  const status = document.getElementById("aiStatus");
+  const label = status?.querySelector("span");
+  if (label && text) label.textContent = text;
+}
+
 const HistoryService = {
   records: [],
   storageKey() {
@@ -2712,6 +2718,116 @@ function fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
     });
 }
 
+function sanitizeRenderedReading(root) {
+  if (!root) return;
+
+  root.querySelectorAll("script, style, iframe, object, embed, form, input, button, textarea, select, meta, link").forEach(el => {
+    el.remove();
+  });
+
+  const allowedTags = new Set([
+    "A", "P", "BR", "HR", "BLOCKQUOTE",
+    "STRONG", "B", "EM", "I", "U", "S",
+    "UL", "OL", "LI",
+    "H1", "H2", "H3", "H4", "H5", "H6",
+    "CODE", "PRE",
+    "TABLE", "THEAD", "TBODY", "TR", "TH", "TD"
+  ]);
+  const allowedAttrs = {
+    A: new Set(["href", "title", "target", "rel"])
+  };
+  const isSafeHref = href => {
+    const value = String(href || "").trim();
+    if (!value) return false;
+    return /^(https?:|mailto:|#|\/)/i.test(value);
+  };
+
+  Array.from(root.querySelectorAll("*")).forEach(el => {
+    if (!allowedTags.has(el.tagName)) {
+      const parent = el.parentNode;
+      if (!parent) {
+        el.remove();
+        return;
+      }
+      while (el.firstChild) parent.insertBefore(el.firstChild, el);
+      parent.removeChild(el);
+      return;
+    }
+
+    Array.from(el.attributes).forEach(attr => {
+      const name = attr.name.toLowerCase();
+      const allowedForTag = allowedAttrs[el.tagName];
+      const allowed = allowedForTag?.has(name) || false;
+      if (!allowed) {
+        el.removeAttribute(attr.name);
+        return;
+      }
+      if (name === "href" && !isSafeHref(attr.value)) {
+        el.removeAttribute("href");
+      }
+    });
+
+    if (el.tagName === "A" && el.getAttribute("href")) {
+      el.setAttribute("target", "_blank");
+      el.setAttribute("rel", "noopener noreferrer");
+    }
+  });
+}
+
+function extractQuestionSignals(question = "") {
+  const text = String(question || "").toLowerCase();
+  if (!text.trim()) return [];
+
+  const groups = [
+    ["复合", "分手", "喜欢", "暧昧", "关系", "感情", "恋爱", "前任", "他", "她", "ta"],
+    ["工作", "事业", "offer", "面试", "跳槽", "老板", "同事", "项目", "副业", "收入"],
+    ["钱", "财", "赚钱", "投资", "存款", "涨薪", "工资"],
+    ["选择", "二选一", "要不要", "该不该", "能不能", "会不会", "是否"],
+    ["未来", "走势", "发展", "多久", "什么时候", "本月", "月运", "今年", "明年"]
+  ];
+
+  const signals = new Set();
+  groups.flat().forEach(word => {
+    if (text.includes(String(word).toLowerCase())) signals.add(word.toLowerCase());
+  });
+  return Array.from(signals);
+}
+
+function evaluateReadingQuality(rawReading = "", question = "") {
+  const plain = stripRichText(rawReading).replace(/\s+/g, " ").trim();
+  const reading = String(rawReading || "");
+  const q = String(question || "").trim();
+  const issues = [];
+
+  if (!plain || plain.length < 80) {
+    issues.push("内容过短，无法形成完整解读");
+  }
+  if (!/###\s*(我理解的问题|理解的问题|问题理解)/.test(reading)) {
+    issues.push("缺少对用户问题的复述");
+  }
+  if (!/###\s*(结论|一句话答案|先看结论)/.test(reading)) {
+    issues.push("缺少明确结论");
+  }
+  if (!/###\s*(现在去做|行动建议|下一步)/.test(reading)) {
+    issues.push("缺少可执行建议");
+  }
+
+  const signals = extractQuestionSignals(q);
+  if (signals.length) {
+    const normalizedReading = plain.toLowerCase();
+    const hitCount = signals.filter(signal => normalizedReading.includes(signal)).length;
+    if (hitCount === 0) {
+      issues.push("没有明显回应用户问题的关键主题");
+    }
+  }
+
+  return {
+    ok: issues.length === 0,
+    issues,
+    message: issues.join("；")
+  };
+}
+
 /* 流式输出解码 */
 async function fetchStream(question, style, cards, context = getReadingContext(question, activeReadingMode)) {
   activeReadingAbortController?.abort();
@@ -2813,6 +2929,7 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
     const source = isFinal ? injectQuickTakeaways(cleaned) : cleaned;
     if (typeof marked !== "undefined" && typeof marked.parse === "function") {
       streamContent.innerHTML = marked.parse(source);
+      sanitizeRenderedReading(streamContent);
       applyTarotTagHighlight();
       return;
     }
@@ -2825,6 +2942,7 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
   }
 
   const aiStatus = document.getElementById("aiStatus"); if(aiStatus) aiStatus.style.display = "flex";
+  setAiStatusText("塔罗解读中，正在对齐你的问题与牌面…");
   let historyRecord = null;
   const vipToken = readVipToken()?.token || null;
   if (vipToken) {
@@ -2836,6 +2954,7 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
   const compositeQuestion = detailContext.isCompatibility
     ? `[双人合盘：${detailContext.userName || "我"} x ${detailContext.partnerName}] ${detailContext.question || "关系走向"}`
     : detailContext.question;
+  const userQuestionForQuality = detailContext.question || compositeQuestion || "";
 
   try {
     const streamBody = await TarotApiService.requestReadingStream({
@@ -2885,6 +3004,32 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
       }
     }
 
+    const quality = evaluateReadingQuality(htmlBuffer, userQuestionForQuality);
+    if (!quality.ok) {
+      updateStatus("解读正在校准：系统发现上一版可能不够聚焦，正在自动修正。");
+      setAiStatusText("正在校准答案，让结论更贴近你的问题…");
+      try {
+        const repaired = await TarotApiService.requestFallbackReading({
+          question: compositeQuestion,
+          cards,
+          readingStyle: "classic",
+          userName: detailContext.userName,
+          partnerName: detailContext.partnerName,
+          emotionLevel: detailContext.emotion.value,
+          emotionLabel: detailContext.emotion.label,
+          isCompatibility: detailContext.isCompatibility,
+          isNight: isNightMode,
+          vipToken,
+          qualityIssue: quality.message
+        }, { signal: requestController.signal });
+        if (repaired?.reading) {
+          htmlBuffer = repaired.reading;
+        }
+      } catch (repairError) {
+        updateStatus("解读结构略有波动，已保留当前版本。你可以继续阅读或重新抽牌。");
+      }
+    }
+
     const spreadLabel = document.getElementById("spreadSelect") ? document.getElementById("spreadSelect").selectedOptions[0].innerText : "未知牌阵";
     const displayQuestion = compositeQuestion || "直觉速取";
     const mode = detailContext.mode === "compatibility" ? "双人合盘" : (detailContext.mode === "quick" ? "直觉速取" : "深度占卜");
@@ -2910,6 +3055,7 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
       return;
     }
     try {
+      setAiStatusText("网络不稳，正在切换到简版解读…");
       const fallback = await TarotApiService.requestFallbackReading({
         question: compositeQuestion,
         cards,
@@ -2918,10 +3064,11 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
         partnerName: detailContext.partnerName,
         emotionLevel: detailContext.emotion.value,
         emotionLabel: detailContext.emotion.label,
-        isCompatibility: detailContext.isCompatibility,
-        isNight: isNightMode,
-        vipToken
-      }, { signal: requestController.signal });
+      isCompatibility: detailContext.isCompatibility,
+      isNight: isNightMode,
+      vipToken,
+      qualityIssue: "流式解读失败，请直接围绕用户原问题给出简短、清楚、可执行的版本。"
+    }, { signal: requestController.signal });
       const fallbackText = fallback.reading || "星界连接暂时不稳，已为你生成简版解牌。";
       renderMarkdown(fallbackText);
       const spreadLabel = document.getElementById("spreadSelect") ? document.getElementById("spreadSelect").selectedOptions[0].innerText : "未知牌阵";

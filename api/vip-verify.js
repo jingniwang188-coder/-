@@ -33,6 +33,9 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: '口令错误' });
   }
 
-  const tokenData = createVipToken(signingSecret);
+  const tokenData = createVipToken(signingSecret, {
+    productType: 'all',
+    source: 'vip-code'
+  });
   return res.status(200).json(tokenData);
 }

@@ -37,6 +37,11 @@ export default async function handler(req, res) {
   }
 
   await consumeVipPaymentUnlock(orderId);
-  const tokenData = createVipToken(signingSecret);
+  const tokenData = createVipToken(signingSecret, {
+    orderId: order.orderId,
+    productType: order.productType,
+    amountFen: Number(order.amountFen || 0),
+    source: 'payment'
+  });
   return res.status(200).json(tokenData);
 }

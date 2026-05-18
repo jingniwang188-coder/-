@@ -42,7 +42,10 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: '测试码无效' });
   }
 
-  const tokenData = createVipToken(signingSecret);
+  const tokenData = createVipToken(signingSecret, {
+    productType: 'all',
+    source: 'friend-test-code'
+  });
   return res.status(200).json({
     ...tokenData,
     source: 'friend-test-code'

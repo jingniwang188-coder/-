@@ -1,4 +1,4 @@
-import crypto from 'node:crypto';
+import { verifyVipToken } from './_vipToken.js';
 
 function applyCors(req, res) {
   const origin = req.headers.origin;
@@ -15,25 +15,6 @@ function applyCors(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 }
 
-function verifyVipToken(token, secret) {
-  if (!token || !secret) return false;
-  const parts = token.split('.');
-  if (parts.length !== 2) return false;
-
-  const payloadB64 = parts[0];
-  const signature = parts[1];
-  const expected = crypto.createHmac('sha256', secret).update(payloadB64).digest('hex');
-  if (signature !== expected) return false;
-
-  try {
-    const payload = JSON.parse(Buffer.from(payloadB64, 'base64url').toString('utf-8'));
-    if (!payload?.exp) return false;
-    return Date.now() < payload.exp;
-  } catch {
-    return false;
-  }
-}
-
 function requiresVipForCards(cards = []) {
   if (!Array.isArray(cards) || !cards.length) return false;
   if (cards.length > 3) return true;
@@ -46,6 +27,11 @@ function requiresVipForCards(cards = []) {
   return yesNoPositions.every(label => positions.includes(label));
 }
 
+function getRequiredVipProductType({ cards = [], isCompatibility = false } = {}) {
+  if (!requiresVipForCards(cards)) return '';
+  return isCompatibility ? 'compatibility' : 'deep';
+}
+
 export default async function handler(req, res) {
   applyCors(req, res);
 
@@ -55,14 +41,17 @@ export default async function handler(req, res) {
   const API_KEY = process.env.OPENAI_API_KEY;
   if (!API_KEY) return res.status(500).json({ error: '后端未配置 API Key' });
 
-  const { question, cards, soulCard, isDaily, isNight, vipToken, fallbackShort, userName, partnerName, emotionLevel, emotionLabel, isCompatibility } = req.body || {};
+  const { question, cards, soulCard, isDaily, isNight, vipToken, fallbackShort, qualityIssue, userName, partnerName, emotionLevel, emotionLabel, isCompatibility } = req.body || {};
   const safeCards = Array.isArray(cards) ? cards : [];
-  const vipUnlockCode = process.env.VIP_UNLOCK_CODE;
   const vipSigningSecret = process.env.VIP_SIGNING_SECRET || API_KEY;
+  const requiredVipProductType = getRequiredVipProductType({ cards: safeCards, isCompatibility });
 
-  if (!isDaily && requiresVipForCards(safeCards) && vipUnlockCode) {
-    const ok = verifyVipToken(vipToken, vipSigningSecret);
-    if (!ok) {
+  if (!isDaily && requiredVipProductType) {
+    if (!vipSigningSecret) return res.status(503).json({ error: 'VIP 验证未配置' });
+    const verification = verifyVipToken(vipToken, vipSigningSecret, {
+      requiredProductType: requiredVipProductType
+    });
+    if (!verification.ok) {
       return res.status(402).json({ error: '高级牌阵需要VIP解锁验证' });
     }
   }
@@ -88,7 +77,7 @@ export default async function handler(req, res) {
     if (isNight) styleDesc += " 此时正值深夜，语气可以温和，但仍要保持清楚、稳定、不过度煽情。";
     
     systemRole = styleDesc + (fallbackShort
-      ? " 你需要输出一版更短、更稳的简版解析。"
+      ? " 你需要输出一版更短、更稳的简版解析。如果这是修正稿，要优先修正偏题、无结论或行动建议不具体的问题。"
       : " 你需要输出简洁清晰的解析。重点是让用户一眼看懂，不要写成长篇散文，也不要为了显得专业而故意写长。");
     
     const identityLine = userName ? `提问者昵称：${userName}` : "提问者昵称：匿名旅人";
@@ -101,18 +90,21 @@ export default async function handler(req, res) {
 ${identityLine}
 ${compatibilityLine}
 ${emotionLine}
+${qualityIssue ? `上一版解读存在问题：${String(qualityIssue).slice(0, 240)}。这一版必须修正这个问题。` : ""}
 TA的疑惑：“${question}”
 抽到的阵法：
 ${safeCards.map(c => `- ${c.position}: 抽到 ${c.cardName}。含义：${c.meaning}`).join('\n')}
 
 你的解盘必须严格遵守以下结构：
-1. 先输出：### 结论
+1. 先输出：### 我理解的问题
+用 1 句话复述用户真正想问的事。如果问题很模糊，先说清你会按哪个方向解读，不能擅自换题。
+2. 然后输出：### 结论
 内容必须直接回答问题。能判断就明确判断（例如：能 / 不能 / 值得 / 暂缓 / 有机会但要先处理XX）。
-2. 然后输出：### 关键提醒
+3. 然后输出：### 关键提醒
 用 2-3 条短句说明最关键的信息，每条都要具体，不要空话。
-3. 然后输出：### 为什么会这样
+4. 然后输出：### 为什么会这样
 用 2 个短段落解释牌面逻辑：现状、阻碍、转机分别是什么。不要讲太多背景故事，不要重复。
-4. 最后输出：### 现在去做
+5. 最后输出：### 现在去做
 给出 3 条可执行建议，每条一句话，直接能落地。
 
 排版铁律：
@@ -129,7 +121,8 @@ ${safeCards.map(c => `- ${c.position}: 抽到 ${c.cardName}。含义：${c.meani
 4. 用户最先看到的前 5 行，必须已经知道答案、风险点和下一步。
 5. 少用“神谕、灵魂、命运、能量、注定”等词，除非牌义确实必须提到。
 6. 不要写安慰废话，不要重复牌名，不要把同一个意思换种说法说三遍。
-7. 如果信息不足以给肯定判断，就明确说“暂时不建议”或“还要观察”，不要含糊。`;
+7. 如果信息不足以给肯定判断，就明确说“暂时不建议”或“还要观察”，不要含糊。
+8. 必须围绕用户原问题回答；不要泛化成与问题无关的人生建议。`;
   }
 
   try {
