@@ -103,10 +103,17 @@
           <h2 class="choice-card__title">写下问题，开启占问</h2>
           <p class="choice-card__desc">适合认真梳理一件事：选阵、抽牌、解牌，再落到行动。</p>
           <div class="choice-card__body" id="deepSettings">
-            <div class="input-group">
-              <label>你此刻最想照见什么？</label>
-              <input type="text" id="questionInput" placeholder="越具体，牌意越清晰…">
-            </div>
+              <div class="input-group">
+                <label>你此刻最想照见什么？</label>
+                <input type="text" id="questionInput" placeholder="越具体，牌意越清晰…">
+                <div class="question-spark-row" id="questionSparkRow" aria-label="问题灵感">
+                  <button class="question-spark" type="button" data-spread="relationship" data-question="我和TA接下来这段关系会怎样发展？">感情走向</button>
+                  <button class="question-spark" type="button" data-spread="career" data-question="我现在的工作机会和风险分别是什么？">事业机会</button>
+                  <button class="question-spark" type="button" data-spread="choice" data-question="我该选择A，还是选择B？">二选一</button>
+                  <button class="question-spark" type="button" data-spread="time" data-question="这件事接下来三个月会怎样发展？">未来趋势</button>
+                </div>
+                <div class="field-hint" id="questionHint">你的问题仅用于本次解牌，不会公开展示。</div>
+              </div>
             <div class="spread-guide-head">先选择牌阵（推荐）</div>
             <div class="spread-visual-guide" id="spreadVisualGuide" aria-live="polite"></div>
             <select id="spreadSelect" style="display:none;">
@@ -278,6 +285,12 @@
       <button id="saveBtn" class="main-btn result-action-primary">📸 保存图片</button>
       <button id="resultGrowthBtn" class="secondary-btn result-action-soft">🗂 查看档案</button>
       <button id="newQuestionBtn" class="secondary-btn result-action-soft">✏️ 再问一次</button>
+      <div id="readingFeedbackPanel" class="reading-feedback-panel" aria-label="这次解读是否有帮助">
+        <span class="reading-feedback-panel__label">这次解读</span>
+        <button class="reading-feedback-choice" type="button" data-feedback="accurate">准</button>
+        <button class="reading-feedback-choice" type="button" data-feedback="unclear">有点偏</button>
+        <button class="reading-feedback-choice" type="button" data-feedback="retry">想重问</button>
+      </div>
     </div>
   </div><!-- end .immersive-container -->
 

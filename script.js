@@ -282,8 +282,18 @@ function initEventBindings() {
     handleReturnToHomePage();
     setTimeout(() => {
       const qi = document.getElementById("questionInput");
-      if (qi) { qi.focus(); qi.scrollIntoView({ behavior: "smooth" }); }
+      if (qi) {
+        qi.focus();
+        qi.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      updateStatus("可以继续写下新的问题，越具体越容易得到清楚答案。");
     }, 300);
+  });
+  document.querySelectorAll(".question-spark").forEach(btn => {
+    btn.addEventListener("click", () => applyQuestionSpark(btn));
+  });
+  document.querySelectorAll(".reading-feedback-choice").forEach(btn => {
+    btn.addEventListener("click", () => sendReadingFeedback(btn));
   });
   bindReturnHome(byId("immersiveBackBtn"));
   byId("historyDetailCloseBtn")?.addEventListener("click", closeHistoryDetail);
@@ -473,6 +483,27 @@ function updateQuestionHint(isError = false) {
   }
   hint.textContent = "你的问题仅用于本次解牌，不会公开展示。";
   hint.classList.remove("error");
+}
+
+function applyQuestionSpark(button) {
+  const input = document.getElementById("questionInput");
+  const select = document.getElementById("spreadSelect");
+  const question = button?.getAttribute("data-question") || "";
+  const spread = button?.getAttribute("data-spread") || "";
+  if (input && question) {
+    input.value = question;
+    input.focus();
+  }
+  if (select && spread && select.querySelector(`option[value="${spread}"]`)) {
+    select.value = spread;
+    renderSpread();
+  }
+  document.querySelectorAll(".question-spark").forEach(item => {
+    item.classList.toggle("active", item === button);
+  });
+  updateQuestionHint(false);
+  renderSpreadGuide();
+  updateStatus("已帮你填入一个问题模板，可以直接修改成更贴近自己的版本。");
 }
 
 function updateCoupleHint(isError = false) {
@@ -945,9 +976,17 @@ function renderTimeline() {
   if (summary) {
     const total = records.length;
     const compatibility = records.filter(r => r.isCompatibility).length;
+    const topicCounts = records.reduce((acc, item) => {
+      const topic = inferTimelineTopic(item);
+      acc[topic] = (acc[topic] || 0) + 1;
+      return acc;
+    }, {});
+    const topTopic = Object.entries(topicCounts).sort((a, b) => b[1] - a[1])[0];
+    const topTopicText = topTopic ? `${topTopic[0]} ${topTopic[1]}次` : "暂无";
     summary.innerHTML = `
       <div class="timeline-summary-item"><div class="timeline-summary-label">总记录</div><div class="timeline-summary-value">${total}</div></div>
       <div class="timeline-summary-item"><div class="timeline-summary-label">双人占卜</div><div class="timeline-summary-value">${compatibility}</div></div>
+      <div class="timeline-summary-item timeline-summary-item--wide"><div class="timeline-summary-label">重复主题</div><div class="timeline-summary-value">${topTopicText}</div></div>
     `;
   }
 
@@ -967,7 +1006,7 @@ function renderTimeline() {
   filtered.forEach(({ record, tags, topic }) => {
     const item = document.createElement("div");
     item.className = "timeline-item";
-    const snippet = String(record.reading || "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim().slice(0, 62);
+    const snippet = buildReadingSnippet(record.reading, 62);
     item.innerHTML = `
       <div class="timeline-item-time">${record.date || "未知时间"}</div>
       <div class="timeline-item-main">${record.question || "单牌速读"} · ${record.spread || "未知牌阵"}</div>
@@ -979,6 +1018,16 @@ function renderTimeline() {
   });
 
   renderJournalRecordOptions();
+}
+
+function buildReadingSnippet(reading = "", maxLength = 80) {
+  const plain = stripRichText(reading)
+    .replace(/#{1,6}\s*/g, "")
+    .replace(/\b(?:我理解的问题|理解的问题|问题理解|三点速览|结论|关键提醒|现在去做)\b/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!plain) return "";
+  return plain.slice(0, maxLength);
 }
 
 function updateStatus(text) {
@@ -1586,11 +1635,7 @@ function pushLatestReadingToArchive() {
     alert("先完成一次解牌，再写入成长档案。");
     return;
   }
-  const summaryText = String(latestReadingRecord.reading || "")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .slice(0, 140);
+  const summaryText = buildReadingSnippet(latestReadingRecord.reading || "", 140);
   const emotion = latestReadingRecord.emotionLabel || "平静观察";
   JournalService.add({
     text: `来自解牌总结：${summaryText || "已完成一次解牌，后续可继续补充行动反馈。"}`,
@@ -2447,9 +2492,70 @@ async function triggerFinalRevealAndReading(question, style, cards, context) {
     document.getElementById("readingWrapper").style.display = "block";
     document.getElementById("readingBox").classList.add("visible");
     renderMiniCardBar(cards);
+    updateStatus("正在生成解读，请稍等片刻。");
+    setAiStatusText("塔罗解读中，正在对齐你的问题与牌面…");
     fetchStream(question, style, cards, context);
   } finally {
     finalRevealTransitionRunning = false;
+  }
+}
+
+function resetReadingFeedbackPanel() {
+  const panel = document.getElementById("readingFeedbackPanel");
+  if (!panel) return;
+  panel.classList.remove("is-sent");
+  panel.querySelectorAll(".reading-feedback-choice").forEach(btn => {
+    btn.disabled = false;
+    btn.classList.remove("active");
+  });
+  const label = panel.querySelector(".reading-feedback-panel__label");
+  if (label) label.textContent = "这次解读";
+}
+
+async function sendReadingFeedback(button) {
+  const feedback = button?.getAttribute("data-feedback") || "";
+  const panel = document.getElementById("readingFeedbackPanel");
+  const label = panel?.querySelector(".reading-feedback-panel__label");
+  if (!feedback || !latestReadingRecord || !panel) return;
+
+  panel.querySelectorAll(".reading-feedback-choice").forEach(btn => {
+    btn.classList.toggle("active", btn === button);
+    btn.disabled = true;
+  });
+  if (label) label.textContent = "已收到";
+
+  const feedbackTextMap = {
+    accurate: "用户认为这次解读准确",
+    unclear: "用户认为这次解读有点偏",
+    retry: "用户想重新提问或重新抽牌"
+  };
+
+  try {
+    await fetch("/api/feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: "解读反馈",
+        email: "未填写",
+        message: [
+          feedbackTextMap[feedback] || `用户反馈：${feedback}`,
+          `问题：${latestReadingRecord.question || "未填写"}`,
+          `牌阵：${latestReadingRecord.spread || "未知"}`,
+          `时间：${latestReadingRecord.date || new Date().toLocaleString()}`
+        ].join("\n"),
+        page: window.location.href,
+        createdAt: new Date().toISOString()
+      })
+    });
+  } catch {
+    // 反馈失败不打断用户阅读。
+  } finally {
+    panel.classList.add("is-sent");
+    if (feedback === "retry") {
+      setTimeout(() => document.getElementById("newQuestionBtn")?.click(), 450);
+    } else {
+      updateStatus("谢谢你的反馈，我会用它继续校准解读体验。");
+    }
   }
 }
 
@@ -2837,6 +2943,7 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
   const isStaleRequest = () => requestId !== activeReadingRequestId;
   const streamContent = document.getElementById("streamContent"); const cursor = document.getElementById("cursor");
   streamContent.innerHTML = ""; let htmlBuffer = "";
+  resetReadingFeedbackPanel();
 
   // #7 进度条：流式开始时显示
   const streamProgress = document.getElementById("streamProgressBar");

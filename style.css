@@ -5617,6 +5617,309 @@ body.home-ready {
 }
 
 /* ═══════════════════════════════════════
+   V1.1 清透覆盖：去灰雾、提对比、字体更有呼吸
+   ═══════════════════════════════════════ */
+body.home-ready.night-mode .night-overlay {
+  opacity: 0.08 !important;
+  background:
+    radial-gradient(760px 320px at 50% 4%, rgba(80, 72, 118, 0.12), transparent 70%),
+    rgba(8, 8, 18, 0.08) !important;
+}
+
+body.home-ready::before {
+  opacity: 0.45;
+}
+
+body.home-ready #starfield {
+  opacity: 0.08 !important;
+}
+
+body.home-ready .top-nav {
+  background: rgba(247, 244, 236, 0.78) !important;
+  border-color: rgba(255, 255, 255, 0.48) !important;
+  box-shadow:
+    0 18px 40px rgba(47, 54, 78, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.74) !important;
+}
+
+body.home-ready .phase-chip {
+  background: rgba(47, 62, 101, 0.88) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  color: rgba(255, 246, 225, 0.96) !important;
+  box-shadow: 0 8px 18px rgba(38, 46, 80, 0.12);
+}
+
+body.home-ready .top-nav-actions .icon-btn {
+  background: rgba(255, 252, 244, 0.5) !important;
+  color: rgba(76, 63, 51, 0.86) !important;
+  border-color: rgba(126, 111, 91, 0.24) !important;
+  box-shadow: none !important;
+}
+
+body.home-ready .classic-title {
+  font-family: "Kaiti SC", "STKaiti", "KaiTi", "Songti SC", "Noto Serif SC", serif !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.08em !important;
+  background: linear-gradient(116deg, #5b5572 0%, #9d713c 45%, #b8842e 68%, #456e73 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  text-shadow: none !important;
+}
+
+body.home-ready .classic-title .title-en {
+  font-family: "Manrope", "PingFang SC", sans-serif !important;
+  letter-spacing: 0.42em !important;
+  color: rgba(80, 77, 92, 0.56) !important;
+  -webkit-text-fill-color: rgba(80, 77, 92, 0.56) !important;
+}
+
+body.home-ready .ritual-orb__label,
+body.home-ready .status-banner {
+  color: rgba(66, 57, 50, 0.72) !important;
+  text-shadow: none !important;
+}
+
+body.home-ready .choice-card {
+  background:
+    linear-gradient(145deg, rgba(255, 252, 244, 0.92), rgba(244, 248, 247, 0.78)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.62) !important;
+  color: #3f352c !important;
+  box-shadow:
+    0 24px 54px rgba(55, 58, 80, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.86) !important;
+}
+
+body.home-ready .choice-card--secondary {
+  background:
+    linear-gradient(148deg, rgba(253, 250, 255, 0.94), rgba(235, 240, 255, 0.78)) !important;
+}
+
+body.home-ready .choice-card--main {
+  background:
+    linear-gradient(148deg, rgba(255, 252, 244, 0.94), rgba(234, 246, 246, 0.78)) !important;
+}
+
+body.home-ready .choice-card--love {
+  background:
+    linear-gradient(148deg, rgba(255, 247, 249, 0.94), rgba(244, 241, 255, 0.78)) !important;
+}
+
+body.home-ready .choice-card__title {
+  font-family: "Kaiti SC", "STKaiti", "KaiTi", "Songti SC", "Noto Serif SC", serif !important;
+  color: #44372c !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+  text-shadow: none !important;
+}
+
+body.home-ready .choice-card__eyebrow,
+body.home-ready .choice-card__feature,
+body.home-ready .spread-guide-head,
+body.home-ready .input-group label {
+  color: rgba(83, 103, 105, 0.86) !important;
+  text-shadow: none !important;
+}
+
+body.home-ready .choice-card__desc,
+body.home-ready .field-hint,
+body.home-ready .pay-hint,
+body.home-ready .spread-guide-text {
+  color: rgba(68, 58, 48, 0.72) !important;
+  text-shadow: none !important;
+}
+
+body.home-ready .spread-visual-guide {
+  background: rgba(255, 253, 248, 0.72) !important;
+  border-color: rgba(255, 255, 255, 0.58) !important;
+}
+
+body.home-ready .spread-current-pick,
+body.home-ready .spread-pill {
+  background: rgba(255, 253, 248, 0.92) !important;
+  border-color: rgba(143, 128, 104, 0.18) !important;
+  color: #43362a !important;
+}
+
+body.home-ready .spread-pill.active {
+  background:
+    linear-gradient(145deg, rgba(239, 251, 249, 0.96), rgba(255, 247, 229, 0.92)) !important;
+  border-color: rgba(71, 118, 123, 0.46) !important;
+}
+
+body.home-ready .spread-pill__name,
+body.home-ready .spread-current-pick__name {
+  color: #3f3429 !important;
+  text-shadow: none !important;
+}
+
+body.home-ready .spread-pill__desc,
+body.home-ready .spread-pill__meta,
+body.home-ready .spread-current-pick__meta {
+  color: rgba(63, 52, 41, 0.68) !important;
+}
+
+body.home-ready .input-group input,
+body.home-ready .input-group textarea,
+body.home-ready .input-group select {
+  background: rgba(28, 34, 53, 0.9) !important;
+  border-color: rgba(255, 244, 216, 0.24) !important;
+  color: rgba(255, 247, 229, 0.96) !important;
+}
+
+body.home-ready .input-group input::placeholder,
+body.home-ready .input-group textarea::placeholder {
+  color: rgba(255, 247, 229, 0.48) !important;
+}
+
+body.home-ready .main-btn,
+body.home-ready .secondary-btn {
+  box-shadow: 0 14px 28px rgba(58, 54, 80, 0.10);
+}
+
+body.home-ready {
+  background:
+    radial-gradient(740px 340px at 18% 2%, rgba(250, 218, 165, 0.22), transparent 62%),
+    radial-gradient(680px 360px at 86% 8%, rgba(104, 155, 162, 0.15), transparent 58%),
+    linear-gradient(155deg, #f8f3e9 0%, #eef2f3 46%, #f4edf3 100%) !important;
+}
+
+body.home-ready .choice-card:hover {
+  transform: translateY(-5px) rotate(-0.45deg) !important;
+  box-shadow:
+    0 30px 62px rgba(55, 58, 80, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
+}
+
+body.home-ready .choice-card--main:hover {
+  transform: translateY(-5px) rotate(0.35deg) !important;
+}
+
+body.home-ready .classic-title {
+  line-height: 1.05 !important;
+}
+
+body.home-ready .choice-card__title {
+  line-height: 1.25 !important;
+}
+
+body.home-ready .ritual-orb {
+  border-color: rgba(105, 125, 154, 0.38) !important;
+  background:
+    radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.88), rgba(177, 149, 206, 0.56) 34%, rgba(65, 83, 126, 0.78) 70%) !important;
+  box-shadow:
+    0 18px 42px rgba(68, 70, 115, 0.16),
+    inset 0 1px 14px rgba(255, 255, 255, 0.34) !important;
+}
+
+.question-spark-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.question-spark {
+  appearance: none;
+  border: 1px solid rgba(115, 105, 86, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 253, 246, 0.68);
+  color: rgba(65, 55, 43, 0.82);
+  min-height: 32px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.22s cubic-bezier(.22,1,.36,1), border-color 0.2s ease, background 0.2s ease;
+}
+
+.question-spark:hover,
+.question-spark.active {
+  transform: translateY(-1px);
+  border-color: rgba(70, 116, 122, 0.42);
+  background: rgba(236, 249, 247, 0.92);
+  color: #344d50;
+}
+
+.reading-feedback-panel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-height: 44px;
+  padding: 6px 8px 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 244, 216, 0.14);
+  background: rgba(255, 248, 229, 0.08);
+  color: rgba(255, 247, 229, 0.82);
+}
+
+.reading-feedback-panel__label {
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.reading-feedback-choice {
+  appearance: none;
+  border: 1px solid rgba(255, 244, 216, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 247, 229, 0.9);
+  min-height: 32px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.reading-feedback-choice:hover,
+.reading-feedback-choice.active {
+  transform: translateY(-1px);
+  border-color: rgba(239, 211, 145, 0.55);
+  background: rgba(239, 211, 145, 0.18);
+}
+
+.reading-feedback-panel.is-sent .reading-feedback-choice:not(.active) {
+  opacity: 0.45;
+}
+
+.reading-feedback-choice:disabled {
+  cursor: default;
+}
+
+.timeline-summary-item--wide {
+  grid-column: span 2;
+}
+
+body.home-ready .timeline-summary-item--wide {
+  grid-column: auto;
+}
+
+@media (max-width: 760px) {
+  .question-spark-row {
+    gap: 6px;
+  }
+
+  .question-spark {
+    flex: 1 1 calc(50% - 6px);
+    justify-content: center;
+    padding-inline: 8px;
+  }
+
+  .reading-feedback-panel {
+    width: 100%;
+    justify-content: center;
+    border-radius: 18px;
+  }
+
+  .timeline-summary-item--wide {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ═══════════════════════════════════════
    减少动画模式（无障碍支持）
    ═══════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
