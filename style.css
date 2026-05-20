@@ -2312,6 +2312,80 @@ body[data-phase="dusk"] #starfield {
   margin-bottom: 0;
 }
 
+.manual-payment-claim {
+  gap: 9px;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid rgba(244, 220, 176, 0.2);
+  border-radius: 16px;
+  background: rgba(255, 248, 226, 0.08);
+}
+
+.manual-payment-claim__title {
+  color: rgba(255, 239, 202, 0.96);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.manual-payment-claim__desc {
+  margin: -2px 0 0;
+  color: rgba(246, 230, 197, 0.72);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.manual-payment-claim__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.manual-payment-claim input,
+.manual-payment-claim textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(244, 220, 176, 0.18);
+  border-radius: 12px;
+  background: rgba(15, 19, 34, 0.72);
+  color: rgba(255, 247, 229, 0.94);
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+}
+
+.manual-payment-claim input {
+  min-height: 38px;
+  padding: 0 10px;
+}
+
+.manual-payment-claim textarea {
+  resize: vertical;
+  min-height: 52px;
+  padding: 9px 10px;
+  line-height: 1.5;
+}
+
+.manual-payment-claim input:focus,
+.manual-payment-claim textarea:focus {
+  border-color: rgba(239, 211, 145, 0.52);
+  box-shadow: 0 0 0 3px rgba(239, 211, 145, 0.1);
+}
+
+.manual-payment-claim input::placeholder,
+.manual-payment-claim textarea::placeholder {
+  color: rgba(255, 247, 229, 0.48);
+}
+
+.manual-payment-claim .secondary-btn {
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .manual-payment-claim__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .vip-modal-content .modal-btns {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

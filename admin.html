@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>塔罗之眼支付确认后台</title>
+  <style>
+    :root { color-scheme: light; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      color: #2f2a24;
+      background: linear-gradient(145deg, #f8f2e8, #e9f1f1);
+    }
+    main {
+      width: min(980px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 28px 0 52px;
+    }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    p { color: rgba(47, 42, 36, 0.72); line-height: 1.7; }
+    .panel, .order {
+      border: 1px solid rgba(105, 92, 76, 0.16);
+      border-radius: 16px;
+      background: rgba(255, 252, 246, 0.84);
+      box-shadow: 0 18px 40px rgba(54, 54, 72, 0.08);
+      padding: 16px;
+    }
+    .panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      margin: 18px 0;
+    }
+    input {
+      min-height: 42px;
+      border: 1px solid rgba(105, 92, 76, 0.2);
+      border-radius: 12px;
+      padding: 0 12px;
+      font: inherit;
+      background: white;
+    }
+    button {
+      min-height: 42px;
+      border: 0;
+      border-radius: 12px;
+      padding: 0 15px;
+      font: inherit;
+      font-weight: 700;
+      color: #fff8e9;
+      background: #32424c;
+      cursor: pointer;
+    }
+    button.secondary { background: #886a3e; }
+    button:disabled { opacity: .6; cursor: wait; }
+    .orders { display: grid; gap: 12px; }
+    .order-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .order-id { font-weight: 800; word-break: break-all; }
+    .badge {
+      flex: 0 0 auto;
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: #efe4cd;
+      color: #5e4727;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .badge.pending { background: #fff0bd; color: #775814; }
+    .badge.paid, .badge.unlocked { background: #dff3e6; color: #27613d; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin: 10px 0;
+    }
+    .cell {
+      border-radius: 12px;
+      background: rgba(255,255,255,.56);
+      padding: 9px 10px;
+      font-size: 13px;
+    }
+    .cell strong { display: block; margin-bottom: 3px; font-size: 11px; color: rgba(47,42,36,.54); }
+    .claim {
+      margin-top: 10px;
+      border-radius: 12px;
+      background: rgba(235, 244, 243, 0.82);
+      padding: 10px;
+      line-height: 1.65;
+      font-size: 13px;
+      white-space: pre-wrap;
+    }
+    .actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+    .status { min-height: 22px; color: #705326; font-weight: 700; }
+    @media (max-width: 680px) {
+      .panel, .grid { grid-template-columns: 1fr; }
+      .actions, .order-head { flex-direction: column; }
+      button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>塔罗之眼支付确认后台</h1>
+    <p>输入管理密钥后查看最近订单。确认收款后点击“确认已支付”，用户页面会在轮询中自动解锁并继续解牌。</p>
+    <section class="panel">
+      <input id="adminKeyInput" type="password" placeholder="VIP_ADMIN_KEY">
+      <button id="loadOrdersBtn" type="button">查看订单</button>
+    </section>
+    <div id="adminStatus" class="status"></div>
+    <section id="orders" class="orders"></section>
+  </main>
+
+  <script>
+    const keyInput = document.getElementById("adminKeyInput");
+    const loadBtn = document.getElementById("loadOrdersBtn");
+    const statusEl = document.getElementById("adminStatus");
+    const ordersEl = document.getElementById("orders");
+
+    function formatMoney(fen) {
+      return `¥${(Number(fen || 0) / 100).toFixed(0)}`;
+    }
+
+    function formatTime(ts) {
+      return ts ? new Date(Number(ts)).toLocaleString() : "无";
+    }
+
+    function setStatus(text) {
+      statusEl.textContent = text || "";
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function claimText(claim) {
+      if (!claim) return "用户还没有提交付款信息。";
+      return [
+        `付款昵称/备注：${claim.payerName || "未填"}`,
+        `付款时间：${claim.paidAtText || "未填"}`,
+        `联系方式：${claim.contact || "未填"}`,
+        `补充说明：${claim.note || "无"}`
+      ].join("\\n");
+    }
+
+    async function requestJson(url, body) {
+      const resp = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok) throw new Error(data.error || "请求失败");
+      return data;
+    }
+
+    function renderOrders(orders) {
+      if (!orders.length) {
+        ordersEl.innerHTML = '<div class="order">暂无订单。</div>';
+        return;
+      }
+      ordersEl.innerHTML = orders.map(order => `
+        <article class="order">
+          <div class="order-head">
+            <div>
+              <div class="order-id">${escapeHtml(order.orderId)}</div>
+              <p>${order.productType === "compatibility" ? "双人合盘" : "进阶解牌"} · ${escapeHtml(formatMoney(order.amountFen))}</p>
+            </div>
+            <span class="badge ${escapeHtml(order.status)}">${escapeHtml(order.status)}</span>
+          </div>
+          <div class="grid">
+            <div class="cell"><strong>创建</strong>${escapeHtml(formatTime(order.createdAt))}</div>
+            <div class="cell"><strong>过期</strong>${escapeHtml(formatTime(order.expiresAt))}</div>
+            <div class="cell"><strong>确认</strong>${escapeHtml(formatTime(order.paidAt))}</div>
+          </div>
+          <div class="claim">${escapeHtml(claimText(order.claim))}</div>
+          <div class="actions">
+            <button class="secondary" type="button" data-copy="${escapeHtml(order.orderId)}">复制订单号</button>
+            <button type="button" data-mark="${escapeHtml(order.orderId)}" ${order.status === "paid" || order.status === "unlocked" ? "disabled" : ""}>确认已支付</button>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    async function loadOrders() {
+      const adminKey = keyInput.value.trim();
+      if (!adminKey) {
+        setStatus("请先输入管理密钥。");
+        return;
+      }
+      loadBtn.disabled = true;
+      setStatus("正在读取订单...");
+      try {
+        const data = await requestJson("/api/vip-payment-admin-list", { adminKey });
+        renderOrders(data.orders || []);
+        setStatus(`已读取 ${(data.orders || []).length} 条订单。`);
+      } catch (err) {
+        setStatus(err.message || "读取失败");
+      } finally {
+        loadBtn.disabled = false;
+      }
+    }
+
+    async function markPaid(orderId) {
+      const adminKey = keyInput.value.trim();
+      if (!adminKey || !orderId) return;
+      setStatus("正在确认收款...");
+      try {
+        await requestJson("/api/vip-payment-admin-mark-paid", { adminKey, orderId });
+        setStatus("已确认收款，用户页面会自动解锁。");
+        await loadOrders();
+      } catch (err) {
+        setStatus(err.message || "确认失败");
+      }
+    }
+
+    loadBtn.addEventListener("click", loadOrders);
+    keyInput.addEventListener("keydown", event => {
+      if (event.key === "Enter") loadOrders();
+    });
+    ordersEl.addEventListener("click", async event => {
+      const copyId = event.target?.getAttribute("data-copy");
+      const markId = event.target?.getAttribute("data-mark");
+      if (copyId) {
+        await navigator.clipboard?.writeText(copyId);
+        setStatus("订单号已复制。");
+      }
+      if (markId) markPaid(markId);
+    });
+  </script>
+</body>
+</html>

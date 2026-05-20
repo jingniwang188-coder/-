@@ -183,6 +183,18 @@
         <div id="vipOrderStatusText">状态：等待扫码支付</div>
         <div id="vipOrderMeta" class="vip-order-meta"></div>
       </div>
+      <div id="manualPaymentClaimBox" class="manual-payment-claim" style="display:none;">
+        <div class="manual-payment-claim__title">已付款？提交确认信息</div>
+        <p class="manual-payment-claim__desc">当前为人工确认模式。提交后我在后台确认收款，你的页面会自动继续解牌。</p>
+        <div class="manual-payment-claim__grid">
+          <input id="manualPayerNameInput" type="text" placeholder="付款备注/昵称">
+          <input id="manualPaidAtInput" type="text" placeholder="付款时间，如 21:36">
+        </div>
+        <input id="manualContactInput" type="text" placeholder="联系方式（可选，方便异常时联系）">
+        <textarea id="manualPaymentNoteInput" rows="2" placeholder="补充说明（可选）"></textarea>
+        <button id="submitManualPaymentClaimBtn" class="secondary-btn" type="button">我已付款，提交确认</button>
+        <div id="manualPaymentClaimHint" class="field-hint"></div>
+      </div>
       <div class="vip-code-divider"><span>或输入口令</span></div>
       <div class="input-group vip-code-group">
         <input id="vipCodeInput" type="text" placeholder="VIP 口令 / 测试码">

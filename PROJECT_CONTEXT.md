@@ -3,6 +3,7 @@
 ## 线上网站
 
 - 正式地址：https://tarotwheel.vercel.app
+- 支付确认后台：https://tarotwheel.vercel.app/admin.html
 - 部署方式：GitHub 连接 Vercel，`main` 分支推送后由 Vercel 自动部署。
 - 代码仓库远端：https://github.com/jingni0618/-.git
 
