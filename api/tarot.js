@@ -32,6 +32,47 @@ function getRequiredVipProductType({ cards = [], isCompatibility = false } = {})
   return isCompatibility ? 'compatibility' : 'deep';
 }
 
+function includesAny(text = '', keywords = []) {
+  const normalized = String(text || '').toLowerCase();
+  return keywords.some(keyword => normalized.includes(String(keyword).toLowerCase()));
+}
+
+function detectQuestionFocus(question = '', isCompatibility = false) {
+  const rules = [
+    {
+      label: '选择判断',
+      keywords: ['要不要', '该不该', '能不能', '会不会', '是否', '值不值得', '适不适合', '二选一', '选择', '还是'],
+      instruction: '结论第一句必须给出明确倾向；如果是二选一，要分别比较两个方向的收益、风险和更推荐的一边。'
+    },
+    {
+      label: '关系感情',
+      keywords: ['复合', '分手', '喜欢', '爱', '暧昧', '关系', '感情', '恋爱', '前任', '伴侣', '对象', '婚姻', '他', '她', 'ta'],
+      instruction: '必须回答关系状态、对方/双方真实动力、主要阻碍和下一步沟通方式，不要泛化成个人成长鸡汤。'
+    },
+    {
+      label: '事业工作',
+      keywords: ['工作', '事业', 'offer', '面试', '跳槽', '老板', '同事', '项目', '副业', '客户', '合作', '升职', '辞职'],
+      instruction: '必须回答现实推进、机会风险、关键人/关键节点和下一步行动，不要转去谈感情或抽象情绪。'
+    },
+    {
+      label: '金钱财务',
+      keywords: ['钱', '财', '赚钱', '收入', '投资', '存款', '涨薪', '工资', '副业', '花钱', '债', '预算'],
+      instruction: '必须回答财务趋势、风险边界和可执行的收支动作，避免给出高风险投资承诺。'
+    },
+    {
+      label: '时间走势',
+      keywords: ['未来', '走势', '发展', '多久', '什么时候', '本月', '月运', '今年', '明年', '近期', '三个月'],
+      instruction: '必须说明阶段变化与观察信号；如果不能给精确时间，就给出最可能的节奏和触发条件。'
+    }
+  ];
+
+  if (isCompatibility) return { label: '双人合盘', instruction: '必须围绕两个人的互动模式、误解来源、吸引与阻碍、下一步沟通动作回答。' };
+  return rules.find(rule => includesAny(question, rule.keywords)) || {
+    label: '开放探索',
+    instruction: '先界定你将按哪个具体方向解读，再给出清楚结论、主要风险和下一步行动。'
+  };
+}
+
 export default async function handler(req, res) {
   applyCors(req, res);
 
@@ -86,10 +127,14 @@ export default async function handler(req, res) {
       : "这是单人问题，聚焦提问者自身成长与决策。";
     const emotionLine = `当前情绪雷达：等级 ${Number(emotionLevel || 3)}（${emotionLabel || "平静观察"}）。请在语气与建议力度中体现这个状态。`;
 
+    const questionFocus = detectQuestionFocus(question, isCompatibility);
+
     promptContext = `${soulCall}
 ${identityLine}
 ${compatibilityLine}
 ${emotionLine}
+问题类型判定：${questionFocus.label}
+回答重点：${questionFocus.instruction}
 ${qualityIssue ? `上一版解读存在问题：${String(qualityIssue).slice(0, 420)}。这一版必须修正这个问题。` : ""}
 ${previousReading ? `上一版解读摘要：${String(previousReading).replace(/\s+/g, ' ').slice(0, 700)}。请保留有用判断，删掉偏题和空泛部分。` : ""}
 TA的疑惑：“${question}”
@@ -126,6 +171,9 @@ ${safeCards.map(c => `- ${c.position}: 抽到 ${c.cardName}。含义：${c.meani
 8. 必须围绕用户原问题回答；不要泛化成与问题无关的人生建议。
 9. 如果用户问关系，就不要泛泛谈事业；问事业，就不要泛泛谈情绪；问选择，就必须比较两个方向。
 10. 如果用户反馈“偏了”，修正版要先承认并重新对齐问题，不要为上一版辩解。`;
+    promptContext += `
+11. 输出前自检：结论第一句必须能单独回答“TA到底问了什么”。如果不能，就重写结论。
+12. “现在去做”的每一条建议必须包含一个现实动作，例如发一条信息、等一个节点、核对一个事实、暂停一个决定或设一个边界。`;
   }
 
   try {

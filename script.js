@@ -3192,6 +3192,53 @@ function extractQuestionSignals(question = "") {
   return Array.from(signals);
 }
 
+function getQuestionIntentProfile(question = "") {
+  const text = String(question || "").toLowerCase();
+  const rules = [
+    {
+      id: "decision",
+      keywords: ["要不要", "该不该", "能不能", "会不会", "是否", "值不值得", "适不适合", "二选一", "选择", "还是"],
+      directPattern: /(建议|不建议|可以|不要|值得|不值得|能|不能|会|不会|暂缓|有机会|倾向|更适合|更推荐|优先|选择|选)/
+    },
+    {
+      id: "relationship",
+      keywords: ["复合", "分手", "喜欢", "暧昧", "关系", "感情", "恋爱", "前任", "伴侣", "对象", "他", "她", "ta"],
+      directPattern: /(关系|对方|双方|沟通|边界|复合|喜欢|暧昧|感情|恋爱|前任|伴侣)/
+    },
+    {
+      id: "career",
+      keywords: ["工作", "事业", "offer", "面试", "跳槽", "老板", "同事", "项目", "副业", "收入", "升职", "辞职"],
+      directPattern: /(工作|事业|机会|风险|项目|面试|跳槽|合作|收入|推进|节点|老板|同事)/
+    },
+    {
+      id: "money",
+      keywords: ["钱", "财", "赚钱", "投资", "存款", "涨薪", "工资", "预算", "债"],
+      directPattern: /(钱|财务|收入|支出|预算|投资|风险|现金|涨薪|存款)/
+    },
+    {
+      id: "timing",
+      keywords: ["未来", "走势", "发展", "多久", "什么时候", "本月", "月运", "今年", "明年", "近期", "三个月"],
+      directPattern: /(阶段|近期|本月|未来|走势|发展|节点|信号|触发|时间|节奏)/
+    }
+  ];
+  return rules.find(rule => rule.keywords.some(word => text.includes(String(word).toLowerCase()))) || null;
+}
+
+function extractActionLines(markdown = "") {
+  const actionSection = extractSectionBody(markdown, ["现在去做", "行动建议", "下一步"]);
+  return String(actionSection || "")
+    .split(/\n|(?<=[。！？!?])/)
+    .map(line => stripRichText(line).replace(/^[-*•\d.\s]+/, "").trim())
+    .filter(Boolean);
+}
+
+function getFirstSentence(text = "") {
+  return String(text || "")
+    .split(/(?<=[。！？!?])|\n/)
+    .map(item => item.trim())
+    .filter(Boolean)[0] || "";
+}
+
 function evaluateReadingQuality(rawReading = "", question = "") {
   const plain = stripRichText(rawReading).replace(/\s+/g, " ").trim();
   const reading = String(rawReading || "");
@@ -3209,6 +3256,23 @@ function evaluateReadingQuality(rawReading = "", question = "") {
   }
   if (!/###\s*(现在去做|行动建议|下一步)/.test(reading)) {
     issues.push("缺少可执行建议");
+  }
+
+  const conclusionSection = stripRichText(extractSectionBody(reading, ["结论", "一句话答案", "先看结论"]));
+  const firstConclusion = getFirstSentence(conclusionSection);
+  const intent = getQuestionIntentProfile(q);
+  if (intent && firstConclusion && !intent.directPattern.test(firstConclusion)) {
+    issues.push("结论第一句没有直接回应问题类型");
+  }
+
+  if (firstConclusion && /(宇宙|命运|能量|灵魂课题|内在功课|看见自己)/.test(firstConclusion) && !/(建议|不建议|可以|不要|值得|暂缓|有机会|倾向|风险|阻碍)/.test(firstConclusion)) {
+    issues.push("结论第一句太抽象，用户可能看不出答案");
+  }
+
+  const actionLines = extractActionLines(reading);
+  const concreteActions = actionLines.filter(line => /(发|问|约|等|看|列|写|核对|确认|暂停|拒绝|设|沟通|记录|复盘|比较|提交|准备|观察)/.test(line));
+  if (actionLines.length && concreteActions.length < Math.min(2, actionLines.length)) {
+    issues.push("行动建议不够具体");
   }
 
   const signals = extractQuestionSignals(q);
