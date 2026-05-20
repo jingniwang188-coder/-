@@ -97,6 +97,11 @@
       margin-bottom: 10px;
     }
     .order-id { font-weight: 800; word-break: break-all; }
+    .order.claimed {
+      border-color: rgba(128, 88, 38, 0.32);
+      background:
+        linear-gradient(135deg, rgba(255, 247, 224, 0.94), rgba(255, 252, 246, 0.86));
+    }
     .badge {
       flex: 0 0 auto;
       border-radius: 999px;
@@ -108,6 +113,7 @@
     }
     .badge.pending { background: #fff0bd; color: #775814; }
     .badge.paid, .badge.unlocked { background: #dff3e6; color: #27613d; }
+    .badge.expired { background: #eadeda; color: #794236; }
     .grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -178,6 +184,25 @@
       return ts ? new Date(Number(ts)).toLocaleString() : "无";
     }
 
+    function formatRemaining(order) {
+      if (order.status === "paid" || order.status === "unlocked") return "已确认";
+      if (order.status === "expired") return "已过期";
+      const left = Number(order.expiresAt || 0) - Date.now();
+      if (left <= 0) return "即将过期";
+      const minutes = Math.ceil(left / 60000);
+      return `${minutes} 分钟后过期`;
+    }
+
+    function statusLabel(status) {
+      const labels = {
+        pending: "待支付",
+        paid: "已支付",
+        unlocked: "已解锁",
+        expired: "已过期"
+      };
+      return labels[status] || status || "未知";
+    }
+
     function setStatus(text) {
       statusEl.textContent = text || "";
     }
@@ -242,18 +267,20 @@
         return;
       }
       ordersEl.innerHTML = orders.map(order => `
-        <article class="order">
+        <article class="order ${order.status === "pending" && order.claim ? "claimed" : ""}">
           <div class="order-head">
             <div>
               <div class="order-id">${escapeHtml(order.orderId)}</div>
               <p>${order.productType === "compatibility" ? "双人合盘" : "进阶解牌"} · ${escapeHtml(formatMoney(order.amountFen))}</p>
             </div>
-            <span class="badge ${escapeHtml(order.status)}">${escapeHtml(order.status)}</span>
+            <span class="badge ${escapeHtml(order.status)}">${escapeHtml(statusLabel(order.status))}</span>
           </div>
           <div class="grid">
             <div class="cell"><strong>创建</strong>${escapeHtml(formatTime(order.createdAt))}</div>
             <div class="cell"><strong>过期</strong>${escapeHtml(formatTime(order.expiresAt))}</div>
             <div class="cell"><strong>确认</strong>${escapeHtml(formatTime(order.paidAt))}</div>
+            <div class="cell"><strong>用户提交</strong>${escapeHtml(formatTime(order.claimAt))}</div>
+            <div class="cell"><strong>剩余时间</strong>${escapeHtml(formatRemaining(order))}</div>
           </div>
           <div class="claim">${escapeHtml(claimText(order.claim))}</div>
           <div class="actions">
@@ -287,6 +314,7 @@
     async function markPaid(orderId) {
       const adminKey = keyInput.value.trim();
       if (!adminKey || !orderId) return;
+      if (!confirm(`确认已经收到这笔款项？\n\n订单号：${orderId}`)) return;
       setStatus("正在确认收款...");
       try {
         await requestJson("/api/vip-payment-admin-mark-paid", { adminKey, orderId });

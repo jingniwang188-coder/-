@@ -1756,7 +1756,10 @@ function setManualPaymentWaiting(isWaiting = false) {
   const box = document.getElementById("manualPaymentWaitingBox");
   const submitBtn = document.getElementById("submitManualPaymentClaimBtn");
   if (box) box.style.display = isWaiting ? "grid" : "none";
-  if (submitBtn) submitBtn.textContent = isWaiting ? "付款信息已提交" : "我已付款，提交确认";
+  if (submitBtn) {
+    submitBtn.disabled = isWaiting;
+    submitBtn.textContent = isWaiting ? "付款信息已提交" : "我已付款，提交确认";
+  }
 }
 
 function stopVipOrderPolling() {
@@ -2056,8 +2059,9 @@ async function submitManualPaymentClaim() {
     setManualPaymentClaimHint(error.message || "提交失败，请稍后重试。", true);
   } finally {
     if (btn) {
-      btn.disabled = false;
-      btn.textContent = "我已付款，提交确认";
+      const isClaimed = localStorage.getItem(VIP_CLAIMED_ORDER_ID_KEY) === orderId;
+      btn.disabled = isClaimed;
+      btn.textContent = isClaimed ? "付款信息已提交" : "我已付款，提交确认";
     }
   }
 }
