@@ -55,6 +55,40 @@
     button.secondary { background: #886a3e; }
     button:disabled { opacity: .6; cursor: wait; }
     .orders { display: grid; gap: 12px; }
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 12px;
+      flex-wrap: wrap;
+    }
+    .stats {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      color: rgba(47,42,36,.68);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      min-height: 34px;
+      border: 1px solid rgba(105, 92, 76, 0.16);
+      color: #4a4036;
+      background: rgba(255, 252, 246, 0.76);
+      border-radius: 999px;
+      padding: 0 12px;
+      font-size: 13px;
+    }
+    .filter-btn.active {
+      color: #fff8e9;
+      background: #32424c;
+    }
     .order-head {
       display: flex;
       justify-content: space-between;
@@ -114,6 +148,15 @@
       <button id="loadOrdersBtn" type="button">查看订单</button>
     </section>
     <div id="adminStatus" class="status"></div>
+    <section class="toolbar" aria-label="订单筛选">
+      <div id="orderStats" class="stats"></div>
+      <div class="filters">
+        <button class="filter-btn active" type="button" data-filter="all">全部</button>
+        <button class="filter-btn" type="button" data-filter="claimed">待确认</button>
+        <button class="filter-btn" type="button" data-filter="paid">已支付</button>
+        <button class="filter-btn" type="button" data-filter="expired">已过期</button>
+      </div>
+    </section>
     <section id="orders" class="orders"></section>
   </main>
 
@@ -122,6 +165,10 @@
     const loadBtn = document.getElementById("loadOrdersBtn");
     const statusEl = document.getElementById("adminStatus");
     const ordersEl = document.getElementById("orders");
+    const statsEl = document.getElementById("orderStats");
+    const filterButtons = Array.from(document.querySelectorAll(".filter-btn"));
+    let allOrders = [];
+    let currentFilter = "all";
 
     function formatMoney(fen) {
       return `¥${(Number(fen || 0) / 100).toFixed(0)}`;
@@ -165,7 +212,31 @@
       return data;
     }
 
-    function renderOrders(orders) {
+    function getFilteredOrders() {
+      if (currentFilter === "claimed") {
+        return allOrders.filter(order => order.status === "pending" && order.claim);
+      }
+      if (currentFilter === "paid") {
+        return allOrders.filter(order => order.status === "paid" || order.status === "unlocked");
+      }
+      if (currentFilter === "expired") {
+        return allOrders.filter(order => order.status === "expired");
+      }
+      return allOrders;
+    }
+
+    function renderStats() {
+      const total = allOrders.length;
+      const claimed = allOrders.filter(order => order.status === "pending" && order.claim).length;
+      const paid = allOrders.filter(order => order.status === "paid" || order.status === "unlocked").length;
+      const expired = allOrders.filter(order => order.status === "expired").length;
+      statsEl.textContent = `全部 ${total} · 待确认 ${claimed} · 已支付 ${paid} · 已过期 ${expired}`;
+    }
+
+    function renderOrders() {
+      const orders = getFilteredOrders();
+      renderStats();
+      filterButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.filter === currentFilter));
       if (!orders.length) {
         ordersEl.innerHTML = '<div class="order">暂无订单。</div>';
         return;
@@ -203,8 +274,9 @@
       setStatus("正在读取订单...");
       try {
         const data = await requestJson("/api/vip-payment-admin-list", { adminKey });
-        renderOrders(data.orders || []);
-        setStatus(`已读取 ${(data.orders || []).length} 条订单。`);
+        allOrders = data.orders || [];
+        renderOrders();
+        setStatus(`已读取 ${allOrders.length} 条订单。`);
       } catch (err) {
         setStatus(err.message || "读取失败");
       } finally {
@@ -226,6 +298,12 @@
     }
 
     loadBtn.addEventListener("click", loadOrders);
+    filterButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        currentFilter = btn.dataset.filter || "all";
+        renderOrders();
+      });
+    });
     keyInput.addEventListener("keydown", event => {
       if (event.key === "Enter") loadOrders();
     });

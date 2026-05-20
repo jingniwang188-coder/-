@@ -1748,7 +1748,15 @@ function resetManualPaymentClaimForm() {
     const el = document.getElementById(id);
     if (el) el.value = "";
   });
+  setManualPaymentWaiting(false);
   setManualPaymentClaimHint("");
+}
+
+function setManualPaymentWaiting(isWaiting = false) {
+  const box = document.getElementById("manualPaymentWaitingBox");
+  const submitBtn = document.getElementById("submitManualPaymentClaimBtn");
+  if (box) box.style.display = isWaiting ? "grid" : "none";
+  if (submitBtn) submitBtn.textContent = isWaiting ? "付款信息已提交" : "我已付款，提交确认";
 }
 
 function stopVipOrderPolling() {
@@ -1929,6 +1937,7 @@ function applyVipOrderStatus(order) {
     ? "扫码完成后系统会自动检测支付结果。"
     : (manualClaimSubmitted ? "付款信息已提交，等待后台确认。" : "扫码后请提交付款信息，后台确认后会自动继续。");
   setManualPaymentClaimVisible(currentVipPaymentMode !== "alipay_precreate");
+  setManualPaymentWaiting(manualClaimSubmitted);
   setVipOrderStatus(
     currentVipPaymentMode === "alipay_precreate" ? "状态：等待扫码支付" : (manualClaimSubmitted ? "状态：等待后台确认" : "状态：等待付款信息"),
     `${meta} · ${waitHint}`
@@ -2038,6 +2047,7 @@ async function submitManualPaymentClaim() {
   try {
     const data = await submitVipPaymentClaim(orderId, { payerName, paidAtText, contact, note });
     localStorage.setItem(VIP_CLAIMED_ORDER_ID_KEY, orderId);
+    setManualPaymentWaiting(true);
     setManualPaymentClaimHint(data.message || "已提交，等待后台确认。");
     setVipOrderStatus("状态：等待后台确认", "我已收到你的付款信息。确认收款后，页面会自动继续解牌。");
     setVipContinueButtonState("刷新确认状态", false);

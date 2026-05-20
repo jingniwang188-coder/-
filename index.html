@@ -185,7 +185,12 @@
       </div>
       <div id="manualPaymentClaimBox" class="manual-payment-claim" style="display:none;">
         <div class="manual-payment-claim__title">已付款？提交确认信息</div>
-        <p class="manual-payment-claim__desc">当前为人工确认模式。提交后我在后台确认收款，你的页面会自动继续解牌。</p>
+        <p class="manual-payment-claim__desc">当前为人工确认模式：扫码付款后提交下面信息，我确认收款后，你的页面会自动继续解牌。</p>
+        <div class="manual-payment-steps" aria-label="人工确认流程">
+          <span>1 扫码付款</span>
+          <span>2 提交信息</span>
+          <span>3 等待确认</span>
+        </div>
         <div class="manual-payment-claim__grid">
           <input id="manualPayerNameInput" type="text" placeholder="付款备注/昵称">
           <input id="manualPaidAtInput" type="text" placeholder="付款时间，如 21:36">
@@ -194,6 +199,10 @@
         <textarea id="manualPaymentNoteInput" rows="2" placeholder="补充说明（可选）"></textarea>
         <button id="submitManualPaymentClaimBtn" class="secondary-btn" type="button">我已付款，提交确认</button>
         <div id="manualPaymentClaimHint" class="field-hint"></div>
+        <div id="manualPaymentWaitingBox" class="manual-payment-waiting" style="display:none;">
+          <strong>已进入等待确认</strong>
+          <span>请保持页面打开。确认后会自动继续；如果不小心关闭，也可以重新打开同一牌阵并联系我处理。</span>
+        </div>
       </div>
       <div class="vip-code-divider"><span>或输入口令</span></div>
       <div class="input-group vip-code-group">

@@ -2334,6 +2334,25 @@ body[data-phase="dusk"] #starfield {
   line-height: 1.6;
 }
 
+.manual-payment-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.manual-payment-steps span {
+  min-height: 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(244, 220, 176, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 239, 202, 0.88);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+}
+
 .manual-payment-claim__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2380,8 +2399,27 @@ body[data-phase="dusk"] #starfield {
   width: 100%;
 }
 
+.manual-payment-waiting {
+  gap: 3px;
+  border-radius: 14px;
+  padding: 10px 11px;
+  border: 1px solid rgba(139, 215, 170, 0.24);
+  background: rgba(126, 205, 160, 0.12);
+  color: rgba(229, 255, 238, 0.92);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.manual-payment-waiting strong {
+  font-size: 13px;
+}
+
 @media (max-width: 640px) {
   .manual-payment-claim__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .manual-payment-steps {
     grid-template-columns: 1fr;
   }
 }
