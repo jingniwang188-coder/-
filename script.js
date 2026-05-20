@@ -295,6 +295,8 @@ function initEventBindings() {
   document.querySelectorAll(".reading-feedback-choice").forEach(btn => {
     btn.addEventListener("click", () => sendReadingFeedback(btn));
   });
+  byId("repairReadingBtn")?.addEventListener("click", repairReadingFromFeedback);
+  byId("cancelReadingFeedbackBtn")?.addEventListener("click", resetReadingFeedbackPanel);
   bindReturnHome(byId("immersiveBackBtn"));
   byId("historyDetailCloseBtn")?.addEventListener("click", closeHistoryDetail);
   byId("questionInput")?.addEventListener("input", () => {
@@ -2510,6 +2512,10 @@ function resetReadingFeedbackPanel() {
   });
   const label = panel.querySelector(".reading-feedback-panel__label");
   if (label) label.textContent = "这次解读";
+  const detail = document.getElementById("readingFeedbackDetail");
+  if (detail) detail.style.display = "none";
+  const note = document.getElementById("readingFeedbackNote");
+  if (note) note.value = "";
 }
 
 async function sendReadingFeedback(button) {
@@ -2520,8 +2526,24 @@ async function sendReadingFeedback(button) {
 
   panel.querySelectorAll(".reading-feedback-choice").forEach(btn => {
     btn.classList.toggle("active", btn === button);
-    btn.disabled = true;
+    btn.disabled = feedback === "accurate";
   });
+  const detail = document.getElementById("readingFeedbackDetail");
+  if (feedback === "unclear") {
+    const note = document.getElementById("readingFeedbackNote");
+    if (label) label.textContent = "说说哪里偏";
+    if (detail) detail.style.display = "grid";
+    if (note) note.focus();
+    updateStatus("告诉我哪里偏了，我会用原牌面重新校准一版。");
+    return;
+  }
+
+  if (feedback === "retry") {
+    prepareRetryFromLatestReading();
+    return;
+  }
+
+  if (detail) detail.style.display = "none";
   if (label) label.textContent = "已收到";
 
   const feedbackTextMap = {
@@ -2551,10 +2573,177 @@ async function sendReadingFeedback(button) {
     // 反馈失败不打断用户阅读。
   } finally {
     panel.classList.add("is-sent");
-    if (feedback === "retry") {
-      setTimeout(() => document.getElementById("newQuestionBtn")?.click(), 450);
-    } else {
-      updateStatus("谢谢你的反馈，我会用它继续校准解读体验。");
+    updateStatus("谢谢你的反馈，我会用它继续校准解读体验。");
+  }
+}
+
+function getQuestionForRetry(record = latestReadingRecord) {
+  const raw = String(record?.question || "").trim();
+  return raw.replace(/^\[双人合盘：.*?\]\s*/, "").trim();
+}
+
+function prepareRetryFromLatestReading() {
+  if (!latestReadingRecord) return;
+  const question = getQuestionForRetry(latestReadingRecord);
+  const spreadKey = latestReadingRecord.spreadKey || "";
+  handleReturnToHomePage();
+  setTimeout(() => {
+    const input = document.getElementById("questionInput");
+    const select = document.getElementById("spreadSelect");
+    if (select && spreadKey && select.querySelector(`option[value="${spreadKey}"]`)) {
+      select.value = spreadKey;
+      renderSpread();
+    }
+    if (input && question && question !== "直觉速取") {
+      input.value = question;
+      input.focus();
+      input.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+    updateQuestionHint(false);
+    renderSpreadGuide();
+    updateStatus("已保留原问题和牌阵，你可以改一句再重新抽牌。");
+  }, 320);
+}
+
+function renderFinalReading(markdownText = "", cards = drawnCardsData) {
+  const streamContent = document.getElementById("streamContent");
+  if (!streamContent) return;
+  const cleaned = String(markdownText || "")
+    .replace(/```html/gi, "")
+    .replace(/```/g, "")
+    .replace(/<\/?(?:div|span|style)[^>]*>/gi, "")
+    .replace(/<h4>(.*?)<\/h4>/gi, "#### $1")
+    .replace(/<\/?p>/gi, "\n")
+    .replace(/<strong>(.*?)<\/strong>/gi, "**$1**")
+    .replace(/<\/?(?:ul|ol)>/gi, "")
+    .replace(/<li>(.*?)<\/li>/gi, "- $1");
+  if (typeof marked !== "undefined" && typeof marked.parse === "function") {
+    streamContent.innerHTML = marked.parse(cleaned);
+    sanitizeRenderedReading(streamContent);
+  } else {
+    streamContent.textContent = cleaned;
+  }
+
+  const names = [...new Set((Array.isArray(cards) ? cards : [])
+    .map(item => normalizeCardName(item?.cardName || ""))
+    .filter(Boolean))].sort((a, b) => b.length - a.length);
+  if (names.length && streamContent.querySelectorAll("*").length) {
+    const regex = new RegExp(`(${names.map(name => name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "g");
+    const walker = document.createTreeWalker(streamContent, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        const parent = node.parentElement;
+        if (!parent || parent.closest("code, pre, .tarot-tag")) return NodeFilter.FILTER_REJECT;
+        regex.lastIndex = 0;
+        return regex.test(node.nodeValue || "") ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }
+    });
+    const nodes = [];
+    let current = walker.nextNode();
+    while (current) {
+      nodes.push(current);
+      current = walker.nextNode();
+    }
+    nodes.forEach(node => {
+      const frag = document.createDocumentFragment();
+      String(node.nodeValue || "").split(regex).forEach(part => {
+        if (!part) return;
+        if (names.includes(part)) {
+          const tag = document.createElement("span");
+          tag.className = "tarot-tag";
+          tag.textContent = part;
+          frag.appendChild(tag);
+        } else {
+          frag.appendChild(document.createTextNode(part));
+        }
+      });
+      node.parentNode?.replaceChild(frag, node);
+    });
+  }
+  renderReadingSummary(markdownText);
+  wrapReadingSectionsAsCollapsible();
+}
+
+function updateLatestHistoryRecord(nextReading) {
+  if (!latestReadingRecord || !nextReading) return;
+  latestReadingRecord.reading = nextReading;
+  const idx = HistoryService.records.findIndex(record => (
+    record.date === latestReadingRecord.date &&
+    record.question === latestReadingRecord.question
+  ));
+  if (idx >= 0) {
+    HistoryService.records[idx] = { ...HistoryService.records[idx], reading: nextReading, repairedAt: new Date().toLocaleString() };
+    HistoryService.save();
+    renderTimeline();
+  }
+}
+
+async function repairReadingFromFeedback() {
+  const noteEl = document.getElementById("readingFeedbackNote");
+  const note = String(noteEl?.value || "").trim();
+  if (!latestReadingRecord) return;
+  if (!note) {
+    updateStatus("先写一句哪里偏了，我才能更准确地校准。");
+    noteEl?.focus();
+    return;
+  }
+
+  const btn = document.getElementById("repairReadingBtn");
+  const panel = document.getElementById("readingFeedbackPanel");
+  const label = panel?.querySelector(".reading-feedback-panel__label");
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = "校准中…";
+  }
+  if (label) label.textContent = "正在校准";
+  setAiStatusText("正在根据你的反馈重新校准解读…");
+  const aiStatus = document.getElementById("aiStatus");
+  if (aiStatus) aiStatus.style.display = "flex";
+  updateStatus("正在用原牌面修正解读，不需要重新抽牌。");
+
+  try {
+    const repaired = await TarotApiService.requestFallbackReading({
+      question: latestReadingRecord.question,
+      cards: latestReadingRecord.cards || drawnCardsData,
+      readingStyle: latestReadingRecord.style || "classic",
+      userName: latestReadingRecord.userName,
+      partnerName: latestReadingRecord.partnerName,
+      emotionLevel: latestReadingRecord.emotionLevel,
+      emotionLabel: latestReadingRecord.emotionLabel,
+      isCompatibility: latestReadingRecord.isCompatibility,
+      isNight: isNightMode,
+      qualityIssue: `用户认为上一版有偏差：${note}。请围绕原问题重写，第一句话直接给结论。`,
+      previousReading: latestReadingRecord.reading
+    });
+    if (!repaired?.reading) throw new Error("修正版为空");
+    fetch("/api/feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: "解读纠偏",
+        email: "未填写",
+        message: [
+          `用户认为上一版有偏差：${note}`,
+          `问题：${latestReadingRecord.question || "未填写"}`,
+          `牌阵：${latestReadingRecord.spread || "未知"}`
+        ].join("\n"),
+        page: window.location.href,
+        createdAt: new Date().toISOString()
+      })
+    }).catch(() => {});
+    renderFinalReading(repaired.reading, latestReadingRecord.cards || drawnCardsData);
+    updateLatestHistoryRecord(repaired.reading);
+    panel?.classList.add("is-sent");
+    const detail = document.getElementById("readingFeedbackDetail");
+    if (detail) detail.style.display = "none";
+    if (label) label.textContent = "已校准";
+    updateStatus("已根据你的反馈生成修正版，并更新到成长档案。");
+  } catch (error) {
+    updateStatus("校准暂时失败，可以稍后再试，或点“想重问”重新抽牌。");
+  } finally {
+    if (aiStatus) aiStatus.style.display = "none";
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = "重新校准";
     }
   }
 }
@@ -2925,6 +3114,11 @@ function evaluateReadingQuality(rawReading = "", question = "") {
     if (hitCount === 0) {
       issues.push("没有明显回应用户问题的关键主题");
     }
+    const understood = stripRichText(extractSectionBody(reading, ["我理解的问题", "理解的问题", "问题理解"])).toLowerCase();
+    const understoodHits = signals.filter(signal => understood.includes(signal)).length;
+    if (understood && understoodHits === 0) {
+      issues.push("问题复述没有对齐用户原问题");
+    }
   }
 
   return {
@@ -2967,7 +3161,7 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
   const injectQuickTakeaways = (source = "") => {
     const markdown = String(source || "").trim();
     if (!markdown) return markdown;
-    if (/###\s*三点速览|###\s*一句话答案|###\s*先看结论/i.test(markdown)) return markdown;
+    if (/###\s*(三点速览|一句话答案|先看结论|结论)/i.test(markdown)) return markdown;
 
     const plain = stripRichText(markdown);
     if (!plain || plain.length < 48) return markdown;
@@ -3145,6 +3339,7 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
       question: displayQuestion,
       style: "classic",
       spread: spreadLabel,
+      spreadKey: document.getElementById("spreadSelect")?.value || "",
       date: new Date().toLocaleString(),
       cards,
       reading: htmlBuffer || streamContent.innerHTML,
@@ -3186,6 +3381,7 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
         question: displayQuestion,
         style: "classic",
         spread: spreadLabel,
+        spreadKey: document.getElementById("spreadSelect")?.value || "",
         date: new Date().toLocaleString(),
         cards,
         reading: fallbackText,

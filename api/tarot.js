@@ -41,7 +41,7 @@ export default async function handler(req, res) {
   const API_KEY = process.env.OPENAI_API_KEY;
   if (!API_KEY) return res.status(500).json({ error: '后端未配置 API Key' });
 
-  const { question, cards, soulCard, isDaily, isNight, vipToken, fallbackShort, qualityIssue, userName, partnerName, emotionLevel, emotionLabel, isCompatibility } = req.body || {};
+  const { question, cards, soulCard, isDaily, isNight, vipToken, fallbackShort, qualityIssue, userName, partnerName, emotionLevel, emotionLabel, isCompatibility, previousReading } = req.body || {};
   const safeCards = Array.isArray(cards) ? cards : [];
   const vipSigningSecret = process.env.VIP_SIGNING_SECRET || API_KEY;
   const requiredVipProductType = getRequiredVipProductType({ cards: safeCards, isCompatibility });
@@ -77,7 +77,7 @@ export default async function handler(req, res) {
     if (isNight) styleDesc += " 此时正值深夜，语气可以温和，但仍要保持清楚、稳定、不过度煽情。";
     
     systemRole = styleDesc + (fallbackShort
-      ? " 你需要输出一版更短、更稳的简版解析。如果这是修正稿，要优先修正偏题、无结论或行动建议不具体的问题。"
+      ? " 你需要输出一版更短、更稳的简版解析。如果这是修正稿，要优先修正偏题、无结论、答非所问或行动建议不具体的问题。"
       : " 你需要输出简洁清晰的解析。重点是让用户一眼看懂，不要写成长篇散文，也不要为了显得专业而故意写长。");
     
     const identityLine = userName ? `提问者昵称：${userName}` : "提问者昵称：匿名旅人";
@@ -90,16 +90,17 @@ export default async function handler(req, res) {
 ${identityLine}
 ${compatibilityLine}
 ${emotionLine}
-${qualityIssue ? `上一版解读存在问题：${String(qualityIssue).slice(0, 240)}。这一版必须修正这个问题。` : ""}
+${qualityIssue ? `上一版解读存在问题：${String(qualityIssue).slice(0, 420)}。这一版必须修正这个问题。` : ""}
+${previousReading ? `上一版解读摘要：${String(previousReading).replace(/\s+/g, ' ').slice(0, 700)}。请保留有用判断，删掉偏题和空泛部分。` : ""}
 TA的疑惑：“${question}”
 抽到的阵法：
 ${safeCards.map(c => `- ${c.position}: 抽到 ${c.cardName}。含义：${c.meaning}`).join('\n')}
 
 你的解盘必须严格遵守以下结构：
 1. 先输出：### 我理解的问题
-用 1 句话复述用户真正想问的事。如果问题很模糊，先说清你会按哪个方向解读，不能擅自换题。
+用 1 句话复述用户真正想问的事。必须包含用户问题里的核心对象或关键词；如果问题很模糊，先说清你会按哪个方向解读，不能擅自换题。
 2. 然后输出：### 结论
-内容必须直接回答问题。能判断就明确判断（例如：能 / 不能 / 值得 / 暂缓 / 有机会但要先处理XX）。
+第一句话必须直接回答问题。能判断就明确判断（例如：能 / 不能 / 值得 / 暂缓 / 有机会但要先处理XX）。不要把结论藏在后文。
 3. 然后输出：### 关键提醒
 用 2-3 条短句说明最关键的信息，每条都要具体，不要空话。
 4. 然后输出：### 为什么会这样
@@ -122,7 +123,9 @@ ${safeCards.map(c => `- ${c.position}: 抽到 ${c.cardName}。含义：${c.meani
 5. 少用“神谕、灵魂、命运、能量、注定”等词，除非牌义确实必须提到。
 6. 不要写安慰废话，不要重复牌名，不要把同一个意思换种说法说三遍。
 7. 如果信息不足以给肯定判断，就明确说“暂时不建议”或“还要观察”，不要含糊。
-8. 必须围绕用户原问题回答；不要泛化成与问题无关的人生建议。`;
+8. 必须围绕用户原问题回答；不要泛化成与问题无关的人生建议。
+9. 如果用户问关系，就不要泛泛谈事业；问事业，就不要泛泛谈情绪；问选择，就必须比较两个方向。
+10. 如果用户反馈“偏了”，修正版要先承认并重新对齐问题，不要为上一版辩解。`;
   }
 
   try {

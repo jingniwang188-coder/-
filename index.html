@@ -290,6 +290,13 @@
         <button class="reading-feedback-choice" type="button" data-feedback="accurate">准</button>
         <button class="reading-feedback-choice" type="button" data-feedback="unclear">有点偏</button>
         <button class="reading-feedback-choice" type="button" data-feedback="retry">想重问</button>
+        <div id="readingFeedbackDetail" class="reading-feedback-detail" style="display:none;">
+          <textarea id="readingFeedbackNote" rows="2" placeholder="哪里偏了？比如：没有回答感情问题、结论太模糊、建议不具体…"></textarea>
+          <div class="reading-feedback-detail__actions">
+            <button id="cancelReadingFeedbackBtn" class="reading-feedback-mini-btn" type="button">取消</button>
+            <button id="repairReadingBtn" class="reading-feedback-mini-btn primary" type="button">重新校准</button>
+          </div>
+        </div>
       </div>
     </div>
   </div><!-- end .immersive-container -->
