@@ -1,0 +1,6 @@
+{
+  "appId": "com.tarotwheel.app",
+  "appName": "塔罗之眼",
+  "webDir": "ios-web",
+  "bundledWebRuntime": false
+}

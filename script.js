@@ -155,6 +155,7 @@ const VIP_CLAIMED_ORDER_ID_KEY = "tarotVipClaimedOrderId";
 const VIP_STATIC_QR_URL = "/alipay-qr.PNG";
 const VAULT_META_KEY = "tarotVaultMeta";
 const DENSITY_MODE_KEY = "tarotReadingDensityMode";
+const LIVE_SITE_ORIGIN = "https://tarotwheel.vercel.app";
 const HISTORY_LIMIT = 20;
 const NOTES_LIMIT = 40;
 const START_HOLD_MS = 2000;
@@ -167,6 +168,16 @@ const CARD_IMAGE_LOAD_TIMEOUT_MS = 6000;
 const VIP_ORDER_REQUEST_TIMEOUT_MS = 15000;
 const VIP_ORDER_POLL_INTERVAL_MS = 3000;
 // Removed emotion range labels — now using emoji reaction bar
+
+function apiUrl(path = "") {
+  const value = String(path || "");
+  if (!value.startsWith("/api/")) return value;
+
+  const isHostedWeb = /^https?:$/.test(window.location.protocol) &&
+    !["localhost", "127.0.0.1", ""].includes(window.location.hostname);
+
+  return isHostedWeb ? value : `${LIVE_SITE_ORIGIN}${value}`;
+}
 
 // ── Intro dismiss ────────────────────────────────────────────────────────
 let introDone = false;
@@ -604,7 +615,7 @@ async function sendFeedback() {
   try {
     clearFeedbackStatus();
 
-    const res = await fetch("/api/feedback", {
+    const res = await fetch(apiUrl("/api/feedback"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
@@ -2241,7 +2252,7 @@ async function requestVipTokenByCode(code) {
 
   for (const item of endpoints) {
     try {
-      const response = await fetch(item.url, {
+      const response = await fetch(apiUrl(item.url), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(item.payload)
@@ -2746,7 +2757,7 @@ async function sendReadingFeedback(button) {
   };
 
   try {
-    await fetch("/api/feedback", {
+    await fetch(apiUrl("/api/feedback"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -2908,7 +2919,7 @@ async function repairReadingFromFeedback() {
       previousReading: latestReadingRecord.reading
     });
     if (!repaired?.reading) throw new Error("修正版为空");
-    fetch("/api/feedback", {
+    fetch(apiUrl("/api/feedback"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -3197,7 +3208,7 @@ function fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
     timerId = window.setTimeout(() => controller.abort(), timeoutMs);
   }
 
-  return fetch(url, {
+  return fetch(apiUrl(url), {
       ...rest,
       signal: controller.signal
     }).finally(() => {
