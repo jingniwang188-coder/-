@@ -6237,6 +6237,324 @@ body.home-ready .timeline-summary-item--wide {
 }
 
 /* ═══════════════════════════════════════
+   V1.3 抽牌与结果页统一：清亮纸面 + 深色仅作点睛
+   ═══════════════════════════════════════ */
+body.reading-mode {
+  color: #302a25;
+  background:
+    linear-gradient(112deg, rgba(80, 96, 94, 0.035) 0 1px, transparent 1px 20px),
+    radial-gradient(720px 280px at 18% 0%, rgba(238, 202, 136, 0.15), transparent 66%),
+    radial-gradient(640px 300px at 92% 8%, rgba(63, 128, 132, 0.08), transparent 62%),
+    linear-gradient(155deg, #fcf8ef 0%, #fbf7ee 48%, #f8f1ef 100%) !important;
+}
+
+body.reading-mode::before {
+  opacity: 0.16 !important;
+  background:
+    linear-gradient(90deg, rgba(80, 70, 52, 0.025) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(80, 70, 52, 0.018) 1px, transparent 1px) !important;
+  background-size: 48px 48px, 48px 48px !important;
+}
+
+body.reading-mode #starfield {
+  opacity: 0.04 !important;
+}
+
+body.reading-mode.night-mode .night-overlay {
+  opacity: 0.035 !important;
+}
+
+body.reading-mode .flow-steps {
+  width: min(760px, calc(100% - 18px)) !important;
+  margin: 8px auto 12px !important;
+}
+
+body.reading-mode .flow-step {
+  border-radius: 10px !important;
+  border-color: rgba(70, 62, 51, 0.14) !important;
+  background: rgba(255, 252, 244, 0.82) !important;
+  color: rgba(54, 47, 40, 0.72) !important;
+  letter-spacing: 0 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.74);
+}
+
+body.reading-mode .flow-step.active {
+  background: #34445f !important;
+  color: #fff2d2 !important;
+  border-color: rgba(255, 255, 255, 0.24) !important;
+  box-shadow: 0 8px 18px rgba(38, 48, 74, 0.12) !important;
+}
+
+body.reading-mode .flow-step.done {
+  background: rgba(236, 247, 244, 0.96) !important;
+  color: #315f65 !important;
+  border-color: rgba(49, 95, 101, 0.26) !important;
+}
+
+body.reading-mode .energy-text,
+body.reading-mode .ritual-text,
+body.reading-mode #revealInstruction,
+body.reading-mode .shuffle-sub-text {
+  color: rgba(48, 42, 36, 0.78) !important;
+  text-shadow: none !important;
+  font-style: normal !important;
+  letter-spacing: 0 !important;
+}
+
+body.reading-mode .deck-area,
+body.reading-mode .spread-container {
+  border-radius: 10px !important;
+  border: 1px solid rgba(70, 62, 51, 0.14) !important;
+  background:
+    linear-gradient(150deg, rgba(255, 255, 251, 0.96), rgba(247, 249, 244, 0.88)) !important;
+  box-shadow:
+    0 18px 38px rgba(51, 50, 66, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body.reading-mode .shuffling-deck-multi {
+  filter: drop-shadow(0 18px 28px rgba(55, 58, 80, 0.14));
+}
+
+body.reading-mode .sdm-card,
+body.reading-mode .deck-card,
+body.reading-mode .fan-deck.arc-fan .deck-card {
+  border-radius: 8px !important;
+  border-color: rgba(72, 92, 100, 0.36) !important;
+  background:
+    radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.58), transparent 18%),
+    linear-gradient(155deg, #526176 0%, #2f3b5a 52%, #1f263d 100%) !important;
+  box-shadow:
+    0 12px 24px rgba(42, 46, 70, 0.18),
+    inset 0 0 0 1px rgba(255, 242, 204, 0.12) !important;
+}
+
+body.reading-mode .fan-deck.arc-fan::after {
+  opacity: 0.62;
+  background: radial-gradient(circle, rgba(221, 181, 96, 0.16) 0%, rgba(49, 95, 101, 0.10) 38%, transparent 70%) !important;
+  filter: blur(12px) !important;
+}
+
+body.reading-mode .deck-spread-hint,
+body.reading-mode .draw-slot-tracker {
+  color: rgba(48, 42, 36, 0.72) !important;
+  text-shadow: none !important;
+}
+
+body.reading-mode .deck-spread-hint {
+  border-radius: 999px !important;
+  background: rgba(255, 252, 244, 0.88) !important;
+  border-color: rgba(70, 62, 51, 0.16) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body.reading-mode .dst-slot {
+  color: rgba(48, 42, 36, 0.58) !important;
+}
+
+body.reading-mode .dst-slot.filled {
+  color: #315f65 !important;
+}
+
+body.reading-mode .card-slot {
+  filter: drop-shadow(0 12px 22px rgba(55, 58, 80, 0.10));
+}
+
+body.reading-mode .slot-label {
+  border-radius: 8px !important;
+  background: rgba(255, 252, 244, 0.9) !important;
+  color: rgba(49, 95, 101, 0.88) !important;
+  border: 1px solid rgba(49, 95, 101, 0.22) !important;
+  font-style: normal !important;
+  letter-spacing: 0 !important;
+}
+
+body.reading-mode .card-face {
+  border-radius: 9px !important;
+  border-color: rgba(72, 92, 100, 0.22) !important;
+}
+
+body.reading-mode .card-back {
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.42), transparent 20%),
+    linear-gradient(155deg, #4d5871 0%, #2f3b5a 58%, #1f263d 100%) !important;
+  color: #f5dfae !important;
+}
+
+body.reading-mode .card-front {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 251, 0.98), rgba(248, 242, 229, 0.98)) !important;
+  color: #302a25 !important;
+}
+
+body.reading-mode .card-front .name {
+  color: #302a25 !important;
+  border-color: rgba(156, 103, 38, 0.38) !important;
+  letter-spacing: 0 !important;
+}
+
+body.reading-mode .reading-wrapper {
+  max-width: 860px !important;
+}
+
+body.reading-text-active .reading-wrapper {
+  max-width: min(860px, calc(100vw - 28px)) !important;
+}
+
+body.reading-mode .mini-card-bar {
+  border-radius: 10px !important;
+  border: 1px solid rgba(70, 62, 51, 0.12) !important;
+  background: rgba(255, 252, 244, 0.92) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: 0 10px 24px rgba(51, 50, 66, 0.08) !important;
+}
+
+body.reading-mode .mini-card-item {
+  border-radius: 8px !important;
+  background: rgba(247, 249, 244, 0.94) !important;
+  border-color: rgba(70, 62, 51, 0.12) !important;
+}
+
+body.reading-mode .mini-card-position {
+  color: rgba(49, 95, 101, 0.78) !important;
+}
+
+body.reading-mode .mini-card-name {
+  color: #302a25 !important;
+}
+
+body.reading-mode .parchment-box {
+  border-radius: 10px !important;
+  border: 1px solid rgba(70, 62, 51, 0.16) !important;
+  background:
+    linear-gradient(150deg, rgba(255, 255, 251, 0.99), rgba(249, 247, 239, 0.98)) !important;
+  color: #302a25 !important;
+  box-shadow:
+    0 22px 46px rgba(51, 50, 66, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.84) !important;
+}
+
+body.reading-mode .reading-wrapper[aria-busy="true"] .parchment-box {
+  box-shadow:
+    0 22px 46px rgba(51, 50, 66, 0.12),
+    0 0 0 1px rgba(178, 123, 36, 0.12),
+    0 0 30px rgba(178, 123, 36, 0.08) !important;
+}
+
+body.reading-mode .ai-status {
+  border-radius: 8px !important;
+  background: rgba(243, 247, 244, 0.92) !important;
+  border-color: rgba(49, 95, 101, 0.18) !important;
+  color: rgba(48, 42, 36, 0.76) !important;
+}
+
+body.reading-mode .reading-summary-panel {
+  grid-template-columns: 1.12fr 1fr 1fr !important;
+  gap: 10px !important;
+}
+
+body.reading-mode .reading-summary-card {
+  border-radius: 8px !important;
+  border-color: rgba(70, 62, 51, 0.13) !important;
+  background: rgba(252, 249, 241, 0.96) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78) !important;
+}
+
+body.reading-mode .reading-summary-card--answer {
+  background: linear-gradient(145deg, rgba(255, 246, 224, 0.98), rgba(238, 247, 244, 0.96)) !important;
+  border-color: rgba(178, 123, 36, 0.22) !important;
+}
+
+body.reading-mode .reading-summary-card__label {
+  color: rgba(49, 95, 101, 0.88) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  font-weight: 800 !important;
+}
+
+body.reading-mode .reading-summary-card p,
+body.reading-mode .reading-summary-card li {
+  color: #302a25 !important;
+}
+
+body.reading-mode .parchment-text,
+body.reading-mode #streamContent {
+  color: #302a25 !important;
+}
+
+body.reading-mode #streamContent h3,
+body.reading-mode #streamContent h4 {
+  color: #6e4b20 !important;
+  letter-spacing: 0 !important;
+}
+
+body.reading-mode #streamContent blockquote {
+  border-left: 4px solid rgba(178, 123, 36, 0.44) !important;
+  border-radius: 0 8px 8px 0 !important;
+  background: rgba(246, 239, 222, 0.88) !important;
+  color: #302a25 !important;
+  box-shadow: none !important;
+}
+
+body.reading-mode #streamContent hr {
+  background: linear-gradient(90deg, transparent, rgba(70, 62, 51, 0.18), transparent) !important;
+}
+
+body.reading-mode #streamContent ul li::before {
+  background: #315f65 !important;
+}
+
+body.reading-mode .result-actions {
+  border-radius: 10px !important;
+  border-color: rgba(70, 62, 51, 0.14) !important;
+  background: rgba(255, 252, 244, 0.92) !important;
+  color: #302a25 !important;
+  box-shadow: 0 18px 36px rgba(51, 50, 66, 0.10) !important;
+}
+
+body.reading-mode .result-actions::before {
+  color: rgba(49, 95, 101, 0.74) !important;
+  letter-spacing: 0 !important;
+}
+
+body.reading-mode .result-action-soft,
+body.reading-mode .reading-feedback-choice,
+body.reading-mode .reading-feedback-mini-btn {
+  border-radius: 8px !important;
+  background: rgba(247, 249, 244, 0.96) !important;
+  border-color: rgba(70, 62, 51, 0.14) !important;
+  color: #302a25 !important;
+}
+
+body.reading-mode .reading-feedback-panel {
+  border-radius: 10px !important;
+  background: rgba(247, 249, 244, 0.72) !important;
+  border-color: rgba(70, 62, 51, 0.12) !important;
+  color: rgba(48, 42, 36, 0.74) !important;
+}
+
+@media (max-width: 760px) {
+  body.reading-mode .reading-summary-panel {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 430px) {
+  body.reading-mode .parchment-box {
+    padding: 18px 14px !important;
+  }
+
+  body.reading-mode .result-actions {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════
    V1.2 清亮纸面：减雾、提墨色、保留一点手写感
    ═══════════════════════════════════════ */
 body.home-ready {
