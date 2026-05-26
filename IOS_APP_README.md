@@ -9,7 +9,7 @@
 - 技术方案：Capacitor iOS 外壳 + 现有网页代码
 - 线上接口来源：https://tarotwheel.vercel.app
 - 已加入原生每日提醒能力，用户可在 iOS App 的今日神谕页开启每天 9:00 提醒。
-- 已加入系统分享能力，用户解牌完成后可以分享结果文案。
+- 已加入系统分享能力，用户解牌完成后可以优先分享海报图片；如果图片分享不可用，会自动退回文字分享。
 - 隐私政策地址：https://tarotwheel.vercel.app/privacy.html
 - 支持页面地址：https://tarotwheel.vercel.app/support.html
 
@@ -58,7 +58,7 @@ npm run ios:open
 ## 下一步建议
 
 1. 在 Xcode 里设置 Apple Developer Team，确认真机可以安装。
-2. 做结果图片分享、抽牌记录本地保存等更多 App 原生体验。
+2. 做抽牌记录本地保存、截图素材和审核说明等更多 App 原生体验。
 3. 准备 App Store 截图、应用介绍和审核说明。
 
 目前它已经是一个可继续开发的 iOS 工程，但还不是最终可上架版本。

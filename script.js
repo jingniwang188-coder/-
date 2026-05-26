@@ -391,6 +391,10 @@ function getSharePlugin() {
   return getCapacitorBridge()?.Plugins?.Share || null;
 }
 
+function getFilesystemPlugin() {
+  return getCapacitorBridge()?.Plugins?.Filesystem || null;
+}
+
 function isNativeApp() {
   const bridge = getCapacitorBridge();
   if (!bridge) return false;
@@ -4335,6 +4339,70 @@ async function copyShareTextToClipboard(text) {
   area.remove();
 }
 
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const value = String(reader.result || "");
+      resolve(value.includes(",") ? value.split(",").pop() : value);
+    };
+    reader.onerror = () => reject(reader.error || new Error("图片转换失败"));
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function createNativeShareImageFile(blob) {
+  const filesystem = getFilesystemPlugin();
+  if (!filesystem) throw new Error("文件系统不可用");
+
+  const path = `share/tarot-eye-${Date.now()}.png`;
+  const data = await blobToBase64(blob);
+  await filesystem.writeFile({
+    path,
+    data,
+    directory: "CACHE",
+    recursive: true
+  });
+  const file = await filesystem.getUri({
+    path,
+    directory: "CACHE"
+  });
+  return file.uri;
+}
+
+async function shareNativePoster(payload) {
+  const nativeShare = getSharePlugin();
+  if (!nativeShare || !isNativeApp()) return false;
+
+  const canShare = await nativeShare.canShare().catch(() => ({ value: true }));
+  if (canShare?.value === false) return false;
+
+  updateStatus("正在生成可分享的解牌海报…");
+  const blob = await createReadingPosterBlob(latestReadingRecord);
+  const uri = await createNativeShareImageFile(blob);
+  await nativeShare.share({
+    ...payload,
+    files: [uri],
+    dialogTitle: "分享塔罗之眼解牌结果"
+  });
+  updateStatus("已打开系统分享面板，可以直接发送解牌海报。");
+  return true;
+}
+
+async function shareWebPosterIfSupported(payload) {
+  if (!navigator.share || !navigator.canShare || typeof File !== "function") return false;
+
+  updateStatus("正在生成可分享的解牌海报…");
+  const blob = await createReadingPosterBlob(latestReadingRecord);
+  const file = new File([blob], "塔罗之眼解牌海报.png", { type: "image/png" });
+  const filePayload = { ...payload, files: [file] };
+  if (!navigator.canShare(filePayload)) return false;
+
+  await navigator.share(filePayload);
+  updateStatus("已打开系统分享面板，可以直接发送解牌海报。");
+  return true;
+}
+
 async function shareReadingResult(button = null) {
   if (!latestReadingRecord) {
     alert("请先完成一次解牌后再分享结果");
@@ -4350,14 +4418,20 @@ async function shareReadingResult(button = null) {
   };
 
   try {
+    try {
+      if (await shareNativePoster(payload)) return;
+      if (await shareWebPosterIfSupported(payload)) return;
+    } catch (posterError) {
+      if (posterError?.name === "AbortError") throw posterError;
+      console.warn("poster share:", posterError);
+      updateStatus("海报分享暂不可用，改用文字分享。");
+    }
+
     const nativeShare = getSharePlugin();
     if (nativeShare && isNativeApp()) {
-      const canShare = await nativeShare.canShare().catch(() => ({ value: true }));
-      if (canShare?.value !== false) {
-        await nativeShare.share(payload);
-        updateStatus("已打开系统分享面板。");
-        return;
-      }
+      await nativeShare.share(payload);
+      updateStatus("海报分享暂不可用，已打开文字分享面板。");
+      return;
     }
 
     if (navigator.share) {
