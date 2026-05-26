@@ -6927,3 +6927,194 @@ body.home-ready .classic-title {
   -webkit-background-clip: text !important;
   background-clip: text !important;
 }
+
+/* V1.3 主流程收束：先占问，轻入口退到次级 */
+body.home-ready .home-ritual-widget {
+  margin: 8px auto 4px !important;
+  transform: scale(0.9);
+}
+
+body.home-ready .mystical-divider {
+  margin: 6px 0 12px !important;
+}
+
+body.home-ready .hero-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr) !important;
+  grid-template-areas:
+    "deep deep"
+    "quick love" !important;
+  grid-template-rows: auto auto !important;
+  gap: 12px !important;
+}
+
+body.home-ready .card-deep {
+  grid-area: deep !important;
+  grid-row: auto !important;
+  min-height: 0 !important;
+  padding: clamp(22px, 3.5vw, 34px) !important;
+}
+
+body.home-ready .card-quick {
+  grid-area: quick !important;
+  margin-top: 0 !important;
+  padding: 18px 20px !important;
+  text-align: left !important;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+}
+
+body.home-ready .card-quick .choice-card__eyebrow,
+body.home-ready .card-quick .choice-card__desc,
+body.home-ready .card-quick .choice-card__feature {
+  margin-bottom: 4px !important;
+}
+
+body.home-ready .card-quick .choice-card__title {
+  margin-bottom: 4px !important;
+  font-size: 1.08rem !important;
+}
+
+body.home-ready .card-quick .choice-card__footer {
+  margin-top: 0 !important;
+  grid-column: 2;
+  grid-row: 1 / span 4;
+}
+
+body.home-ready .card-quick #quickDrawBtn {
+  white-space: nowrap;
+  min-width: 112px;
+}
+
+body.home-ready .card-love {
+  grid-area: love !important;
+  min-height: 0 !important;
+}
+
+body.home-ready .hero-grid:has(.choice-card--love:not(.couple-collapsed)) {
+  grid-template-areas:
+    "deep deep"
+    "quick quick"
+    "love love" !important;
+}
+
+body.home-ready .hero-grid:has(.choice-card--love:not(.couple-collapsed)) .card-love {
+  grid-column: auto !important;
+  grid-row: auto !important;
+}
+
+body.home-ready .spread-current-pick {
+  background: linear-gradient(135deg, rgba(236, 247, 244, 0.98), rgba(255, 252, 245, 0.94)) !important;
+  border-color: rgba(49, 95, 101, 0.24) !important;
+}
+
+body.home-ready .spread-recommendation {
+  border-radius: 8px !important;
+  background: rgba(236, 247, 244, 0.96) !important;
+  border-color: rgba(49, 95, 101, 0.28) !important;
+}
+
+body.home-ready .start-btn-sticky {
+  min-height: 54px;
+  font-size: 1rem;
+}
+
+.reading-answer-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(220px, 0.72fr);
+  gap: 12px;
+  align-items: stretch;
+  margin-bottom: 12px;
+}
+
+.reading-answer-hero > div {
+  border: 1px solid rgba(235, 206, 150, 0.2);
+  border-radius: 16px;
+  padding: 16px 18px;
+  background: linear-gradient(155deg, rgba(224, 177, 86, 0.2), rgba(73, 42, 99, 0.28));
+}
+
+.reading-answer-hero__label,
+.reading-answer-hero__action span {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(255, 229, 176, 0.9);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.reading-answer-hero__answer {
+  margin: 0;
+  color: rgba(251, 242, 225, 0.98);
+  font-size: clamp(1.06rem, 2vw, 1.36rem);
+  line-height: 1.75;
+  font-weight: 800;
+}
+
+.reading-answer-hero__action {
+  background: rgba(255, 249, 236, 0.1) !important;
+}
+
+.reading-answer-hero__action strong {
+  display: block;
+  color: rgba(251, 242, 225, 0.96);
+  line-height: 1.68;
+}
+
+body.reading-mode .reading-answer-hero {
+  grid-template-columns: minmax(0, 1.35fr) minmax(220px, 0.65fr) !important;
+}
+
+body.reading-mode .reading-answer-hero > div {
+  border-radius: 10px !important;
+  border-color: rgba(70, 62, 51, 0.14) !important;
+  background: rgba(252, 249, 241, 0.96) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78) !important;
+}
+
+body.reading-mode .reading-answer-hero > div:first-child {
+  background: linear-gradient(145deg, rgba(255, 246, 224, 0.98), rgba(238, 247, 244, 0.96)) !important;
+  border-color: rgba(178, 123, 36, 0.22) !important;
+}
+
+body.reading-mode .reading-answer-hero__label,
+body.reading-mode .reading-answer-hero__action span {
+  color: rgba(49, 95, 101, 0.88) !important;
+  letter-spacing: 0 !important;
+}
+
+body.reading-mode .reading-answer-hero__answer,
+body.reading-mode .reading-answer-hero__action strong {
+  color: #302a25 !important;
+}
+
+body.reading-mode .reading-summary-panel {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+@media (max-width: 760px) {
+  body.home-ready .hero-grid {
+    grid-template-columns: 1fr !important;
+    grid-template-areas:
+      "deep"
+      "quick"
+      "love" !important;
+  }
+
+  body.home-ready .card-quick {
+    grid-template-columns: 1fr;
+  }
+
+  body.home-ready .card-quick .choice-card__footer {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .reading-answer-hero,
+  body.reading-mode .reading-answer-hero,
+  body.reading-mode .reading-summary-panel {
+    grid-template-columns: 1fr !important;
+  }
+}

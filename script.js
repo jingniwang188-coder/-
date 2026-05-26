@@ -3180,6 +3180,7 @@ function extractSummaryModel(rawReading = "") {
 
   return {
     answer,
+    firstAction: actionLines[0] || "",
     reminders: reminderLines,
     actions: actionLines
   };
@@ -3191,6 +3192,8 @@ function renderReadingSummary(rawHtml) {
 
   const summaryModel = extractSummaryModel(rawHtml);
   if (summaryModel) {
+    const answerText = summaryModel.answer || "答案已经浮现，重点在于别再拖延关键一步。";
+    const firstAction = summaryModel.firstAction || "把答案落成一个今天就能执行的小动作。";
     const reminderHtml = summaryModel.reminders.length
       ? `<ul>${summaryModel.reminders.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`
       : `<p>先处理最卡住你的那一个点，再往下推进。</p>`;
@@ -3199,11 +3202,17 @@ function renderReadingSummary(rawHtml) {
       : `<p>把答案落成一个今天就能执行的小动作。</p>`;
 
     box.innerHTML = `
+      <section class="reading-answer-hero" aria-label="本次解牌核心答案">
+        <div>
+          <div class="reading-answer-hero__label">这次先看这里</div>
+          <p class="reading-answer-hero__answer">${escapeHtml(answerText)}</p>
+        </div>
+        <div class="reading-answer-hero__action">
+          <span>下一步</span>
+          <strong>${escapeHtml(firstAction)}</strong>
+        </div>
+      </section>
       <div class="reading-summary-panel">
-        <section class="reading-summary-card reading-summary-card--answer">
-          <div class="reading-summary-card__label">先看答案</div>
-          <p>${escapeHtml(summaryModel.answer || "答案已经浮现，重点在于别再拖延关键一步。")}</p>
-        </section>
         <section class="reading-summary-card">
           <div class="reading-summary-card__label">关键提醒</div>
           ${reminderHtml}
