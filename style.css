@@ -6685,6 +6685,216 @@ body.home-ready select {
   border-color: rgba(218, 195, 139, 0.22) !important;
 }
 
+/* V1.3.6 home composition: aligned glass panels, lighter rhythm */
+body.home-ready .home-main,
+body.home-ready .hero-grid {
+  width: min(1080px, calc(100vw - 72px)) !important;
+  max-width: 1080px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+body.home-ready .hero-grid {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  grid-template-areas:
+    "quick"
+    "deep"
+    "love" !important;
+  gap: 20px !important;
+}
+
+body.home-ready .choice-card {
+  width: 100% !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+  border-radius: 28px 18px 30px 18px !important;
+  border: 1px solid rgba(226, 210, 168, 0.22) !important;
+  backdrop-filter: blur(18px) saturate(1.25) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.25) !important;
+  overflow: hidden;
+}
+
+body.home-ready .choice-card::before {
+  content: "";
+  display: block !important;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(108deg, transparent 0%, rgba(255, 255, 255, 0.18) 38%, transparent 66%),
+    radial-gradient(420px 180px at 14% 0%, rgba(255, 232, 171, 0.12), transparent 70%);
+  opacity: 0.58;
+}
+
+body.home-ready .card-quick {
+  grid-area: quick !important;
+  min-height: 172px !important;
+  padding: clamp(24px, 3vw, 34px) clamp(28px, 4vw, 42px) !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  column-gap: 32px !important;
+  text-align: left !important;
+  background:
+    radial-gradient(360px 150px at 8% 16%, rgba(215, 181, 255, 0.16), transparent 72%),
+    radial-gradient(340px 150px at 96% 10%, rgba(255, 227, 165, 0.14), transparent 70%),
+    linear-gradient(145deg, rgba(22, 34, 76, 0.70), rgba(13, 18, 45, 0.58)) !important;
+  box-shadow:
+    0 24px 70px rgba(2, 8, 28, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+body.home-ready .card-quick::after {
+  content: "✦";
+  position: absolute;
+  left: 24px;
+  top: 22px;
+  color: rgba(186, 160, 255, 0.24);
+  font-size: 66px;
+  line-height: 1;
+  transform: rotate(-12deg);
+  pointer-events: none;
+}
+
+body.home-ready .card-quick .choice-card__eyebrow,
+body.home-ready .card-quick .choice-card__title,
+body.home-ready .card-quick .choice-card__desc,
+body.home-ready .card-quick .choice-card__feature {
+  grid-column: 1 !important;
+  text-align: left !important;
+  justify-self: start !important;
+}
+
+body.home-ready .card-quick .choice-card__eyebrow {
+  margin-left: 2px !important;
+  margin-bottom: 12px !important;
+  color: rgba(226, 196, 128, 0.92) !important;
+}
+
+body.home-ready .card-quick .choice-card__title {
+  margin-bottom: 12px !important;
+  font-size: clamp(1.55rem, 2.4vw, 2.08rem) !important;
+  line-height: 1.08 !important;
+  font-style: normal !important;
+}
+
+body.home-ready .card-quick .choice-card__desc {
+  max-width: 30em;
+  margin-bottom: 18px !important;
+  font-size: clamp(0.98rem, 1.3vw, 1.12rem) !important;
+  color: rgba(239, 231, 213, 0.78) !important;
+}
+
+body.home-ready .card-quick .choice-card__feature {
+  min-width: min(100%, 620px);
+  padding: 9px 18px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.065) !important;
+  border-color: rgba(226, 210, 168, 0.16) !important;
+  color: rgba(232, 199, 130, 0.94) !important;
+  text-align: center !important;
+}
+
+body.home-ready .card-quick .choice-card__footer {
+  grid-column: 2 !important;
+  grid-row: 1 / span 4 !important;
+  margin: 0 !important;
+  align-self: center !important;
+}
+
+body.home-ready .card-quick #quickDrawBtn {
+  min-width: 156px !important;
+  min-height: 58px !important;
+  border-radius: 18px 12px 18px 12px !important;
+  background: rgba(255, 252, 244, 0.92) !important;
+  color: #2f2417 !important;
+  border-color: rgba(255, 255, 255, 0.68) !important;
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82) !important;
+}
+
+body.home-ready .card-deep {
+  grid-area: deep !important;
+  max-width: none !important;
+  padding: clamp(30px, 4vw, 44px) clamp(34px, 5vw, 54px) !important;
+  text-align: left !important;
+  border-radius: 18px 32px 18px 32px !important;
+  background:
+    radial-gradient(520px 220px at 74% 6%, rgba(96, 129, 230, 0.22), transparent 72%),
+    radial-gradient(420px 220px at 12% 0%, rgba(224, 190, 103, 0.12), transparent 70%),
+    linear-gradient(145deg, rgba(30, 49, 101, 0.72), rgba(14, 22, 54, 0.64)) !important;
+}
+
+body.home-ready .card-deep .choice-card__eyebrow,
+body.home-ready .card-deep .choice-card__title,
+body.home-ready .card-deep .choice-card__desc {
+  text-align: left !important;
+}
+
+body.home-ready .card-deep .choice-card__title {
+  font-size: clamp(1.65rem, 2.7vw, 2.36rem) !important;
+  line-height: 1.12 !important;
+  font-style: normal !important;
+}
+
+body.home-ready .card-deep .choice-card__desc {
+  max-width: 46em;
+  font-size: 1rem !important;
+}
+
+body.home-ready .card-love {
+  grid-area: love !important;
+  width: 100% !important;
+  justify-self: stretch !important;
+  border-radius: 999px !important;
+  opacity: 0.94;
+}
+
+body.home-ready .card-love.couple-collapsed {
+  max-width: none !important;
+}
+
+body.home-ready .couple-collapsed .couple-toggle {
+  justify-content: flex-start !important;
+  padding: 16px 26px !important;
+}
+
+body.home-ready .spread-visual-guide,
+body.home-ready .spread-current-pick,
+body.home-ready .spread-pill,
+body.home-ready .question-spark {
+  backdrop-filter: blur(12px) saturate(1.16) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(1.16) !important;
+}
+
+@media (max-width: 760px) {
+  body.home-ready .home-main,
+  body.home-ready .hero-grid {
+    width: min(100%, calc(100vw - 28px)) !important;
+  }
+
+  body.home-ready .card-quick {
+    grid-template-columns: 1fr !important;
+    padding: 24px 20px !important;
+  }
+
+  body.home-ready .card-quick .choice-card__footer {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+    justify-self: stretch !important;
+  }
+
+  body.home-ready .card-quick #quickDrawBtn {
+    width: 100%;
+  }
+
+  body.home-ready .card-deep {
+    padding: 26px 20px !important;
+  }
+}
+
 /* V1.3.5 layout correction: lightweight draw stays at the top */
 body.home-ready .hero-grid {
   grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr) !important;
