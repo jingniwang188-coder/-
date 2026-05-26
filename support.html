@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#111a35">
+  <title>支持与帮助 - 塔罗之眼</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #302a25;
+      --muted: rgba(48, 42, 37, 0.68);
+      --line: rgba(98, 82, 58, 0.16);
+      --paper: rgba(255, 252, 244, 0.88);
+      --accent: #315f65;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Serif SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.85;
+      background:
+        radial-gradient(900px 360px at 10% -10%, rgba(213, 187, 126, 0.24), transparent 58%),
+        radial-gradient(760px 420px at 90% 0%, rgba(142, 154, 207, 0.2), transparent 54%),
+        linear-gradient(160deg, #f7f2e9 2%, #e9eff8 42%, #f3ecdf 100%);
+    }
+    main {
+      width: min(840px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: max(38px, env(safe-area-inset-top)) 0 max(54px, env(safe-area-inset-bottom));
+    }
+    article {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--paper);
+      box-shadow: 0 22px 70px rgba(69, 61, 52, 0.12);
+      padding: clamp(22px, 4vw, 42px);
+    }
+    a { color: var(--accent); font-weight: 700; }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-family: "Songti SC", "STSong", "Noto Serif SC", serif;
+      line-height: 1.15;
+    }
+    h2 {
+      margin: 32px 0 10px;
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+    p, li { color: var(--muted); }
+    ul { padding-left: 1.2em; }
+    .meta {
+      margin: 0 0 26px;
+      color: rgba(48, 42, 37, 0.54);
+      font-size: 0.92rem;
+    }
+    .nav {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <article>
+      <h1>支持与帮助</h1>
+      <p class="meta">适用于「塔罗之眼」网站与 iOS App。最后更新：2026年05月26日。</p>
+
+      <p>如果你在使用塔罗之眼时遇到问题，或者想反馈解读质量、支付确认、页面体验，可以通过下面的方式联系作者。</p>
+
+      <h2>联系方式</h2>
+      <p>邮箱：<a href="mailto:jingniwang188@gmail.com">jingniwang188@gmail.com</a></p>
+
+      <h2>常见问题</h2>
+      <ul>
+        <li>如果解读结果没有出现，可以刷新页面后重新尝试。</li>
+        <li>如果保存图片失败，可以先使用“分享结果”，或稍后在网络更稳定时重试。</li>
+        <li>如果付费后没有自动继续，请保留付款时间和备注，并通过邮箱联系处理。</li>
+        <li>成长档案目前主要保存在本机，清理浏览器数据或卸载 App 可能导致记录丢失。</li>
+      </ul>
+
+      <h2>问题反馈时建议提供</h2>
+      <ul>
+        <li>你使用的是网站还是 iOS App。</li>
+        <li>大致发生问题的时间。</li>
+        <li>你点击了哪个功能，例如今日神谕、主题占问、双人合盘、保存图片。</li>
+        <li>如果和支付有关，请提供付款备注或付款时间，不需要提供敏感账户信息。</li>
+      </ul>
+
+      <h2>重要说明</h2>
+      <p>塔罗之眼提供的是灵感参考和自我复盘辅助，不应替代医疗、法律、金融等专业建议。遇到重要决定时，请结合现实信息和专业意见判断。</p>
+
+      <div class="nav">
+        <a href="index.html">回到塔罗之眼</a>
+        <a href="privacy.html">隐私政策</a>
+      </div>
+    </article>
+  </main>
+</body>
+</html>

@@ -297,6 +297,7 @@ function initEventBindings() {
   byId("closeCardPreviewBtn")?.addEventListener("click", closeCardPreview);
   byId("sendFeedbackBtn")?.addEventListener("click", sendFeedback);
   byId("saveBtn")?.addEventListener("click", saveAsImage);
+  byId("shareResultBtn")?.addEventListener("click", event => shareReadingResult(event.currentTarget));
   byId("resultGrowthBtn")?.addEventListener("click", openGrowthHub);
   byId("newQuestionBtn")?.addEventListener("click", () => {
     handleReturnToHomePage();
@@ -384,6 +385,10 @@ function getCapacitorBridge() {
 
 function getLocalNotificationsPlugin() {
   return getCapacitorBridge()?.Plugins?.LocalNotifications || null;
+}
+
+function getSharePlugin() {
+  return getCapacitorBridge()?.Plugins?.Share || null;
 }
 
 function isNativeApp() {
@@ -4283,6 +4288,101 @@ async function saveAsImage() {
   })();
 
   return posterRenderInFlight;
+}
+
+function getPublicSiteUrl() {
+  const isHostedWeb = /^https?:$/.test(window.location.protocol) &&
+    !["localhost", "127.0.0.1", ""].includes(window.location.hostname);
+  return isHostedWeb ? window.location.origin : LIVE_SITE_ORIGIN;
+}
+
+function buildReadingShareText(record = latestReadingRecord) {
+  const question = String(record?.question || "").trim();
+  const cards = Array.isArray(record?.cards)
+    ? record.cards
+        .slice(0, 5)
+        .map(card => `${card?.position || "牌面"}：${normalizeCardName(card?.cardName || "") || "未知"}`)
+        .join(" / ")
+    : "";
+  const coreLine = extractPosterCoreLineFromDom();
+  const summary = extractPosterSummaryText(record);
+
+  return [
+    "我刚在塔罗之眼完成了一次解牌。",
+    question ? `问题：${question}` : "",
+    cards ? `牌面：${cards}` : "",
+    coreLine ? `核心提示：${coreLine}` : "",
+    summary ? `简短结论：${summary}` : "",
+    "也可以来抽一张属于你的牌。"
+  ].filter(Boolean).join("\n");
+}
+
+async function copyShareTextToClipboard(text) {
+  if (navigator.clipboard?.writeText && window.isSecureContext) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const area = document.createElement("textarea");
+  area.value = text;
+  area.setAttribute("readonly", "");
+  area.style.position = "fixed";
+  area.style.left = "-9999px";
+  area.style.top = "0";
+  document.body.appendChild(area);
+  area.select();
+  document.execCommand("copy");
+  area.remove();
+}
+
+async function shareReadingResult(button = null) {
+  if (!latestReadingRecord) {
+    alert("请先完成一次解牌后再分享结果");
+    return;
+  }
+
+  setButtonBusy(button, true, "准备分享…");
+  const url = getPublicSiteUrl();
+  const payload = {
+    title: "塔罗之眼 · 我的解牌结果",
+    text: buildReadingShareText(latestReadingRecord),
+    url
+  };
+
+  try {
+    const nativeShare = getSharePlugin();
+    if (nativeShare && isNativeApp()) {
+      const canShare = await nativeShare.canShare().catch(() => ({ value: true }));
+      if (canShare?.value !== false) {
+        await nativeShare.share(payload);
+        updateStatus("已打开系统分享面板。");
+        return;
+      }
+    }
+
+    if (navigator.share) {
+      await navigator.share(payload);
+      updateStatus("已打开系统分享面板。");
+      return;
+    }
+
+    await copyShareTextToClipboard(`${payload.text}\n${payload.url}`);
+    updateStatus("分享文案已复制，可以直接粘贴给朋友。");
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      updateStatus("已取消分享。");
+      return;
+    }
+    console.warn("share reading:", error);
+    try {
+      await copyShareTextToClipboard(`${payload.text}\n${payload.url}`);
+      updateStatus("系统分享不可用，已复制分享文案。");
+    } catch {
+      updateStatus("分享失败，请稍后再试。");
+    }
+  } finally {
+    setButtonBusy(button, false);
+  }
 }
 
 function extractPosterCoreLineFromDom() {

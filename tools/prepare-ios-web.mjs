@@ -9,6 +9,8 @@ const files = [
   "index.html",
   "style.css",
   "script.js",
+  "privacy.html",
+  "support.html",
   "alipay-qr.PNG"
 ];
 
