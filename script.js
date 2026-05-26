@@ -155,6 +155,8 @@ const VIP_CLAIMED_ORDER_ID_KEY = "tarotVipClaimedOrderId";
 const VIP_STATIC_QR_URL = "/alipay-qr.PNG";
 const VAULT_META_KEY = "tarotVaultMeta";
 const DENSITY_MODE_KEY = "tarotReadingDensityMode";
+const DAILY_REMINDER_ENABLED_KEY = "tarotDailyReminderEnabled";
+const DAILY_REMINDER_ID = 901018;
 const LIVE_SITE_ORIGIN = "https://tarotwheel.vercel.app";
 const HISTORY_LIMIT = 20;
 const NOTES_LIMIT = 40;
@@ -218,6 +220,7 @@ window.onload = function() {
     sessionStorage.removeItem(VIP_TOKEN_KEY);
     localStorage.removeItem(VIP_ORDER_ID_KEY);
     applyDensityMode(localStorage.getItem(DENSITY_MODE_KEY) || "compact");
+    initNativeAppEnhancements();
     // initStarfield 已移至 dismissIntro 回调中延迟执行
     applyTimePhaseTheme(); renderSpread(); renderSpreadGuide(); loadHistory(); renderHomeDate(); updateStatus("");
   } catch(e) { console.error("init failed:", e); }
@@ -257,6 +260,7 @@ function initEventBindings() {
     });
   };
   byId("dailyBtn")?.addEventListener("click", event => startDailyDraw(event.currentTarget));
+  byId("dailyReminderBtn")?.addEventListener("click", event => toggleDailyReminder(event.currentTarget));
   bindReturnHome(byId("dailyBackBtn"));
   byId("growthHubBtn")?.addEventListener("click", openGrowthHub);
   byId("feedbackBtn")?.addEventListener("click", openFeedbackModal);
@@ -372,6 +376,105 @@ function initEventBindings() {
   updateQuestionHint();
   updateCoupleHint();
   // setInterval 移至 window.onload 统一管理，此处不重复创建
+}
+
+function getCapacitorBridge() {
+  return window.Capacitor || null;
+}
+
+function getLocalNotificationsPlugin() {
+  return getCapacitorBridge()?.Plugins?.LocalNotifications || null;
+}
+
+function isNativeApp() {
+  const bridge = getCapacitorBridge();
+  if (!bridge) return false;
+  if (typeof bridge.isNativePlatform === "function") return bridge.isNativePlatform();
+  return Boolean(bridge.getPlatform && bridge.getPlatform() !== "web");
+}
+
+function initNativeAppEnhancements() {
+  if (!isNativeApp()) return;
+  document.body.classList.add("native-app");
+  updateDailyReminderUi();
+}
+
+function getNextDailyReminderDate(hour = 9, minute = 0) {
+  const now = new Date();
+  const next = new Date();
+  next.setHours(hour, minute, 0, 0);
+  if (next <= now) next.setDate(next.getDate() + 1);
+  return next;
+}
+
+function setDailyReminderStatus(message = "") {
+  const status = document.getElementById("dailyReminderStatus");
+  if (status) status.textContent = message;
+}
+
+function updateDailyReminderUi() {
+  const button = document.getElementById("dailyReminderBtn");
+  const enabled = localStorage.getItem(DAILY_REMINDER_ENABLED_KEY) === "true";
+  if (button) {
+    button.textContent = enabled ? "已开启每日提醒" : "每日 9:00 提醒我抽牌";
+    button.classList.toggle("is-enabled", enabled);
+    button.setAttribute("aria-pressed", enabled ? "true" : "false");
+  }
+  setDailyReminderStatus(enabled ? "每天 9:00 会提醒你抽一张今日神谕。" : "");
+}
+
+async function toggleDailyReminder(button = null) {
+  const notifications = getLocalNotificationsPlugin();
+  if (!notifications) {
+    updateStatus("每日提醒会在 iOS App 里可用。");
+    return;
+  }
+
+  const enabled = localStorage.getItem(DAILY_REMINDER_ENABLED_KEY) === "true";
+  setButtonBusy(button, true, enabled ? "关闭中…" : "设置中…");
+
+  try {
+    if (enabled) {
+      await notifications.cancel({ notifications: [{ id: DAILY_REMINDER_ID }] });
+      localStorage.removeItem(DAILY_REMINDER_ENABLED_KEY);
+      setDailyReminderStatus("已关闭每日神谕提醒。");
+      updateStatus("已关闭每日神谕提醒。");
+      return;
+    }
+
+    const permission = await notifications.requestPermissions();
+    if (permission?.display !== "granted") {
+      setDailyReminderStatus("你还没有允许通知，可以稍后在系统设置里打开。");
+      updateStatus("通知权限未开启，暂时无法设置每日提醒。");
+      return;
+    }
+
+    await notifications.cancel({ notifications: [{ id: DAILY_REMINDER_ID }] });
+    await notifications.schedule({
+      notifications: [{
+        id: DAILY_REMINDER_ID,
+        title: "塔罗之眼 今日神谕",
+        body: "今天也可以抽一张牌，给自己一个清晰的小提示。",
+        schedule: {
+          at: getNextDailyReminderDate(9, 0),
+          repeats: true,
+          every: "day"
+        },
+        extra: { action: "daily" }
+      }]
+    });
+
+    localStorage.setItem(DAILY_REMINDER_ENABLED_KEY, "true");
+    setDailyReminderStatus("已开启。每天 9:00，会提醒你回来抽一张牌。");
+    updateStatus("已开启每日神谕提醒。");
+  } catch (error) {
+    console.warn("daily reminder:", error);
+    setDailyReminderStatus("提醒设置失败，请稍后再试。");
+    updateStatus("提醒设置失败，请稍后再试。");
+  } finally {
+    setButtonBusy(button, false);
+    updateDailyReminderUi();
+  }
 }
 
 /* Old ritual-hold-btn functions removed — start button is now a normal click,
