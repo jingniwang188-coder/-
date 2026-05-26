@@ -6595,6 +6595,443 @@ body.reading-mode .reading-feedback-panel {
   }
 }
 
+/* V1.3.3 final: restore the blue starfield home after all pale overrides */
+body.home-ready {
+  color: #f7ecd3;
+  background:
+    radial-gradient(900px 420px at 16% -8%, rgba(124, 151, 220, 0.32), transparent 62%),
+    radial-gradient(780px 360px at 88% 4%, rgba(156, 115, 214, 0.22), transparent 58%),
+    radial-gradient(620px 280px at 50% 26%, rgba(219, 176, 86, 0.10), transparent 68%),
+    linear-gradient(150deg, #071021 0%, #111c3a 43%, #1a1740 72%, #090d1b 100%) !important;
+}
+
+body.home-ready::before {
+  opacity: 0.42 !important;
+  background:
+    radial-gradient(circle at 18% 14%, rgba(255, 236, 180, 0.18), transparent 2px),
+    radial-gradient(circle at 72% 20%, rgba(207, 225, 255, 0.16), transparent 2px),
+    radial-gradient(circle at 42% 74%, rgba(255, 236, 180, 0.12), transparent 1px),
+    linear-gradient(115deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 24px) !important;
+}
+
+body.home-ready #starfield { opacity: 0.34 !important; }
+body.home-ready .container { background: radial-gradient(680px 220px at 50% 0%, rgba(255, 228, 166, 0.08), transparent 70%) !important; }
+
+body.home-ready .top-nav {
+  background: linear-gradient(125deg, rgba(23, 35, 72, 0.86), rgba(16, 22, 50, 0.72)) !important;
+  border-color: rgba(218, 195, 139, 0.18) !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+body.home-ready .classic-title {
+  background: linear-gradient(112deg, #fff0c6 0%, #d5a65b 38%, #b58aff 72%, #9ec9ff 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  text-shadow: 0 18px 42px rgba(8, 10, 28, 0.42) !important;
+}
+
+body.home-ready .choice-card {
+  background:
+    radial-gradient(420px 160px at 18% 0%, rgba(255, 228, 166, 0.08), transparent 68%),
+    linear-gradient(150deg, rgba(25, 35, 76, 0.88), rgba(13, 19, 46, 0.82)) !important;
+  border-color: rgba(222, 198, 145, 0.2) !important;
+  box-shadow: 0 24px 58px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+body.home-ready .choice-card--main {
+  background:
+    radial-gradient(560px 180px at 18% 0%, rgba(231, 188, 101, 0.14), transparent 70%),
+    radial-gradient(420px 190px at 88% 8%, rgba(111, 148, 228, 0.18), transparent 72%),
+    linear-gradient(150deg, rgba(26, 43, 91, 0.92), rgba(13, 22, 55, 0.88)) !important;
+  border-color: rgba(232, 194, 112, 0.28) !important;
+}
+
+body.home-ready .choice-card--secondary { background: linear-gradient(150deg, rgba(23, 36, 76, 0.82), rgba(14, 20, 48, 0.76)) !important; }
+body.home-ready .choice-card--love { background: linear-gradient(150deg, rgba(48, 31, 78, 0.82), rgba(18, 20, 52, 0.76)) !important; }
+body.home-ready .choice-card__title { color: rgba(255, 239, 204, 0.98) !important; }
+
+body.home-ready .choice-card__eyebrow,
+body.home-ready .choice-card__feature,
+body.home-ready .spread-guide-head,
+body.home-ready .input-group label {
+  color: rgba(233, 198, 124, 0.94) !important;
+}
+
+body.home-ready .choice-card__desc,
+body.home-ready .field-hint,
+body.home-ready .pay-hint,
+body.home-ready .spread-guide-text,
+body.home-ready .ritual-orb__label,
+body.home-ready .status-banner {
+  color: rgba(237, 228, 207, 0.74) !important;
+}
+
+body.home-ready .question-spark,
+body.home-ready .spread-pill,
+body.home-ready .spread-current-pick,
+body.home-ready .spread-recommendation,
+body.home-ready .spread-visual-guide,
+body.home-ready .spread-advanced-teaser {
+  background: rgba(8, 15, 35, 0.52) !important;
+  border-color: rgba(218, 195, 139, 0.16) !important;
+  color: rgba(247, 236, 212, 0.9) !important;
+}
+
+body.home-ready input,
+body.home-ready textarea,
+body.home-ready select {
+  background: rgba(7, 12, 30, 0.66) !important;
+  color: rgba(255, 246, 226, 0.96) !important;
+  border-color: rgba(218, 195, 139, 0.22) !important;
+}
+
+/* V1.3.5 layout correction: lightweight draw stays at the top */
+body.home-ready .hero-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr) !important;
+  grid-template-areas:
+    "quick quick"
+    "deep deep"
+    "love love" !important;
+}
+
+body.home-ready .card-quick {
+  grid-area: quick !important;
+}
+
+body.home-ready .card-deep {
+  grid-area: deep !important;
+}
+
+body.home-ready .card-love {
+  grid-area: love !important;
+}
+
+/* V1.3.1 星空夜蓝修正：恢复神秘感，但保持清晰层级 */
+body.home-ready {
+  color: #f7ecd3;
+  background:
+    radial-gradient(900px 420px at 16% -8%, rgba(124, 151, 220, 0.32), transparent 62%),
+    radial-gradient(780px 360px at 88% 4%, rgba(156, 115, 214, 0.22), transparent 58%),
+    radial-gradient(620px 280px at 50% 26%, rgba(219, 176, 86, 0.10), transparent 68%),
+    linear-gradient(150deg, #071021 0%, #111c3a 43%, #1a1740 72%, #090d1b 100%) !important;
+}
+
+body.home-ready::before {
+  opacity: 0.42 !important;
+  background:
+    radial-gradient(circle at 18% 14%, rgba(255, 236, 180, 0.18), transparent 2px),
+    radial-gradient(circle at 72% 20%, rgba(207, 225, 255, 0.16), transparent 2px),
+    radial-gradient(circle at 42% 74%, rgba(255, 236, 180, 0.12), transparent 1px),
+    linear-gradient(115deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 24px) !important;
+}
+
+body.home-ready #starfield {
+  opacity: 0.34 !important;
+}
+
+body.home-ready.night-mode .night-overlay {
+  opacity: 0.08 !important;
+}
+
+body.home-ready[data-weather="sunny"]::after,
+body.home-ready[data-weather="cloudy"]::after,
+body.home-ready[data-weather="rainy"]::after,
+body.home-ready[data-weather="misty"]::after {
+  opacity: 0.12 !important;
+}
+
+body.home-ready .container {
+  background:
+    radial-gradient(680px 220px at 50% 0%, rgba(255, 228, 166, 0.08), transparent 70%) !important;
+}
+
+body.home-ready .top-nav {
+  background: linear-gradient(125deg, rgba(23, 35, 72, 0.86), rgba(16, 22, 50, 0.72)) !important;
+  border-color: rgba(218, 195, 139, 0.18) !important;
+  box-shadow:
+    0 18px 44px rgba(0, 0, 0, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+body.home-ready .phase-chip {
+  background: rgba(8, 14, 32, 0.72) !important;
+  color: rgba(255, 238, 196, 0.94) !important;
+  border-color: rgba(218, 195, 139, 0.22) !important;
+}
+
+body.home-ready .top-nav-actions .icon-btn {
+  background: rgba(255, 246, 219, 0.08) !important;
+  color: rgba(255, 241, 212, 0.92) !important;
+  border-color: rgba(218, 195, 139, 0.22) !important;
+}
+
+body.home-ready .top-nav-actions .icon-btn:hover {
+  background: rgba(255, 236, 186, 0.14) !important;
+  border-color: rgba(235, 206, 150, 0.42) !important;
+}
+
+body.home-ready .classic-title {
+  background: linear-gradient(112deg, #fff0c6 0%, #d5a65b 38%, #b58aff 72%, #9ec9ff 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  text-shadow: 0 18px 42px rgba(8, 10, 28, 0.42) !important;
+}
+
+body.home-ready .classic-title .title-en {
+  color: rgba(225, 220, 241, 0.72) !important;
+  -webkit-text-fill-color: rgba(225, 220, 241, 0.72) !important;
+}
+
+body.home-ready .hero-header::after {
+  background: linear-gradient(90deg, transparent, rgba(232, 194, 112, 0.54), rgba(160, 139, 255, 0.34), transparent) !important;
+}
+
+body.home-ready .ritual-orb {
+  background:
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.94), rgba(183, 142, 236, 0.62) 28%, rgba(67, 78, 154, 0.84) 66%, rgba(24, 31, 75, 0.96) 100%) !important;
+  box-shadow:
+    0 0 0 1px rgba(235, 206, 150, 0.18),
+    0 18px 46px rgba(58, 75, 163, 0.34),
+    inset 0 1px 18px rgba(255, 255, 255, 0.38) !important;
+}
+
+body.home-ready .ritual-orb__label,
+body.home-ready .status-banner,
+body.home-ready .mystical-divider {
+  color: rgba(236, 226, 204, 0.76) !important;
+}
+
+body.home-ready .choice-card {
+  background:
+    radial-gradient(420px 160px at 18% 0%, rgba(255, 228, 166, 0.08), transparent 68%),
+    linear-gradient(150deg, rgba(25, 35, 76, 0.88), rgba(13, 19, 46, 0.82)) !important;
+  border-color: rgba(222, 198, 145, 0.2) !important;
+  box-shadow:
+    0 24px 58px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+body.home-ready .choice-card--main {
+  background:
+    radial-gradient(560px 180px at 18% 0%, rgba(231, 188, 101, 0.14), transparent 70%),
+    radial-gradient(420px 190px at 88% 8%, rgba(111, 148, 228, 0.18), transparent 72%),
+    linear-gradient(150deg, rgba(26, 43, 91, 0.92), rgba(13, 22, 55, 0.88)) !important;
+  border-color: rgba(232, 194, 112, 0.28) !important;
+}
+
+body.home-ready .choice-card--secondary {
+  background:
+    linear-gradient(150deg, rgba(23, 36, 76, 0.82), rgba(14, 20, 48, 0.76)) !important;
+}
+
+body.home-ready .choice-card--love {
+  background:
+    linear-gradient(150deg, rgba(48, 31, 78, 0.82), rgba(18, 20, 52, 0.76)) !important;
+}
+
+body.home-ready .choice-card:hover {
+  transform: translateY(-4px) rotate(-0.16deg) !important;
+  box-shadow:
+    0 30px 66px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(232, 194, 112, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+body.home-ready .choice-card__title {
+  color: rgba(255, 239, 204, 0.98) !important;
+  text-shadow: 0 12px 28px rgba(0, 0, 0, 0.24) !important;
+}
+
+body.home-ready .choice-card__eyebrow,
+body.home-ready .choice-card__feature,
+body.home-ready .spread-guide-head,
+body.home-ready .input-group label {
+  color: rgba(233, 198, 124, 0.94) !important;
+}
+
+body.home-ready .choice-card__desc,
+body.home-ready .field-hint,
+body.home-ready .pay-hint,
+body.home-ready .spread-guide-text,
+body.home-ready .couple-toggle__desc {
+  color: rgba(237, 228, 207, 0.74) !important;
+}
+
+body.home-ready .question-spark,
+body.home-ready .spread-pill,
+body.home-ready .spread-current-pick,
+body.home-ready .spread-recommendation,
+body.home-ready .spread-visual-guide,
+body.home-ready .spread-advanced-teaser {
+  background: rgba(8, 15, 35, 0.52) !important;
+  border-color: rgba(218, 195, 139, 0.16) !important;
+  color: rgba(247, 236, 212, 0.9) !important;
+}
+
+body.home-ready .spread-pill.active,
+body.home-ready .spread-current-pick,
+body.home-ready .spread-recommendation {
+  background: linear-gradient(135deg, rgba(31, 62, 94, 0.66), rgba(37, 31, 76, 0.58)) !important;
+  border-color: rgba(232, 194, 112, 0.36) !important;
+}
+
+body.home-ready .spread-pill__name,
+body.home-ready .spread-current-pick__name,
+body.home-ready .spread-recommendation__main {
+  color: rgba(255, 239, 204, 0.98) !important;
+}
+
+body.home-ready .spread-pill__desc,
+body.home-ready .spread-pill__meta,
+body.home-ready .spread-current-pick__meta,
+body.home-ready .spread-recommendation__reason,
+body.home-ready .spread-advanced-teaser__preview {
+  color: rgba(232, 224, 204, 0.72) !important;
+}
+
+body.home-ready input,
+body.home-ready textarea,
+body.home-ready select {
+  background: rgba(7, 12, 30, 0.66) !important;
+  color: rgba(255, 246, 226, 0.96) !important;
+  border-color: rgba(218, 195, 139, 0.22) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 10px 22px rgba(0, 0, 0, 0.12) !important;
+}
+
+body.home-ready input::placeholder,
+body.home-ready textarea::placeholder {
+  color: rgba(230, 221, 202, 0.48) !important;
+}
+
+body.home-ready .main-btn {
+  background: linear-gradient(135deg, #ffe8ad, #c8913d 52%, #8e5f24) !important;
+  color: #21160a !important;
+  box-shadow: 0 16px 34px rgba(198, 145, 61, 0.28) !important;
+}
+
+body.home-ready .secondary-btn,
+body.home-ready .save-btn {
+  background: rgba(255, 246, 219, 0.1) !important;
+  color: rgba(255, 239, 204, 0.94) !important;
+  border-color: rgba(232, 194, 112, 0.26) !important;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.18) !important;
+}
+
+body.home-ready .couple-toggle {
+  color: rgba(255, 235, 220, 0.94) !important;
+}
+
+body.home-ready .price-tag {
+  background: rgba(255, 228, 166, 0.14) !important;
+  color: rgba(255, 231, 178, 0.96) !important;
+  border-color: rgba(232, 194, 112, 0.22) !important;
+}
+
+/* V1.3.2 最终覆盖：夜蓝星空必须压过旧浅色规则 */
+body.home-ready {
+  color: #f7ecd3;
+  background:
+    radial-gradient(900px 420px at 16% -8%, rgba(124, 151, 220, 0.32), transparent 62%),
+    radial-gradient(780px 360px at 88% 4%, rgba(156, 115, 214, 0.22), transparent 58%),
+    radial-gradient(620px 280px at 50% 26%, rgba(219, 176, 86, 0.10), transparent 68%),
+    linear-gradient(150deg, #071021 0%, #111c3a 43%, #1a1740 72%, #090d1b 100%) !important;
+}
+
+body.home-ready::before {
+  opacity: 0.42 !important;
+  background:
+    radial-gradient(circle at 18% 14%, rgba(255, 236, 180, 0.18), transparent 2px),
+    radial-gradient(circle at 72% 20%, rgba(207, 225, 255, 0.16), transparent 2px),
+    radial-gradient(circle at 42% 74%, rgba(255, 236, 180, 0.12), transparent 1px),
+    linear-gradient(115deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 24px) !important;
+}
+
+body.home-ready #starfield {
+  opacity: 0.34 !important;
+}
+
+body.home-ready .container {
+  background: radial-gradient(680px 220px at 50% 0%, rgba(255, 228, 166, 0.08), transparent 70%) !important;
+}
+
+body.home-ready .top-nav {
+  background: linear-gradient(125deg, rgba(23, 35, 72, 0.86), rgba(16, 22, 50, 0.72)) !important;
+  border-color: rgba(218, 195, 139, 0.18) !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+body.home-ready .classic-title {
+  background: linear-gradient(112deg, #fff0c6 0%, #d5a65b 38%, #b58aff 72%, #9ec9ff 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  text-shadow: 0 18px 42px rgba(8, 10, 28, 0.42) !important;
+}
+
+body.home-ready .choice-card {
+  background:
+    radial-gradient(420px 160px at 18% 0%, rgba(255, 228, 166, 0.08), transparent 68%),
+    linear-gradient(150deg, rgba(25, 35, 76, 0.88), rgba(13, 19, 46, 0.82)) !important;
+  border-color: rgba(222, 198, 145, 0.2) !important;
+  box-shadow: 0 24px 58px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+body.home-ready .choice-card--main {
+  background:
+    radial-gradient(560px 180px at 18% 0%, rgba(231, 188, 101, 0.14), transparent 70%),
+    radial-gradient(420px 190px at 88% 8%, rgba(111, 148, 228, 0.18), transparent 72%),
+    linear-gradient(150deg, rgba(26, 43, 91, 0.92), rgba(13, 22, 55, 0.88)) !important;
+  border-color: rgba(232, 194, 112, 0.28) !important;
+}
+
+body.home-ready .choice-card--secondary {
+  background: linear-gradient(150deg, rgba(23, 36, 76, 0.82), rgba(14, 20, 48, 0.76)) !important;
+}
+
+body.home-ready .choice-card--love {
+  background: linear-gradient(150deg, rgba(48, 31, 78, 0.82), rgba(18, 20, 52, 0.76)) !important;
+}
+
+body.home-ready .choice-card__title {
+  color: rgba(255, 239, 204, 0.98) !important;
+}
+
+body.home-ready .choice-card__eyebrow,
+body.home-ready .choice-card__feature,
+body.home-ready .spread-guide-head,
+body.home-ready .input-group label {
+  color: rgba(233, 198, 124, 0.94) !important;
+}
+
+body.home-ready .choice-card__desc,
+body.home-ready .field-hint,
+body.home-ready .pay-hint,
+body.home-ready .spread-guide-text,
+body.home-ready .ritual-orb__label,
+body.home-ready .status-banner {
+  color: rgba(237, 228, 207, 0.74) !important;
+}
+
+body.home-ready .question-spark,
+body.home-ready .spread-pill,
+body.home-ready .spread-current-pick,
+body.home-ready .spread-recommendation,
+body.home-ready .spread-visual-guide,
+body.home-ready .spread-advanced-teaser {
+  background: rgba(8, 15, 35, 0.52) !important;
+  border-color: rgba(218, 195, 139, 0.16) !important;
+  color: rgba(247, 236, 212, 0.9) !important;
+}
+
+body.home-ready input,
+body.home-ready textarea,
+body.home-ready select {
+  background: rgba(7, 12, 30, 0.66) !important;
+  color: rgba(255, 246, 226, 0.96) !important;
+  border-color: rgba(218, 195, 139, 0.22) !important;
+}
+
 @media (max-width: 430px) {
   body.reading-mode .parchment-box {
     padding: 18px 14px !important;
@@ -6941,8 +7378,9 @@ body.home-ready .mystical-divider {
 body.home-ready .hero-grid {
   grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr) !important;
   grid-template-areas:
+    "quick quick"
     "deep deep"
-    "quick love" !important;
+    "love love" !important;
   grid-template-rows: auto auto !important;
   gap: 12px !important;
 }
@@ -6994,8 +7432,8 @@ body.home-ready .card-love {
 
 body.home-ready .hero-grid:has(.choice-card--love:not(.couple-collapsed)) {
   grid-template-areas:
-    "deep deep"
     "quick quick"
+    "deep deep"
     "love love" !important;
 }
 
@@ -7117,4 +7555,105 @@ body.reading-mode .reading-summary-panel {
   body.reading-mode .reading-summary-panel {
     grid-template-columns: 1fr !important;
   }
+}
+
+/* V1.3.4 EOF override: keep the actual shipped home in deep blue */
+body.home-ready {
+  color: #f7ecd3;
+  background:
+    radial-gradient(900px 420px at 16% -8%, rgba(124, 151, 220, 0.32), transparent 62%),
+    radial-gradient(780px 360px at 88% 4%, rgba(156, 115, 214, 0.22), transparent 58%),
+    radial-gradient(620px 280px at 50% 26%, rgba(219, 176, 86, 0.10), transparent 68%),
+    linear-gradient(150deg, #071021 0%, #111c3a 43%, #1a1740 72%, #090d1b 100%) !important;
+}
+
+body.home-ready::before {
+  opacity: 0.42 !important;
+  background:
+    radial-gradient(circle at 18% 14%, rgba(255, 236, 180, 0.18), transparent 2px),
+    radial-gradient(circle at 72% 20%, rgba(207, 225, 255, 0.16), transparent 2px),
+    radial-gradient(circle at 42% 74%, rgba(255, 236, 180, 0.12), transparent 1px),
+    linear-gradient(115deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 24px) !important;
+}
+
+body.home-ready #starfield { opacity: 0.34 !important; }
+
+body.home-ready .container {
+  background: radial-gradient(680px 220px at 50% 0%, rgba(255, 228, 166, 0.08), transparent 70%) !important;
+}
+
+body.home-ready .top-nav {
+  background: linear-gradient(125deg, rgba(23, 35, 72, 0.86), rgba(16, 22, 50, 0.72)) !important;
+  border-color: rgba(218, 195, 139, 0.18) !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+body.home-ready .classic-title {
+  background: linear-gradient(112deg, #fff0c6 0%, #d5a65b 38%, #b58aff 72%, #9ec9ff 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  text-shadow: 0 18px 42px rgba(8, 10, 28, 0.42) !important;
+}
+
+body.home-ready .choice-card {
+  background:
+    radial-gradient(420px 160px at 18% 0%, rgba(255, 228, 166, 0.08), transparent 68%),
+    linear-gradient(150deg, rgba(25, 35, 76, 0.88), rgba(13, 19, 46, 0.82)) !important;
+  border-color: rgba(222, 198, 145, 0.2) !important;
+  box-shadow: 0 24px 58px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+body.home-ready .choice-card--main {
+  background:
+    radial-gradient(560px 180px at 18% 0%, rgba(231, 188, 101, 0.14), transparent 70%),
+    radial-gradient(420px 190px at 88% 8%, rgba(111, 148, 228, 0.18), transparent 72%),
+    linear-gradient(150deg, rgba(26, 43, 91, 0.92), rgba(13, 22, 55, 0.88)) !important;
+  border-color: rgba(232, 194, 112, 0.28) !important;
+}
+
+body.home-ready .choice-card--secondary {
+  background: linear-gradient(150deg, rgba(23, 36, 76, 0.82), rgba(14, 20, 48, 0.76)) !important;
+}
+
+body.home-ready .choice-card--love {
+  background: linear-gradient(150deg, rgba(48, 31, 78, 0.82), rgba(18, 20, 52, 0.76)) !important;
+}
+
+body.home-ready .choice-card__title {
+  color: rgba(255, 239, 204, 0.98) !important;
+}
+
+body.home-ready .choice-card__eyebrow,
+body.home-ready .choice-card__feature,
+body.home-ready .spread-guide-head,
+body.home-ready .input-group label {
+  color: rgba(233, 198, 124, 0.94) !important;
+}
+
+body.home-ready .choice-card__desc,
+body.home-ready .field-hint,
+body.home-ready .pay-hint,
+body.home-ready .spread-guide-text,
+body.home-ready .ritual-orb__label,
+body.home-ready .status-banner {
+  color: rgba(237, 228, 207, 0.74) !important;
+}
+
+body.home-ready .question-spark,
+body.home-ready .spread-pill,
+body.home-ready .spread-current-pick,
+body.home-ready .spread-recommendation,
+body.home-ready .spread-visual-guide,
+body.home-ready .spread-advanced-teaser {
+  background: rgba(8, 15, 35, 0.52) !important;
+  border-color: rgba(218, 195, 139, 0.16) !important;
+  color: rgba(247, 236, 212, 0.9) !important;
+}
+
+body.home-ready input,
+body.home-ready textarea,
+body.home-ready select {
+  background: rgba(7, 12, 30, 0.66) !important;
+  color: rgba(255, 246, 226, 0.96) !important;
+  border-color: rgba(218, 195, 139, 0.22) !important;
 }
