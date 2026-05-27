@@ -2531,7 +2531,6 @@ body[data-phase="dusk"] #starfield {
   text-shadow: none !important;
 }
 
-#contactModal .contact-panel-content,
 #historyDetailModal .history-detail-content,
 #growthHubModal .growth-hub-modal,
 #vipConfirmModal .vip-confirm-content {
@@ -2543,14 +2542,12 @@ body[data-phase="dusk"] #starfield {
   box-shadow: 0 24px 70px rgba(43, 31, 16, 0.28), inset 0 1px 0 rgba(255,255,255,0.72);
 }
 
-#contactModal .contact-desc,
 #growthHubModal .growth-intro,
 #growthHubModal .vault-meta,
 #vipConfirmModal .vip-confirm-text {
   color: rgba(79, 56, 33, 0.74) !important;
 }
 
-#contactModal .contact-item,
 #growthHubModal .journal-notebook,
 #growthHubModal .timeline-item,
 #historyDetailModal .history-detail-body {
@@ -2591,14 +2588,6 @@ body[data-phase="dusk"] #starfield {
   color: #4b3520;
   background: rgba(255, 252, 244, 0.86);
   border-color: rgba(136, 99, 56, 0.34);
-}
-
-#contactModal .contact-label {
-  color: rgba(79, 56, 33, 0.68) !important;
-}
-
-#contactModal .contact-value {
-  color: #7a4e16 !important;
 }
 
 .feedback-contact-shortcut {
@@ -5563,1500 +5552,200 @@ button {
   }
 }
 
-/* ═══════════════════════════════════════
-   V1.1 灵动化：轻盈首页、清晰牌阵、可读结果页
-   ═══════════════════════════════════════ */
+
+/* Final UI layer: mysterious, light glass, single source of truth. */
 body.home-ready {
+  color: #f8edcf;
   background:
-    linear-gradient(115deg, rgba(255, 255, 255, 0.22) 0 1px, transparent 1px 16px),
-    radial-gradient(820px 360px at 16% 0%, rgba(255, 236, 196, 0.24), transparent 64%),
-    radial-gradient(760px 420px at 88% 8%, rgba(184, 217, 242, 0.24), transparent 58%),
-    linear-gradient(160deg, #f7f2e9 0%, #e9eff8 40%, #ece4f5 72%, #f3eee4 100%);
-}
-
-.top-nav {
-  border-radius: 26px;
-  background: rgba(255, 252, 245, 0.68);
-  box-shadow:
-    0 18px 44px rgba(82, 64, 45, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7);
-}
-
-.classic-title {
-  letter-spacing: 3px;
-  background: linear-gradient(115deg, #51456b 0%, #9a6b39 36%, #c59642 62%, #476c75 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  filter: drop-shadow(0 8px 20px rgba(96, 70, 42, 0.12));
-}
-
-.classic-title .title-en {
-  letter-spacing: 8px;
-  -webkit-text-fill-color: rgba(82, 76, 97, 0.5);
-}
-
-.hero-header::after {
-  content: "";
-  width: min(180px, 42vw);
-  height: 1px;
-  margin: 14px auto 0;
-  border-radius: 999px;
-  background: linear-gradient(90deg, transparent, rgba(185, 142, 75, 0.42), rgba(72, 112, 126, 0.32), transparent);
-}
-
-.home-ritual-widget {
-  margin-top: 0;
-}
-
-.ritual-orb {
-  width: 92px;
-  height: 92px;
-  border-width: 1px;
-  background:
-    radial-gradient(circle at 38% 30%, rgba(255, 255, 255, 0.65), transparent 18%),
-    radial-gradient(circle at 45% 42%, rgba(182, 125, 213, 0.42), rgba(74, 62, 142, 0.52) 56%, rgba(25, 31, 62, 0.82));
-  box-shadow:
-    0 18px 42px rgba(64, 58, 122, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.48);
-}
-
-.ritual-orb__label {
-  color: rgba(85, 67, 48, 0.76);
-}
-
-.mystical-divider {
-  margin: 16px 0 18px;
-  color: rgba(90, 119, 128, 0.34);
-}
-
-.hero-grid {
-  gap: 16px;
-}
-
-.choice-card {
-  border-radius: 18px;
-  border-color: rgba(140, 118, 84, 0.16);
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.84), rgba(255, 249, 237, 0.68)),
-    linear-gradient(180deg, rgba(112, 151, 164, 0.06), transparent);
-  box-shadow:
-    0 22px 54px rgba(88, 70, 48, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.82);
-  overflow: hidden;
-}
-
-.choice-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border-radius: inherit;
-  background:
-    linear-gradient(100deg, transparent 0%, rgba(255, 255, 255, 0.24) 42%, transparent 70%);
-  opacity: 0;
-  transform: translateX(-26%);
-  transition: opacity 0.28s ease, transform 0.55s ease;
-}
-
-.choice-card:hover {
-  transform: translateY(-5px);
-  box-shadow:
-    0 28px 62px rgba(74, 57, 40, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-}
-
-.choice-card:hover::before {
-  opacity: 1;
-  transform: translateX(26%);
-}
-
-.choice-card--secondary,
-.choice-card--main,
-.choice-card--love {
-  border-radius: 18px;
-}
-
-.choice-card--secondary {
-  background:
-    linear-gradient(145deg, rgba(244, 249, 255, 0.86), rgba(255, 250, 238, 0.66));
-}
-
-.choice-card--main {
-  background:
-    linear-gradient(145deg, rgba(255, 252, 244, 0.9), rgba(240, 247, 248, 0.66));
-}
-
-.choice-card--love {
-  background:
-    linear-gradient(145deg, rgba(255, 244, 246, 0.88), rgba(244, 246, 255, 0.66));
-}
-
-.choice-card__eyebrow {
-  color: rgba(71, 108, 117, 0.78);
-  letter-spacing: 0.18em;
-  font-style: normal;
-}
-
-.choice-card__title {
-  color: #44352b;
-  letter-spacing: 0;
-  font-style: normal;
-}
-
-.choice-card__desc {
-  color: rgba(73, 61, 49, 0.68);
-  font-style: normal;
-}
-
-.choice-card__icon {
-  opacity: 0.8;
-  filter: drop-shadow(0 10px 18px rgba(93, 73, 120, 0.18));
-}
-
-.spread-visual-guide {
-  border-radius: 18px;
-  background: rgba(255, 253, 248, 0.56);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.68);
-}
-
-.spread-current-pick {
-  border-radius: 16px;
-  background: linear-gradient(135deg, rgba(255, 252, 245, 0.82), rgba(236, 248, 247, 0.62));
-}
-
-.spread-current-pick__change {
-  border-radius: 999px;
-}
-
-.spread-pill {
-  border-radius: 14px;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(250, 244, 232, 0.58));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62);
-}
-
-.spread-pill:hover {
-  transform: translateY(-3px);
-}
-
-.spread-pill.active {
-  border-color: rgba(72, 112, 126, 0.48);
-  background:
-    linear-gradient(145deg, rgba(235, 249, 248, 0.9), rgba(255, 245, 224, 0.76));
-  box-shadow:
-    0 14px 26px rgba(74, 108, 118, 0.13),
-    inset 0 1px 0 rgba(255, 255, 255, 0.76);
-}
-
-.spread-pill.is-paid {
-  border-style: solid;
-  border-color: rgba(153, 118, 63, 0.28);
-  background:
-    linear-gradient(145deg, rgba(255, 249, 237, 0.85), rgba(244, 239, 251, 0.62));
-}
-
-.spread-pill__tag,
-.spread-pill__cta {
-  background: rgba(74, 112, 126, 0.08);
-  color: rgba(57, 78, 84, 0.86);
-}
-
-.spread-advanced-teaser {
-  border-width: 1px;
-  border-color: rgba(83, 67, 105, 0.28);
-  background:
-    linear-gradient(135deg, rgba(52, 45, 78, 0.94), rgba(73, 91, 101, 0.86)),
-    linear-gradient(90deg, rgba(255, 226, 156, 0.16), transparent);
-  box-shadow: 0 18px 34px rgba(47, 45, 73, 0.18);
-}
-
-.spread-advanced-teaser__cta {
-  background: rgba(255, 244, 216, 0.92);
-}
-
-.pay-hint {
-  background: rgba(235, 249, 241, 0.72);
-}
-
-.parchment-box {
-  border-radius: 18px;
-  background:
-    linear-gradient(160deg, rgba(18, 18, 38, 0.96), rgba(28, 31, 56, 0.94) 58%, rgba(24, 37, 45, 0.95));
-  box-shadow:
-    0 26px 64px rgba(0, 0, 0, 0.46),
-    inset 0 1px 0 rgba(255, 242, 204, 0.12);
-}
-
-.reading-summary-panel {
-  grid-template-columns: 1.15fr 1fr 1fr;
-  align-items: stretch;
-}
-
-.reading-summary-card {
-  border-radius: 14px;
-  background: rgba(255, 247, 229, 0.08);
-}
-
-.reading-summary-card--answer {
-  background:
-    linear-gradient(150deg, rgba(234, 196, 116, 0.18), rgba(95, 121, 128, 0.14));
-}
-
-#streamContent h3 {
-  padding-top: 0.35rem;
-  letter-spacing: 0;
-}
-
-#streamContent p,
-#streamContent ul li {
-  line-height: 1.78;
-}
-
-#streamContent blockquote {
-  border-left-width: 3px;
-  background: linear-gradient(120deg, rgba(76, 99, 112, 0.22), rgba(43, 34, 72, 0.34));
-}
-
-.result-actions {
-  border-radius: 18px;
-  background:
-    linear-gradient(135deg, rgba(26, 28, 48, 0.72), rgba(34, 45, 54, 0.56));
-}
-
-@media (max-width: 760px) {
-  .reading-summary-panel {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 640px) {
-  .top-nav {
-    border-radius: 18px;
-  }
-
-  .choice-card {
-    border-radius: 16px !important;
-    padding: 20px 18px;
-  }
-
-  .spread-visual-guide {
-    padding: 10px;
-  }
-
-  .spread-current-pick {
-    align-items: flex-start;
-    flex-wrap: wrap;
-    border-radius: 14px;
-  }
-
-  .spread-current-pick__change {
-    width: 100%;
-    margin-left: 0;
-  }
-}
-
-/* ═══════════════════════════════════════
-   V1.1 清透覆盖：去灰雾、提对比、字体更有呼吸
-   ═══════════════════════════════════════ */
-body.home-ready.night-mode .night-overlay {
-  opacity: 0.08 !important;
-  background:
-    radial-gradient(760px 320px at 50% 4%, rgba(80, 72, 118, 0.12), transparent 70%),
-    rgba(8, 8, 18, 0.08) !important;
+    radial-gradient(760px 320px at 18% -6%, rgba(117, 153, 226, 0.22), transparent 64%),
+    radial-gradient(680px 300px at 88% 4%, rgba(165, 118, 214, 0.18), transparent 60%),
+    radial-gradient(520px 240px at 50% 24%, rgba(227, 186, 106, 0.08), transparent 70%),
+    linear-gradient(150deg, #071020 0%, #101936 48%, #17133b 74%, #080c1a 100%) !important;
 }
 
 body.home-ready::before {
-  opacity: 0.45;
-}
-
-body.home-ready #starfield {
-  opacity: 0.08 !important;
-}
-
-body.home-ready .top-nav {
-  background: rgba(247, 244, 236, 0.78) !important;
-  border-color: rgba(255, 255, 255, 0.48) !important;
-  box-shadow:
-    0 18px 40px rgba(47, 54, 78, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.74) !important;
-}
-
-body.home-ready .phase-chip {
-  background: rgba(47, 62, 101, 0.88) !important;
-  border-color: rgba(255, 255, 255, 0.22) !important;
-  color: rgba(255, 246, 225, 0.96) !important;
-  box-shadow: 0 8px 18px rgba(38, 46, 80, 0.12);
-}
-
-body.home-ready .top-nav-actions .icon-btn {
-  background: rgba(255, 252, 244, 0.5) !important;
-  color: rgba(76, 63, 51, 0.86) !important;
-  border-color: rgba(126, 111, 91, 0.24) !important;
-  box-shadow: none !important;
-}
-
-body.home-ready .classic-title {
-  font-family: "Kaiti SC", "STKaiti", "KaiTi", "Songti SC", "Noto Serif SC", serif !important;
-  font-weight: 500 !important;
-  letter-spacing: 0.08em !important;
-  background: linear-gradient(116deg, #5b5572 0%, #9d713c 45%, #b8842e 68%, #456e73 100%) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  text-shadow: none !important;
-}
-
-body.home-ready .classic-title .title-en {
-  font-family: "Manrope", "PingFang SC", sans-serif !important;
-  letter-spacing: 0.42em !important;
-  color: rgba(80, 77, 92, 0.56) !important;
-  -webkit-text-fill-color: rgba(80, 77, 92, 0.56) !important;
-}
-
-body.home-ready .ritual-orb__label,
-body.home-ready .status-banner {
-  color: rgba(66, 57, 50, 0.72) !important;
-  text-shadow: none !important;
-}
-
-body.home-ready .choice-card {
+  opacity: 0.34 !important;
   background:
-    linear-gradient(145deg, rgba(255, 252, 244, 0.92), rgba(244, 248, 247, 0.78)) !important;
-  border: 1px solid rgba(255, 255, 255, 0.62) !important;
-  color: #3f352c !important;
-  box-shadow:
-    0 24px 54px rgba(55, 58, 80, 0.10),
-    inset 0 1px 0 rgba(255, 255, 255, 0.86) !important;
-}
-
-body.home-ready .choice-card--secondary {
-  background:
-    linear-gradient(148deg, rgba(253, 250, 255, 0.94), rgba(235, 240, 255, 0.78)) !important;
-}
-
-body.home-ready .choice-card--main {
-  background:
-    linear-gradient(148deg, rgba(255, 252, 244, 0.94), rgba(234, 246, 246, 0.78)) !important;
-}
-
-body.home-ready .choice-card--love {
-  background:
-    linear-gradient(148deg, rgba(255, 247, 249, 0.94), rgba(244, 241, 255, 0.78)) !important;
-}
-
-body.home-ready .choice-card__title {
-  font-family: "Kaiti SC", "STKaiti", "KaiTi", "Songti SC", "Noto Serif SC", serif !important;
-  color: #44372c !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.02em !important;
-  text-shadow: none !important;
-}
-
-body.home-ready .choice-card__eyebrow,
-body.home-ready .choice-card__feature,
-body.home-ready .spread-guide-head,
-body.home-ready .input-group label {
-  color: rgba(83, 103, 105, 0.86) !important;
-  text-shadow: none !important;
-}
-
-body.home-ready .choice-card__desc,
-body.home-ready .field-hint,
-body.home-ready .pay-hint,
-body.home-ready .spread-guide-text {
-  color: rgba(68, 58, 48, 0.72) !important;
-  text-shadow: none !important;
-}
-
-body.home-ready .spread-visual-guide {
-  background: rgba(255, 253, 248, 0.72) !important;
-  border-color: rgba(255, 255, 255, 0.58) !important;
-}
-
-body.home-ready .spread-current-pick,
-body.home-ready .spread-pill {
-  background: rgba(255, 253, 248, 0.92) !important;
-  border-color: rgba(143, 128, 104, 0.18) !important;
-  color: #43362a !important;
-}
-
-body.home-ready .spread-pill.active {
-  background:
-    linear-gradient(145deg, rgba(239, 251, 249, 0.96), rgba(255, 247, 229, 0.92)) !important;
-  border-color: rgba(71, 118, 123, 0.46) !important;
-}
-
-body.home-ready .spread-pill__name,
-body.home-ready .spread-current-pick__name {
-  color: #3f3429 !important;
-  text-shadow: none !important;
-}
-
-body.home-ready .spread-pill__desc,
-body.home-ready .spread-pill__meta,
-body.home-ready .spread-current-pick__meta {
-  color: rgba(63, 52, 41, 0.68) !important;
-}
-
-body.home-ready .input-group input,
-body.home-ready .input-group textarea,
-body.home-ready .input-group select {
-  background: rgba(28, 34, 53, 0.9) !important;
-  border-color: rgba(255, 244, 216, 0.24) !important;
-  color: rgba(255, 247, 229, 0.96) !important;
-}
-
-body.home-ready .input-group input::placeholder,
-body.home-ready .input-group textarea::placeholder {
-  color: rgba(255, 247, 229, 0.48) !important;
-}
-
-body.home-ready .main-btn,
-body.home-ready .secondary-btn {
-  box-shadow: 0 14px 28px rgba(58, 54, 80, 0.10);
-}
-
-body.home-ready {
-  background:
-    radial-gradient(740px 340px at 18% 2%, rgba(250, 218, 165, 0.22), transparent 62%),
-    radial-gradient(680px 360px at 86% 8%, rgba(104, 155, 162, 0.15), transparent 58%),
-    linear-gradient(155deg, #f8f3e9 0%, #eef2f3 46%, #f4edf3 100%) !important;
-}
-
-body.home-ready .choice-card:hover {
-  transform: translateY(-5px) rotate(-0.45deg) !important;
-  box-shadow:
-    0 30px 62px rgba(55, 58, 80, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
-}
-
-body.home-ready .choice-card--main:hover {
-  transform: translateY(-5px) rotate(0.35deg) !important;
-}
-
-body.home-ready .classic-title {
-  line-height: 1.05 !important;
-}
-
-body.home-ready .choice-card__title {
-  line-height: 1.25 !important;
-}
-
-body.home-ready .ritual-orb {
-  border-color: rgba(105, 125, 154, 0.38) !important;
-  background:
-    radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.88), rgba(177, 149, 206, 0.56) 34%, rgba(65, 83, 126, 0.78) 70%) !important;
-  box-shadow:
-    0 18px 42px rgba(68, 70, 115, 0.16),
-    inset 0 1px 14px rgba(255, 255, 255, 0.34) !important;
-}
-
-.question-spark-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.question-spark {
-  appearance: none;
-  border: 1px solid rgba(115, 105, 86, 0.22);
-  border-radius: 999px;
-  background: rgba(255, 253, 246, 0.68);
-  color: rgba(65, 55, 43, 0.82);
-  min-height: 32px;
-  padding: 6px 12px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform 0.22s cubic-bezier(.22,1,.36,1), border-color 0.2s ease, background 0.2s ease;
-}
-
-.question-spark:hover,
-.question-spark.active {
-  transform: translateY(-1px);
-  border-color: rgba(70, 116, 122, 0.42);
-  background: rgba(236, 249, 247, 0.92);
-  color: #344d50;
-}
-
-.reading-feedback-panel {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  max-width: min(100%, 560px);
-  min-height: 44px;
-  padding: 6px 8px 6px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 244, 216, 0.14);
-  background: rgba(255, 248, 229, 0.08);
-  color: rgba(255, 247, 229, 0.82);
-}
-
-.reading-feedback-panel__label {
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.reading-feedback-choice {
-  appearance: none;
-  border: 1px solid rgba(255, 244, 216, 0.16);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 247, 229, 0.9);
-  min-height: 32px;
-  padding: 5px 10px;
-  font-size: 12px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-}
-
-.reading-feedback-choice:hover,
-.reading-feedback-choice.active {
-  transform: translateY(-1px);
-  border-color: rgba(239, 211, 145, 0.55);
-  background: rgba(239, 211, 145, 0.18);
-}
-
-.reading-feedback-panel.is-sent .reading-feedback-choice:not(.active) {
-  opacity: 0.45;
-}
-
-.reading-feedback-choice:disabled {
-  cursor: default;
-}
-
-.reading-feedback-detail {
-  flex: 1 1 100%;
-  width: 100%;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.reading-feedback-detail textarea {
-  width: 100%;
-  min-height: 58px;
-  box-sizing: border-box;
-  resize: vertical;
-  border: 1px solid rgba(255, 244, 216, 0.18);
-  border-radius: 14px;
-  padding: 10px 12px;
-  background: rgba(14, 18, 32, 0.72);
-  color: rgba(255, 247, 229, 0.94);
-  font: inherit;
-  font-size: 12.5px;
-  line-height: 1.55;
-  outline: none;
-}
-
-.reading-feedback-detail textarea:focus {
-  border-color: rgba(239, 211, 145, 0.5);
-  box-shadow: 0 0 0 3px rgba(239, 211, 145, 0.1);
-}
-
-.reading-feedback-detail textarea::placeholder {
-  color: rgba(255, 247, 229, 0.46);
-}
-
-.reading-feedback-detail__actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.reading-feedback-mini-btn {
-  appearance: none;
-  border: 1px solid rgba(255, 244, 216, 0.16);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 247, 229, 0.88);
-  min-height: 30px;
-  padding: 5px 11px;
-  font-size: 12px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.reading-feedback-mini-btn.primary {
-  background: rgba(239, 211, 145, 0.18);
-  border-color: rgba(239, 211, 145, 0.44);
-}
-
-.reading-feedback-mini-btn:disabled {
-  opacity: 0.62;
-  cursor: progress;
-}
-
-.timeline-summary-item--wide {
-  grid-column: span 2;
-}
-
-body.home-ready .timeline-summary-item--wide {
-  grid-column: auto;
-}
-
-@media (max-width: 760px) {
-  .question-spark-row {
-    gap: 6px;
-  }
-
-  .question-spark {
-    flex: 1 1 calc(50% - 6px);
-    justify-content: center;
-    padding-inline: 8px;
-  }
-
-  .reading-feedback-panel {
-    width: 100%;
-    justify-content: center;
-    border-radius: 18px;
-  }
-
-  .reading-feedback-detail__actions {
-    justify-content: stretch;
-  }
-
-  .reading-feedback-mini-btn {
-    flex: 1;
-  }
-
-  .timeline-summary-item--wide {
-    grid-column: 1 / -1;
-  }
-}
-
-/* ═══════════════════════════════════════
-   减少动画模式（无障碍支持）
-   ═══════════════════════════════════════ */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  .card {
-    transition: none !important;
-  }
-
-  .sdm-card,
-  .ritual-orb,
-  .ritual-orb__glow,
-  .choice-card__icon,
-  .couple-toggle__heart,
-  .mystical-divider span:nth-child(2) {
-    animation: none !important;
-  }
-
-  .fan-deck.arc-fan .deck-card {
-    transition: opacity 0.1s ease !important;
-  }
-}
-
-/* ═══════════════════════════════════════
-   横屏手机适配（landscape mobile）
-   ═══════════════════════════════════════ */
-@media (max-height: 500px) and (orientation: landscape) {
-  .intro-panel {
-    padding: 16px 20px;
-  }
-
-  .home-ritual-widget {
-    display: none;
-  }
-
-  .hero-header {
-    margin-bottom: 8px;
-  }
-
-  .classic-title {
-    font-size: 1.6rem !important;
-  }
-
-  .fan-deck.arc-fan {
-    height: 180px !important;
-  }
-
-  .fan-deck.arc-fan .deck-card {
-    height: 130px !important;
-  }
-}
-
-/* ═══════════════════════════════════════
-   V1.3 抽牌与结果页统一：清亮纸面 + 深色仅作点睛
-   ═══════════════════════════════════════ */
-body.reading-mode {
-  color: #302a25;
-  background:
-    linear-gradient(112deg, rgba(80, 96, 94, 0.035) 0 1px, transparent 1px 20px),
-    radial-gradient(720px 280px at 18% 0%, rgba(238, 202, 136, 0.15), transparent 66%),
-    radial-gradient(640px 300px at 92% 8%, rgba(63, 128, 132, 0.08), transparent 62%),
-    linear-gradient(155deg, #fcf8ef 0%, #fbf7ee 48%, #f8f1ef 100%) !important;
-}
-
-body.reading-mode::before {
-  opacity: 0.16 !important;
-  background:
-    linear-gradient(90deg, rgba(80, 70, 52, 0.025) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(80, 70, 52, 0.018) 1px, transparent 1px) !important;
-  background-size: 48px 48px, 48px 48px !important;
-}
-
-body.reading-mode #starfield {
-  opacity: 0.04 !important;
-}
-
-body.reading-mode.night-mode .night-overlay {
-  opacity: 0.035 !important;
-}
-
-body.reading-mode .flow-steps {
-  width: min(760px, calc(100% - 18px)) !important;
-  margin: 8px auto 12px !important;
-}
-
-body.reading-mode .flow-step {
-  border-radius: 10px !important;
-  border-color: rgba(70, 62, 51, 0.14) !important;
-  background: rgba(255, 252, 244, 0.82) !important;
-  color: rgba(54, 47, 40, 0.72) !important;
-  letter-spacing: 0 !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.74);
-}
-
-body.reading-mode .flow-step.active {
-  background: #34445f !important;
-  color: #fff2d2 !important;
-  border-color: rgba(255, 255, 255, 0.24) !important;
-  box-shadow: 0 8px 18px rgba(38, 48, 74, 0.12) !important;
-}
-
-body.reading-mode .flow-step.done {
-  background: rgba(236, 247, 244, 0.96) !important;
-  color: #315f65 !important;
-  border-color: rgba(49, 95, 101, 0.26) !important;
-}
-
-body.reading-mode .energy-text,
-body.reading-mode .ritual-text,
-body.reading-mode #revealInstruction,
-body.reading-mode .shuffle-sub-text {
-  color: rgba(48, 42, 36, 0.78) !important;
-  text-shadow: none !important;
-  font-style: normal !important;
-  letter-spacing: 0 !important;
-}
-
-body.reading-mode .deck-area,
-body.reading-mode .spread-container {
-  border-radius: 10px !important;
-  border: 1px solid rgba(70, 62, 51, 0.14) !important;
-  background:
-    linear-gradient(150deg, rgba(255, 255, 251, 0.96), rgba(247, 249, 244, 0.88)) !important;
-  box-shadow:
-    0 18px 38px rgba(51, 50, 66, 0.09),
-    inset 0 1px 0 rgba(255, 255, 255, 0.82) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-body.reading-mode .shuffling-deck-multi {
-  filter: drop-shadow(0 18px 28px rgba(55, 58, 80, 0.14));
-}
-
-body.reading-mode .sdm-card,
-body.reading-mode .deck-card,
-body.reading-mode .fan-deck.arc-fan .deck-card {
-  border-radius: 8px !important;
-  border-color: rgba(72, 92, 100, 0.36) !important;
-  background:
-    radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.58), transparent 18%),
-    linear-gradient(155deg, #526176 0%, #2f3b5a 52%, #1f263d 100%) !important;
-  box-shadow:
-    0 12px 24px rgba(42, 46, 70, 0.18),
-    inset 0 0 0 1px rgba(255, 242, 204, 0.12) !important;
-}
-
-body.reading-mode .fan-deck.arc-fan::after {
-  opacity: 0.62;
-  background: radial-gradient(circle, rgba(221, 181, 96, 0.16) 0%, rgba(49, 95, 101, 0.10) 38%, transparent 70%) !important;
-  filter: blur(12px) !important;
-}
-
-body.reading-mode .deck-spread-hint,
-body.reading-mode .draw-slot-tracker {
-  color: rgba(48, 42, 36, 0.72) !important;
-  text-shadow: none !important;
-}
-
-body.reading-mode .deck-spread-hint {
-  border-radius: 999px !important;
-  background: rgba(255, 252, 244, 0.88) !important;
-  border-color: rgba(70, 62, 51, 0.16) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-body.reading-mode .dst-slot {
-  color: rgba(48, 42, 36, 0.58) !important;
-}
-
-body.reading-mode .dst-slot.filled {
-  color: #315f65 !important;
-}
-
-body.reading-mode .card-slot {
-  filter: drop-shadow(0 12px 22px rgba(55, 58, 80, 0.10));
-}
-
-body.reading-mode .slot-label {
-  border-radius: 8px !important;
-  background: rgba(255, 252, 244, 0.9) !important;
-  color: rgba(49, 95, 101, 0.88) !important;
-  border: 1px solid rgba(49, 95, 101, 0.22) !important;
-  font-style: normal !important;
-  letter-spacing: 0 !important;
-}
-
-body.reading-mode .card-face {
-  border-radius: 9px !important;
-  border-color: rgba(72, 92, 100, 0.22) !important;
-}
-
-body.reading-mode .card-back {
-  background:
-    radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.42), transparent 20%),
-    linear-gradient(155deg, #4d5871 0%, #2f3b5a 58%, #1f263d 100%) !important;
-  color: #f5dfae !important;
-}
-
-body.reading-mode .card-front {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 251, 0.98), rgba(248, 242, 229, 0.98)) !important;
-  color: #302a25 !important;
-}
-
-body.reading-mode .card-front .name {
-  color: #302a25 !important;
-  border-color: rgba(156, 103, 38, 0.38) !important;
-  letter-spacing: 0 !important;
-}
-
-body.reading-mode .reading-wrapper {
-  max-width: 860px !important;
-}
-
-body.reading-text-active .reading-wrapper {
-  max-width: min(860px, calc(100vw - 28px)) !important;
-}
-
-body.reading-mode .mini-card-bar {
-  border-radius: 10px !important;
-  border: 1px solid rgba(70, 62, 51, 0.12) !important;
-  background: rgba(255, 252, 244, 0.92) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  box-shadow: 0 10px 24px rgba(51, 50, 66, 0.08) !important;
-}
-
-body.reading-mode .mini-card-item {
-  border-radius: 8px !important;
-  background: rgba(247, 249, 244, 0.94) !important;
-  border-color: rgba(70, 62, 51, 0.12) !important;
-}
-
-body.reading-mode .mini-card-position {
-  color: rgba(49, 95, 101, 0.78) !important;
-}
-
-body.reading-mode .mini-card-name {
-  color: #302a25 !important;
-}
-
-body.reading-mode .parchment-box {
-  border-radius: 10px !important;
-  border: 1px solid rgba(70, 62, 51, 0.16) !important;
-  background:
-    linear-gradient(150deg, rgba(255, 255, 251, 0.99), rgba(249, 247, 239, 0.98)) !important;
-  color: #302a25 !important;
-  box-shadow:
-    0 22px 46px rgba(51, 50, 66, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.84) !important;
-}
-
-body.reading-mode .reading-wrapper[aria-busy="true"] .parchment-box {
-  box-shadow:
-    0 22px 46px rgba(51, 50, 66, 0.12),
-    0 0 0 1px rgba(178, 123, 36, 0.12),
-    0 0 30px rgba(178, 123, 36, 0.08) !important;
-}
-
-body.reading-mode .ai-status {
-  border-radius: 8px !important;
-  background: rgba(243, 247, 244, 0.92) !important;
-  border-color: rgba(49, 95, 101, 0.18) !important;
-  color: rgba(48, 42, 36, 0.76) !important;
-}
-
-body.reading-mode .reading-summary-panel {
-  grid-template-columns: 1.12fr 1fr 1fr !important;
-  gap: 10px !important;
-}
-
-body.reading-mode .reading-summary-card {
-  border-radius: 8px !important;
-  border-color: rgba(70, 62, 51, 0.13) !important;
-  background: rgba(252, 249, 241, 0.96) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78) !important;
-}
-
-body.reading-mode .reading-summary-card--answer {
-  background: linear-gradient(145deg, rgba(255, 246, 224, 0.98), rgba(238, 247, 244, 0.96)) !important;
-  border-color: rgba(178, 123, 36, 0.22) !important;
-}
-
-body.reading-mode .reading-summary-card__label {
-  color: rgba(49, 95, 101, 0.88) !important;
-  letter-spacing: 0 !important;
-  text-transform: none !important;
-  font-weight: 800 !important;
-}
-
-body.reading-mode .reading-summary-card p,
-body.reading-mode .reading-summary-card li {
-  color: #302a25 !important;
-}
-
-body.reading-mode .parchment-text,
-body.reading-mode #streamContent {
-  color: #302a25 !important;
-}
-
-body.reading-mode #streamContent h3,
-body.reading-mode #streamContent h4 {
-  color: #6e4b20 !important;
-  letter-spacing: 0 !important;
-}
-
-body.reading-mode #streamContent blockquote {
-  border-left: 4px solid rgba(178, 123, 36, 0.44) !important;
-  border-radius: 0 8px 8px 0 !important;
-  background: rgba(246, 239, 222, 0.88) !important;
-  color: #302a25 !important;
-  box-shadow: none !important;
-}
-
-body.reading-mode #streamContent hr {
-  background: linear-gradient(90deg, transparent, rgba(70, 62, 51, 0.18), transparent) !important;
-}
-
-body.reading-mode #streamContent ul li::before {
-  background: #315f65 !important;
-}
-
-body.reading-mode .result-actions {
-  border-radius: 10px !important;
-  border-color: rgba(70, 62, 51, 0.14) !important;
-  background: rgba(255, 252, 244, 0.92) !important;
-  color: #302a25 !important;
-  box-shadow: 0 18px 36px rgba(51, 50, 66, 0.10) !important;
-}
-
-body.reading-mode .result-actions::before {
-  color: rgba(49, 95, 101, 0.74) !important;
-  letter-spacing: 0 !important;
-}
-
-body.reading-mode .result-action-soft,
-body.reading-mode .reading-feedback-choice,
-body.reading-mode .reading-feedback-mini-btn {
-  border-radius: 8px !important;
-  background: rgba(247, 249, 244, 0.96) !important;
-  border-color: rgba(70, 62, 51, 0.14) !important;
-  color: #302a25 !important;
-}
-
-body.reading-mode .reading-feedback-panel {
-  border-radius: 10px !important;
-  background: rgba(247, 249, 244, 0.72) !important;
-  border-color: rgba(70, 62, 51, 0.12) !important;
-  color: rgba(48, 42, 36, 0.74) !important;
-}
-
-@media (max-width: 760px) {
-  body.reading-mode .reading-summary-panel {
-    grid-template-columns: 1fr !important;
-  }
-}
-
-/* V1.3.3 final: restore the blue starfield home after all pale overrides */
-body.home-ready {
-  color: #f7ecd3;
-  background:
-    radial-gradient(900px 420px at 16% -8%, rgba(124, 151, 220, 0.32), transparent 62%),
-    radial-gradient(780px 360px at 88% 4%, rgba(156, 115, 214, 0.22), transparent 58%),
-    radial-gradient(620px 280px at 50% 26%, rgba(219, 176, 86, 0.10), transparent 68%),
-    linear-gradient(150deg, #071021 0%, #111c3a 43%, #1a1740 72%, #090d1b 100%) !important;
-}
-
-body.home-ready::before {
-  opacity: 0.42 !important;
-  background:
-    radial-gradient(circle at 18% 14%, rgba(255, 236, 180, 0.18), transparent 2px),
-    radial-gradient(circle at 72% 20%, rgba(207, 225, 255, 0.16), transparent 2px),
-    radial-gradient(circle at 42% 74%, rgba(255, 236, 180, 0.12), transparent 1px),
-    linear-gradient(115deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 24px) !important;
+    radial-gradient(circle at 18% 14%, rgba(255, 236, 180, 0.16), transparent 2px),
+    radial-gradient(circle at 72% 20%, rgba(207, 225, 255, 0.14), transparent 2px),
+    radial-gradient(circle at 42% 74%, rgba(255, 236, 180, 0.10), transparent 1px),
+    linear-gradient(115deg, rgba(255, 255, 255, 0.026) 0 1px, transparent 1px 24px) !important;
 }
 
 body.home-ready #starfield { opacity: 0.34 !important; }
-body.home-ready .container { background: radial-gradient(680px 220px at 50% 0%, rgba(255, 228, 166, 0.08), transparent 70%) !important; }
-
-body.home-ready .top-nav {
-  background: linear-gradient(125deg, rgba(23, 35, 72, 0.86), rgba(16, 22, 50, 0.72)) !important;
-  border-color: rgba(218, 195, 139, 0.18) !important;
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-}
-
-body.home-ready .classic-title {
-  background: linear-gradient(112deg, #fff0c6 0%, #d5a65b 38%, #b58aff 72%, #9ec9ff 100%) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  text-shadow: 0 18px 42px rgba(8, 10, 28, 0.42) !important;
-}
-
-body.home-ready .choice-card {
-  background:
-    radial-gradient(420px 160px at 18% 0%, rgba(255, 228, 166, 0.08), transparent 68%),
-    linear-gradient(150deg, rgba(25, 35, 76, 0.88), rgba(13, 19, 46, 0.82)) !important;
-  border-color: rgba(222, 198, 145, 0.2) !important;
-  box-shadow: 0 24px 58px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-}
-
-body.home-ready .choice-card--main {
-  background:
-    radial-gradient(560px 180px at 18% 0%, rgba(231, 188, 101, 0.14), transparent 70%),
-    radial-gradient(420px 190px at 88% 8%, rgba(111, 148, 228, 0.18), transparent 72%),
-    linear-gradient(150deg, rgba(26, 43, 91, 0.92), rgba(13, 22, 55, 0.88)) !important;
-  border-color: rgba(232, 194, 112, 0.28) !important;
-}
-
-body.home-ready .choice-card--secondary { background: linear-gradient(150deg, rgba(23, 36, 76, 0.82), rgba(14, 20, 48, 0.76)) !important; }
-body.home-ready .choice-card--love { background: linear-gradient(150deg, rgba(48, 31, 78, 0.82), rgba(18, 20, 52, 0.76)) !important; }
-body.home-ready .choice-card__title { color: rgba(255, 239, 204, 0.98) !important; }
-
-body.home-ready .choice-card__eyebrow,
-body.home-ready .choice-card__feature,
-body.home-ready .spread-guide-head,
-body.home-ready .input-group label {
-  color: rgba(233, 198, 124, 0.94) !important;
-}
-
-body.home-ready .choice-card__desc,
-body.home-ready .field-hint,
-body.home-ready .pay-hint,
-body.home-ready .spread-guide-text,
-body.home-ready .ritual-orb__label,
-body.home-ready .status-banner {
-  color: rgba(237, 228, 207, 0.74) !important;
-}
-
-body.home-ready .question-spark,
-body.home-ready .spread-pill,
-body.home-ready .spread-current-pick,
-body.home-ready .spread-recommendation,
-body.home-ready .spread-visual-guide,
-body.home-ready .spread-advanced-teaser {
-  background: rgba(8, 15, 35, 0.52) !important;
-  border-color: rgba(218, 195, 139, 0.16) !important;
-  color: rgba(247, 236, 212, 0.9) !important;
-}
-
-body.home-ready input,
-body.home-ready textarea,
-body.home-ready select {
-  background: rgba(7, 12, 30, 0.66) !important;
-  color: rgba(255, 246, 226, 0.96) !important;
-  border-color: rgba(218, 195, 139, 0.22) !important;
-}
-
-/* V1.3.6 home composition: aligned glass panels, lighter rhythm */
-body.home-ready .home-main,
-body.home-ready .hero-grid {
-  width: min(1080px, calc(100vw - 72px)) !important;
-  max-width: 1080px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-body.home-ready .hero-grid {
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  grid-template-areas:
-    "quick"
-    "deep"
-    "love" !important;
-  gap: 20px !important;
-}
-
-body.home-ready .choice-card {
-  width: 100% !important;
-  max-width: none !important;
-  box-sizing: border-box !important;
-  border-radius: 28px 18px 30px 18px !important;
-  border: 1px solid rgba(226, 210, 168, 0.22) !important;
-  backdrop-filter: blur(18px) saturate(1.25) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(1.25) !important;
-  overflow: hidden;
-}
-
-body.home-ready .choice-card::before {
-  content: "";
-  display: block !important;
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(108deg, transparent 0%, rgba(255, 255, 255, 0.18) 38%, transparent 66%),
-    radial-gradient(420px 180px at 14% 0%, rgba(255, 232, 171, 0.12), transparent 70%);
-  opacity: 0.58;
-}
-
-body.home-ready .card-quick {
-  grid-area: quick !important;
-  min-height: 172px !important;
-  padding: clamp(24px, 3vw, 34px) clamp(28px, 4vw, 42px) !important;
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) auto !important;
-  align-items: center !important;
-  column-gap: 32px !important;
-  text-align: left !important;
-  background:
-    radial-gradient(360px 150px at 8% 16%, rgba(215, 181, 255, 0.16), transparent 72%),
-    radial-gradient(340px 150px at 96% 10%, rgba(255, 227, 165, 0.14), transparent 70%),
-    linear-gradient(145deg, rgba(22, 34, 76, 0.70), rgba(13, 18, 45, 0.58)) !important;
-  box-shadow:
-    0 24px 70px rgba(2, 8, 28, 0.32),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
-}
-
-body.home-ready .card-quick::after {
-  content: "✦";
-  position: absolute;
-  left: 24px;
-  top: 22px;
-  color: rgba(186, 160, 255, 0.24);
-  font-size: 66px;
-  line-height: 1;
-  transform: rotate(-12deg);
-  pointer-events: none;
-}
-
-body.home-ready .card-quick .choice-card__eyebrow,
-body.home-ready .card-quick .choice-card__title,
-body.home-ready .card-quick .choice-card__desc,
-body.home-ready .card-quick .choice-card__feature {
-  grid-column: 1 !important;
-  text-align: left !important;
-  justify-self: start !important;
-}
-
-body.home-ready .card-quick .choice-card__eyebrow {
-  margin-left: 2px !important;
-  margin-bottom: 12px !important;
-  color: rgba(226, 196, 128, 0.92) !important;
-}
-
-body.home-ready .card-quick .choice-card__title {
-  margin-bottom: 12px !important;
-  font-size: clamp(1.55rem, 2.4vw, 2.08rem) !important;
-  line-height: 1.08 !important;
-  font-style: normal !important;
-}
-
-body.home-ready .card-quick .choice-card__desc {
-  max-width: 30em;
-  margin-bottom: 18px !important;
-  font-size: clamp(0.98rem, 1.3vw, 1.12rem) !important;
-  color: rgba(239, 231, 213, 0.78) !important;
-}
-
-body.home-ready .card-quick .choice-card__feature {
-  min-width: min(100%, 620px);
-  padding: 9px 18px !important;
-  border-radius: 999px !important;
-  background: rgba(255, 255, 255, 0.065) !important;
-  border-color: rgba(226, 210, 168, 0.16) !important;
-  color: rgba(232, 199, 130, 0.94) !important;
-  text-align: center !important;
-}
-
-body.home-ready .card-quick .choice-card__footer {
-  grid-column: 2 !important;
-  grid-row: 1 / span 4 !important;
-  margin: 0 !important;
-  align-self: center !important;
-}
-
-body.home-ready .card-quick #quickDrawBtn {
-  min-width: 156px !important;
-  min-height: 58px !important;
-  border-radius: 18px 12px 18px 12px !important;
-  background: rgba(255, 252, 244, 0.92) !important;
-  color: #2f2417 !important;
-  border-color: rgba(255, 255, 255, 0.68) !important;
-  box-shadow:
-    0 14px 34px rgba(0, 0, 0, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.82) !important;
-}
-
-body.home-ready .card-deep {
-  grid-area: deep !important;
-  max-width: none !important;
-  padding: clamp(30px, 4vw, 44px) clamp(34px, 5vw, 54px) !important;
-  text-align: left !important;
-  border-radius: 18px 32px 18px 32px !important;
-  background:
-    radial-gradient(520px 220px at 74% 6%, rgba(96, 129, 230, 0.22), transparent 72%),
-    radial-gradient(420px 220px at 12% 0%, rgba(224, 190, 103, 0.12), transparent 70%),
-    linear-gradient(145deg, rgba(30, 49, 101, 0.72), rgba(14, 22, 54, 0.64)) !important;
-}
-
-body.home-ready .card-deep .choice-card__eyebrow,
-body.home-ready .card-deep .choice-card__title,
-body.home-ready .card-deep .choice-card__desc {
-  text-align: left !important;
-}
-
-body.home-ready .card-deep .choice-card__title {
-  font-size: clamp(1.65rem, 2.7vw, 2.36rem) !important;
-  line-height: 1.12 !important;
-  font-style: normal !important;
-}
-
-body.home-ready .card-deep .choice-card__desc {
-  max-width: 46em;
-  font-size: 1rem !important;
-}
-
-body.home-ready .card-love {
-  grid-area: love !important;
-  width: 100% !important;
-  justify-self: stretch !important;
-  border-radius: 999px !important;
-  opacity: 0.94;
-}
-
-body.home-ready .card-love.couple-collapsed {
-  max-width: none !important;
-}
-
-body.home-ready .couple-collapsed .couple-toggle {
-  justify-content: flex-start !important;
-  padding: 16px 26px !important;
-}
-
-body.home-ready .spread-visual-guide,
-body.home-ready .spread-current-pick,
-body.home-ready .spread-pill,
-body.home-ready .question-spark {
-  backdrop-filter: blur(12px) saturate(1.16) !important;
-  -webkit-backdrop-filter: blur(12px) saturate(1.16) !important;
-}
-
-@media (max-width: 760px) {
-  body.home-ready .home-main,
-  body.home-ready .hero-grid {
-    width: min(100%, calc(100vw - 28px)) !important;
-  }
-
-  body.home-ready .card-quick {
-    grid-template-columns: 1fr !important;
-    padding: 24px 20px !important;
-  }
-
-  body.home-ready .card-quick .choice-card__footer {
-    grid-column: 1 !important;
-    grid-row: auto !important;
-    justify-self: stretch !important;
-  }
-
-  body.home-ready .card-quick #quickDrawBtn {
-    width: 100%;
-  }
-
-  body.home-ready .card-deep {
-    padding: 26px 20px !important;
-  }
-}
-
-/* V1.3.5 layout correction: lightweight draw stays at the top */
-body.home-ready .hero-grid {
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr) !important;
-  grid-template-areas:
-    "quick quick"
-    "deep deep"
-    "love love" !important;
-}
-
-body.home-ready .card-quick {
-  grid-area: quick !important;
-}
-
-body.home-ready .card-deep {
-  grid-area: deep !important;
-}
-
-body.home-ready .card-love {
-  grid-area: love !important;
-}
-
-/* V1.3.1 星空夜蓝修正：恢复神秘感，但保持清晰层级 */
-body.home-ready {
-  color: #f7ecd3;
-  background:
-    radial-gradient(900px 420px at 16% -8%, rgba(124, 151, 220, 0.32), transparent 62%),
-    radial-gradient(780px 360px at 88% 4%, rgba(156, 115, 214, 0.22), transparent 58%),
-    radial-gradient(620px 280px at 50% 26%, rgba(219, 176, 86, 0.10), transparent 68%),
-    linear-gradient(150deg, #071021 0%, #111c3a 43%, #1a1740 72%, #090d1b 100%) !important;
-}
-
-body.home-ready::before {
-  opacity: 0.42 !important;
-  background:
-    radial-gradient(circle at 18% 14%, rgba(255, 236, 180, 0.18), transparent 2px),
-    radial-gradient(circle at 72% 20%, rgba(207, 225, 255, 0.16), transparent 2px),
-    radial-gradient(circle at 42% 74%, rgba(255, 236, 180, 0.12), transparent 1px),
-    linear-gradient(115deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 24px) !important;
-}
-
-body.home-ready #starfield {
-  opacity: 0.34 !important;
-}
-
-body.home-ready.night-mode .night-overlay {
-  opacity: 0.08 !important;
-}
-
-body.home-ready[data-weather="sunny"]::after,
-body.home-ready[data-weather="cloudy"]::after,
-body.home-ready[data-weather="rainy"]::after,
-body.home-ready[data-weather="misty"]::after {
-  opacity: 0.12 !important;
-}
+body.home-ready.night-mode .night-overlay { opacity: 0.16 !important; }
 
 body.home-ready .container {
-  background:
-    radial-gradient(680px 220px at 50% 0%, rgba(255, 228, 166, 0.08), transparent 70%) !important;
+  max-width: 1220px;
+  background: radial-gradient(680px 220px at 50% 0%, rgba(255, 228, 166, 0.07), transparent 70%) !important;
 }
 
-body.home-ready .top-nav {
-  background: linear-gradient(125deg, rgba(23, 35, 72, 0.86), rgba(16, 22, 50, 0.72)) !important;
-  border-color: rgba(218, 195, 139, 0.18) !important;
-  box-shadow:
-    0 18px 44px rgba(0, 0, 0, 0.26),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+body.home-ready .top-nav,
+body:not(.reading-mode) .top-nav {
+  width: min(1080px, calc(100vw - 132px));
+  margin: 28px auto 0;
+  border-radius: 22px 14px 22px 14px !important;
+  background: linear-gradient(125deg, rgba(25, 36, 72, 0.62), rgba(13, 18, 45, 0.48)) !important;
+  border-color: rgba(227, 207, 158, 0.16) !important;
+  backdrop-filter: blur(18px) saturate(1.18) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.18) !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
 }
 
 body.home-ready .phase-chip {
-  background: rgba(8, 14, 32, 0.72) !important;
-  color: rgba(255, 238, 196, 0.94) !important;
-  border-color: rgba(218, 195, 139, 0.22) !important;
+  background: rgba(16, 25, 58, 0.7) !important;
+  border-color: rgba(232, 203, 133, 0.16) !important;
+  color: rgba(255, 243, 212, 0.94) !important;
 }
 
 body.home-ready .top-nav-actions .icon-btn {
-  background: rgba(255, 246, 219, 0.08) !important;
-  color: rgba(255, 241, 212, 0.92) !important;
-  border-color: rgba(218, 195, 139, 0.22) !important;
-}
-
-body.home-ready .top-nav-actions .icon-btn:hover {
-  background: rgba(255, 236, 186, 0.14) !important;
-  border-color: rgba(235, 206, 150, 0.42) !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  border-color: rgba(232, 203, 133, 0.16) !important;
+  color: rgba(255, 242, 214, 0.88) !important;
+  box-shadow: none !important;
 }
 
 body.home-ready .classic-title {
-  background: linear-gradient(112deg, #fff0c6 0%, #d5a65b 38%, #b58aff 72%, #9ec9ff 100%) !important;
+  font-family: "Kaiti SC", "STKaiti", "KaiTi", "Songti SC", "Noto Serif SC", serif !important;
+  font-weight: 520 !important;
+  letter-spacing: 0.08em !important;
+  line-height: 1.02 !important;
+  background: linear-gradient(112deg, #fff1c9 0%, #d7a85f 38%, #c6a3ff 72%, #9cc8ff 100%) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
-  text-shadow: 0 18px 42px rgba(8, 10, 28, 0.42) !important;
+  -webkit-text-fill-color: transparent !important;
+  text-shadow: 0 18px 42px rgba(8, 10, 28, 0.38) !important;
 }
 
 body.home-ready .classic-title .title-en {
-  color: rgba(225, 220, 241, 0.72) !important;
-  -webkit-text-fill-color: rgba(225, 220, 241, 0.72) !important;
+  display: block;
+  margin-top: 10px;
+  font-family: "Manrope", "PingFang SC", sans-serif !important;
+  font-size: 0.34em !important;
+  font-weight: 650 !important;
+  letter-spacing: 0.42em !important;
+  color: rgba(224, 213, 194, 0.56) !important;
+  -webkit-text-fill-color: rgba(224, 213, 194, 0.56) !important;
 }
 
 body.home-ready .hero-header::after {
-  background: linear-gradient(90deg, transparent, rgba(232, 194, 112, 0.54), rgba(160, 139, 255, 0.34), transparent) !important;
+  width: min(150px, 38vw) !important;
+  background: linear-gradient(90deg, transparent, rgba(232, 195, 113, 0.48), rgba(156, 191, 255, 0.32), transparent) !important;
+}
+
+body.home-ready .home-ritual-widget {
+  margin: 8px auto 10px !important;
+  transform: none !important;
 }
 
 body.home-ready .ritual-orb {
+  width: 86px !important;
+  height: 86px !important;
+  border-color: rgba(220, 197, 151, 0.22) !important;
   background:
-    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.94), rgba(183, 142, 236, 0.62) 28%, rgba(67, 78, 154, 0.84) 66%, rgba(24, 31, 75, 0.96) 100%) !important;
-  box-shadow:
-    0 0 0 1px rgba(235, 206, 150, 0.18),
-    0 18px 46px rgba(58, 75, 163, 0.34),
-    inset 0 1px 18px rgba(255, 255, 255, 0.38) !important;
+    radial-gradient(circle at 36% 30%, rgba(255, 255, 255, 0.92), rgba(190, 150, 219, 0.58) 32%, rgba(66, 78, 132, 0.8) 70%) !important;
+  box-shadow: 0 18px 44px rgba(60, 47, 120, 0.22), inset 0 1px 14px rgba(255, 255, 255, 0.34) !important;
 }
 
 body.home-ready .ritual-orb__label,
 body.home-ready .status-banner,
 body.home-ready .mystical-divider {
-  color: rgba(236, 226, 204, 0.76) !important;
+  color: rgba(237, 228, 207, 0.64) !important;
+  letter-spacing: 0 !important;
+  text-shadow: none !important;
 }
 
-body.home-ready .choice-card {
-  background:
-    radial-gradient(420px 160px at 18% 0%, rgba(255, 228, 166, 0.08), transparent 68%),
-    linear-gradient(150deg, rgba(25, 35, 76, 0.88), rgba(13, 19, 46, 0.82)) !important;
-  border-color: rgba(222, 198, 145, 0.2) !important;
-  box-shadow:
-    0 24px 58px rgba(0, 0, 0, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+body.home-ready .home-main,
+body.home-ready .hero-grid,
+body:not(.reading-mode) .home-main,
+body:not(.reading-mode) .hero-grid {
+  width: min(1080px, calc(100vw - 132px)) !important;
+  max-width: 1080px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
-body.home-ready .choice-card--main {
-  background:
-    radial-gradient(560px 180px at 18% 0%, rgba(231, 188, 101, 0.14), transparent 70%),
-    radial-gradient(420px 190px at 88% 8%, rgba(111, 148, 228, 0.18), transparent 72%),
-    linear-gradient(150deg, rgba(26, 43, 91, 0.92), rgba(13, 22, 55, 0.88)) !important;
-  border-color: rgba(232, 194, 112, 0.28) !important;
+body.home-ready .hero-grid,
+body:not(.reading-mode) .hero-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-template-areas:
+    "quick"
+    "deep"
+    "love" !important;
+  gap: 18px !important;
 }
 
-body.home-ready .choice-card--secondary {
+body.home-ready .choice-card,
+body:not(.reading-mode) .choice-card {
+  width: 100% !important;
+  max-width: none !important;
+  justify-self: stretch !important;
+  box-sizing: border-box !important;
+  color: rgba(255, 244, 221, 0.95) !important;
+  border: 1px solid rgba(226, 210, 168, 0.18) !important;
   background:
-    linear-gradient(150deg, rgba(23, 36, 76, 0.82), rgba(14, 20, 48, 0.76)) !important;
-}
-
-body.home-ready .choice-card--love {
-  background:
-    linear-gradient(150deg, rgba(48, 31, 78, 0.82), rgba(18, 20, 52, 0.76)) !important;
+    radial-gradient(420px 170px at 16% 0%, rgba(255, 231, 180, 0.08), transparent 68%),
+    linear-gradient(145deg, rgba(23, 34, 75, 0.54), rgba(10, 16, 40, 0.42)) !important;
+  backdrop-filter: blur(18px) saturate(1.2) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.2) !important;
+  box-shadow: 0 24px 68px rgba(2, 8, 28, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
+  overflow: hidden;
 }
 
 body.home-ready .choice-card:hover {
-  transform: translateY(-4px) rotate(-0.16deg) !important;
-  box-shadow:
-    0 30px 66px rgba(0, 0, 0, 0.32),
-    0 0 0 1px rgba(232, 194, 112, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 30px 76px rgba(2, 8, 28, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
 }
 
-body.home-ready .choice-card__title {
-  color: rgba(255, 239, 204, 0.98) !important;
-  text-shadow: 0 12px 28px rgba(0, 0, 0, 0.24) !important;
+body.home-ready .card-quick {
+  grid-area: quick !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  min-height: 150px !important;
+  padding: clamp(22px, 3vw, 32px) clamp(26px, 4vw, 40px) !important;
+  border-radius: 30px 18px 34px 18px !important;
+  background:
+    radial-gradient(420px 190px at 8% 10%, rgba(198, 170, 255, 0.17), transparent 70%),
+    radial-gradient(340px 150px at 94% 0%, rgba(255, 228, 166, 0.12), transparent 70%),
+    linear-gradient(145deg, rgba(22, 34, 76, 0.58), rgba(13, 18, 45, 0.42)) !important;
+}
+
+body.home-ready .card-deep {
+  grid-area: deep !important;
+  min-height: 0 !important;
+  padding: clamp(28px, 4vw, 42px) clamp(30px, 5vw, 52px) !important;
+  border-radius: 18px 32px 18px 32px !important;
+  background:
+    radial-gradient(520px 220px at 74% 6%, rgba(96, 129, 230, 0.18), transparent 72%),
+    radial-gradient(420px 220px at 12% 0%, rgba(224, 190, 103, 0.10), transparent 70%),
+    linear-gradient(145deg, rgba(27, 47, 98, 0.58), rgba(12, 20, 54, 0.48)) !important;
+}
+
+body.home-ready .card-love {
+  grid-area: love !important;
+  min-height: 0 !important;
+  border-radius: 22px !important;
 }
 
 body.home-ready .choice-card__eyebrow,
 body.home-ready .choice-card__feature,
 body.home-ready .spread-guide-head,
 body.home-ready .input-group label {
-  color: rgba(233, 198, 124, 0.94) !important;
+  color: rgba(232, 198, 124, 0.92) !important;
+  font-style: normal !important;
+  letter-spacing: 0.04em !important;
+  text-align: left !important;
+}
+
+body.home-ready .choice-card__title {
+  color: rgba(255, 241, 210, 0.98) !important;
+  font-family: "Kaiti SC", "STKaiti", "KaiTi", "Songti SC", "Noto Serif SC", serif !important;
+  font-weight: 560 !important;
+  letter-spacing: 0.02em !important;
+  line-height: 1.18 !important;
+  text-align: left !important;
 }
 
 body.home-ready .choice-card__desc,
@@ -7064,869 +5753,9 @@ body.home-ready .field-hint,
 body.home-ready .pay-hint,
 body.home-ready .spread-guide-text,
 body.home-ready .couple-toggle__desc {
-  color: rgba(237, 228, 207, 0.74) !important;
-}
-
-body.home-ready .question-spark,
-body.home-ready .spread-pill,
-body.home-ready .spread-current-pick,
-body.home-ready .spread-recommendation,
-body.home-ready .spread-visual-guide,
-body.home-ready .spread-advanced-teaser {
-  background: rgba(8, 15, 35, 0.52) !important;
-  border-color: rgba(218, 195, 139, 0.16) !important;
-  color: rgba(247, 236, 212, 0.9) !important;
-}
-
-body.home-ready .spread-pill.active,
-body.home-ready .spread-current-pick,
-body.home-ready .spread-recommendation {
-  background: linear-gradient(135deg, rgba(31, 62, 94, 0.66), rgba(37, 31, 76, 0.58)) !important;
-  border-color: rgba(232, 194, 112, 0.36) !important;
-}
-
-body.home-ready .spread-pill__name,
-body.home-ready .spread-current-pick__name,
-body.home-ready .spread-recommendation__main {
-  color: rgba(255, 239, 204, 0.98) !important;
-}
-
-body.home-ready .spread-pill__desc,
-body.home-ready .spread-pill__meta,
-body.home-ready .spread-current-pick__meta,
-body.home-ready .spread-recommendation__reason,
-body.home-ready .spread-advanced-teaser__preview {
-  color: rgba(232, 224, 204, 0.72) !important;
-}
-
-body.home-ready input,
-body.home-ready textarea,
-body.home-ready select {
-  background: rgba(7, 12, 30, 0.66) !important;
-  color: rgba(255, 246, 226, 0.96) !important;
-  border-color: rgba(218, 195, 139, 0.22) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 10px 22px rgba(0, 0, 0, 0.12) !important;
-}
-
-body.home-ready input::placeholder,
-body.home-ready textarea::placeholder {
-  color: rgba(230, 221, 202, 0.48) !important;
-}
-
-body.home-ready .main-btn {
-  background: linear-gradient(135deg, #ffe8ad, #c8913d 52%, #8e5f24) !important;
-  color: #21160a !important;
-  box-shadow: 0 16px 34px rgba(198, 145, 61, 0.28) !important;
-}
-
-body.home-ready .secondary-btn,
-body.home-ready .save-btn {
-  background: rgba(255, 246, 219, 0.1) !important;
-  color: rgba(255, 239, 204, 0.94) !important;
-  border-color: rgba(232, 194, 112, 0.26) !important;
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.18) !important;
-}
-
-body.home-ready .couple-toggle {
-  color: rgba(255, 235, 220, 0.94) !important;
-}
-
-body.home-ready .price-tag {
-  background: rgba(255, 228, 166, 0.14) !important;
-  color: rgba(255, 231, 178, 0.96) !important;
-  border-color: rgba(232, 194, 112, 0.22) !important;
-}
-
-/* V1.3.2 最终覆盖：夜蓝星空必须压过旧浅色规则 */
-body.home-ready {
-  color: #f7ecd3;
-  background:
-    radial-gradient(900px 420px at 16% -8%, rgba(124, 151, 220, 0.32), transparent 62%),
-    radial-gradient(780px 360px at 88% 4%, rgba(156, 115, 214, 0.22), transparent 58%),
-    radial-gradient(620px 280px at 50% 26%, rgba(219, 176, 86, 0.10), transparent 68%),
-    linear-gradient(150deg, #071021 0%, #111c3a 43%, #1a1740 72%, #090d1b 100%) !important;
-}
-
-body.home-ready::before {
-  opacity: 0.42 !important;
-  background:
-    radial-gradient(circle at 18% 14%, rgba(255, 236, 180, 0.18), transparent 2px),
-    radial-gradient(circle at 72% 20%, rgba(207, 225, 255, 0.16), transparent 2px),
-    radial-gradient(circle at 42% 74%, rgba(255, 236, 180, 0.12), transparent 1px),
-    linear-gradient(115deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 24px) !important;
-}
-
-body.home-ready #starfield {
-  opacity: 0.34 !important;
-}
-
-body.home-ready .container {
-  background: radial-gradient(680px 220px at 50% 0%, rgba(255, 228, 166, 0.08), transparent 70%) !important;
-}
-
-body.home-ready .top-nav {
-  background: linear-gradient(125deg, rgba(23, 35, 72, 0.86), rgba(16, 22, 50, 0.72)) !important;
-  border-color: rgba(218, 195, 139, 0.18) !important;
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-}
-
-body.home-ready .classic-title {
-  background: linear-gradient(112deg, #fff0c6 0%, #d5a65b 38%, #b58aff 72%, #9ec9ff 100%) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  text-shadow: 0 18px 42px rgba(8, 10, 28, 0.42) !important;
-}
-
-body.home-ready .choice-card {
-  background:
-    radial-gradient(420px 160px at 18% 0%, rgba(255, 228, 166, 0.08), transparent 68%),
-    linear-gradient(150deg, rgba(25, 35, 76, 0.88), rgba(13, 19, 46, 0.82)) !important;
-  border-color: rgba(222, 198, 145, 0.2) !important;
-  box-shadow: 0 24px 58px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-}
-
-body.home-ready .choice-card--main {
-  background:
-    radial-gradient(560px 180px at 18% 0%, rgba(231, 188, 101, 0.14), transparent 70%),
-    radial-gradient(420px 190px at 88% 8%, rgba(111, 148, 228, 0.18), transparent 72%),
-    linear-gradient(150deg, rgba(26, 43, 91, 0.92), rgba(13, 22, 55, 0.88)) !important;
-  border-color: rgba(232, 194, 112, 0.28) !important;
-}
-
-body.home-ready .choice-card--secondary {
-  background: linear-gradient(150deg, rgba(23, 36, 76, 0.82), rgba(14, 20, 48, 0.76)) !important;
-}
-
-body.home-ready .choice-card--love {
-  background: linear-gradient(150deg, rgba(48, 31, 78, 0.82), rgba(18, 20, 52, 0.76)) !important;
-}
-
-body.home-ready .choice-card__title {
-  color: rgba(255, 239, 204, 0.98) !important;
-}
-
-body.home-ready .choice-card__eyebrow,
-body.home-ready .choice-card__feature,
-body.home-ready .spread-guide-head,
-body.home-ready .input-group label {
-  color: rgba(233, 198, 124, 0.94) !important;
-}
-
-body.home-ready .choice-card__desc,
-body.home-ready .field-hint,
-body.home-ready .pay-hint,
-body.home-ready .spread-guide-text,
-body.home-ready .ritual-orb__label,
-body.home-ready .status-banner {
-  color: rgba(237, 228, 207, 0.74) !important;
-}
-
-body.home-ready .question-spark,
-body.home-ready .spread-pill,
-body.home-ready .spread-current-pick,
-body.home-ready .spread-recommendation,
-body.home-ready .spread-visual-guide,
-body.home-ready .spread-advanced-teaser {
-  background: rgba(8, 15, 35, 0.52) !important;
-  border-color: rgba(218, 195, 139, 0.16) !important;
-  color: rgba(247, 236, 212, 0.9) !important;
-}
-
-body.home-ready input,
-body.home-ready textarea,
-body.home-ready select {
-  background: rgba(7, 12, 30, 0.66) !important;
-  color: rgba(255, 246, 226, 0.96) !important;
-  border-color: rgba(218, 195, 139, 0.22) !important;
-}
-
-@media (max-width: 430px) {
-  body.reading-mode .parchment-box {
-    padding: 18px 14px !important;
-  }
-
-  body.reading-mode .result-actions {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-}
-
-/* ═══════════════════════════════════════
-   V1.2 清亮纸面：减雾、提墨色、保留一点手写感
-   ═══════════════════════════════════════ */
-body.home-ready {
-  color: #302a25;
-  background:
-    linear-gradient(112deg, rgba(75, 103, 111, 0.045) 0 1px, transparent 1px 18px),
-    radial-gradient(720px 280px at 14% 0%, rgba(238, 197, 126, 0.18), transparent 64%),
-    radial-gradient(660px 320px at 88% 6%, rgba(69, 123, 132, 0.12), transparent 60%),
-    linear-gradient(155deg, #fbf7ee 0%, #f2f3ee 42%, #f6eef1 100%) !important;
-}
-
-body.home-ready::before {
-  opacity: 0.28 !important;
-  background:
-    linear-gradient(90deg, rgba(80, 70, 52, 0.025) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(80, 70, 52, 0.018) 1px, transparent 1px) !important;
-  background-size: 48px 48px, 48px 48px !important;
-}
-
-body.home-ready[data-weather="sunny"]::after,
-body.home-ready[data-weather="cloudy"]::after,
-body.home-ready[data-weather="rainy"]::after,
-body.home-ready[data-weather="misty"]::after {
-  opacity: 0.07 !important;
-}
-
-body.home-ready.night-mode .night-overlay {
-  opacity: 0.035 !important;
-}
-
-body.home-ready #starfield {
-  opacity: 0.04 !important;
-}
-
-body.home-ready .top-nav {
-  background: rgba(255, 252, 244, 0.9) !important;
-  border-color: rgba(88, 77, 62, 0.14) !important;
-  border-radius: 14px !important;
-  backdrop-filter: blur(7px) saturate(1.06) !important;
-  -webkit-backdrop-filter: blur(7px) saturate(1.06) !important;
-  box-shadow:
-    0 12px 30px rgba(49, 49, 63, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.78) !important;
-}
-
-body.home-ready .phase-chip {
-  border-radius: 10px !important;
-  background: #34445f !important;
-  color: #fff2d2 !important;
-  border-color: rgba(255, 255, 255, 0.2) !important;
-  box-shadow: 0 6px 14px rgba(38, 48, 74, 0.12) !important;
-  font-style: normal !important;
+  color: rgba(239, 230, 212, 0.68) !important;
   letter-spacing: 0 !important;
-}
-
-body.home-ready .top-nav-actions .icon-btn {
-  border-radius: 10px !important;
-  background: rgba(255, 250, 239, 0.82) !important;
-  color: #4e453b !important;
-  border-color: rgba(85, 73, 58, 0.18) !important;
-  text-shadow: none !important;
-  letter-spacing: 0 !important;
-}
-
-body.home-ready .top-nav-actions .icon-btn:hover {
-  background: #fff8e9 !important;
-  border-color: rgba(69, 110, 116, 0.32) !important;
-}
-
-body.home-ready .hero-header {
-  margin-top: 6px;
-}
-
-body.home-ready .classic-title {
-  font-family: "Kaiti SC", "STKaiti", "KaiTi", "Songti SC", "Noto Serif SC", serif !important;
-  font-weight: 520 !important;
-  letter-spacing: 0 !important;
-  line-height: 0.98 !important;
-  background: linear-gradient(112deg, #46425e 0%, #916737 42%, #a87425 66%, #315f65 100%) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  filter: none !important;
-}
-
-body.home-ready .classic-title .title-en {
-  margin-top: 10px !important;
-  font-size: 0.32em !important;
-  font-weight: 650 !important;
-  letter-spacing: 0 !important;
-  color: rgba(48, 56, 68, 0.52) !important;
-  -webkit-text-fill-color: rgba(48, 56, 68, 0.52) !important;
-}
-
-body.home-ready .hero-header::after {
-  width: min(132px, 34vw) !important;
-  background: linear-gradient(90deg, transparent, rgba(156, 103, 38, 0.44), rgba(49, 95, 101, 0.34), transparent) !important;
-}
-
-body.home-ready .mystical-divider {
-  margin: 12px 0 16px !important;
-  color: rgba(49, 95, 101, 0.3) !important;
-  letter-spacing: 0 !important;
-}
-
-body.home-ready .ritual-orb {
-  width: 84px !important;
-  height: 84px !important;
-  background:
-    radial-gradient(circle at 36% 30%, rgba(255, 255, 255, 0.92), rgba(186, 157, 202, 0.48) 31%, rgba(58, 79, 118, 0.82) 72%) !important;
-  box-shadow:
-    0 14px 32px rgba(59, 68, 105, 0.14),
-    inset 0 1px 14px rgba(255, 255, 255, 0.38) !important;
-}
-
-body.home-ready .ritual-orb__glow {
-  opacity: 0.42 !important;
-}
-
-body.home-ready .ritual-orb__label,
-body.home-ready .status-banner {
-  color: rgba(48, 42, 36, 0.78) !important;
-  font-style: normal !important;
-  letter-spacing: 0 !important;
-}
-
-body.home-ready .hero-grid {
-  gap: 14px !important;
-}
-
-body.home-ready .choice-card {
-  border-radius: 8px !important;
-  background:
-    linear-gradient(150deg, rgba(255, 253, 247, 0.98), rgba(246, 249, 247, 0.92)) !important;
-  border-color: rgba(77, 67, 53, 0.16) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  box-shadow:
-    0 18px 38px rgba(51, 50, 66, 0.09),
-    inset 0 1px 0 rgba(255, 255, 255, 0.82) !important;
-}
-
-body.home-ready .choice-card--secondary {
-  background:
-    linear-gradient(150deg, rgba(252, 252, 255, 0.98), rgba(238, 243, 255, 0.92)) !important;
-}
-
-body.home-ready .choice-card--main {
-  background:
-    linear-gradient(150deg, rgba(255, 253, 246, 0.98), rgba(237, 247, 245, 0.92)) !important;
-}
-
-body.home-ready .choice-card--love {
-  background:
-    linear-gradient(150deg, rgba(255, 249, 250, 0.98), rgba(245, 242, 255, 0.92)) !important;
-}
-
-body.home-ready .choice-card:hover {
-  transform: translateY(-4px) rotate(-0.25deg) !important;
-  box-shadow:
-    0 24px 46px rgba(51, 50, 66, 0.13),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
-}
-
-body.home-ready .choice-card--main:hover {
-  transform: translateY(-4px) rotate(0.18deg) !important;
-}
-
-body.home-ready .choice-card::before {
-  background: linear-gradient(100deg, transparent 0%, rgba(255, 255, 255, 0.26) 44%, transparent 70%) !important;
-}
-
-body.home-ready .choice-card__title {
-  font-family: "Kaiti SC", "STKaiti", "KaiTi", "Songti SC", "Noto Serif SC", serif !important;
-  color: #382f29 !important;
-  font-weight: 620 !important;
-  letter-spacing: 0 !important;
-  line-height: 1.2 !important;
-}
-
-body.home-ready .choice-card__eyebrow,
-body.home-ready .choice-card__feature,
-body.home-ready .spread-guide-head,
-body.home-ready .input-group label {
-  color: rgba(49, 92, 96, 0.88) !important;
-  font-style: normal !important;
-  letter-spacing: 0 !important;
-}
-
-body.home-ready .choice-card__desc,
-body.home-ready .field-hint,
-body.home-ready .pay-hint,
-body.home-ready .spread-guide-text {
-  color: rgba(52, 45, 38, 0.74) !important;
-  font-style: normal !important;
-  letter-spacing: 0 !important;
-}
-
-body.home-ready .choice-card__icon {
-  opacity: 0.72 !important;
-  filter: drop-shadow(0 8px 14px rgba(80, 82, 118, 0.14)) !important;
-}
-
-body.home-ready input,
-body.home-ready textarea,
-body.home-ready select {
-  background: rgba(255, 252, 246, 0.94) !important;
-  color: #2f2924 !important;
-  border-color: rgba(65, 56, 45, 0.2) !important;
-  border-radius: 8px !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72) !important;
-}
-
-body.home-ready input::placeholder,
-body.home-ready textarea::placeholder {
-  color: rgba(66, 57, 48, 0.48) !important;
-}
-
-body.home-ready .question-spark,
-body.home-ready .spread-pill,
-body.home-ready .spread-current-pick,
-body.home-ready .spread-visual-guide {
-  border-radius: 8px !important;
-  background: rgba(255, 253, 247, 0.86) !important;
-  border-color: rgba(66, 56, 43, 0.14) !important;
-  box-shadow: none !important;
-}
-
-body.home-ready .spread-pill.active {
-  background: rgba(236, 247, 244, 0.96) !important;
-  border-color: rgba(49, 95, 101, 0.42) !important;
-}
-
-body.home-ready .main-btn,
-body.home-ready .secondary-btn,
-body.home-ready .save-btn {
-  border-radius: 10px !important;
-  letter-spacing: 0 !important;
-}
-
-body.home-ready .main-btn {
-  background: linear-gradient(135deg, #f6e3b5, #c79643) !important;
-  color: #2d2419 !important;
-  box-shadow: 0 12px 24px rgba(116, 84, 37, 0.16) !important;
-}
-
-body.home-ready .secondary-btn {
-  background: rgba(255, 252, 246, 0.92) !important;
-  color: #3a3128 !important;
-  border: 1px solid rgba(66, 56, 43, 0.18) !important;
-  box-shadow: 0 10px 20px rgba(51, 50, 66, 0.08) !important;
-}
-
-body.home-ready .couple-collapsed .couple-toggle {
-  border-radius: 8px !important;
-}
-
-@media (max-width: 640px) {
-  body.home-ready .top-nav {
-    border-radius: 10px !important;
-  }
-
-  body.home-ready .classic-title {
-    line-height: 1.08 !important;
-  }
-
-  body.home-ready .choice-card {
-    border-radius: 8px !important;
-  }
-}
-
-/* V1.2.1 背景再清亮一档：去掉大面积灰蓝幕布 */
-body.home-ready {
-  background:
-    linear-gradient(112deg, rgba(80, 96, 94, 0.03) 0 1px, transparent 1px 20px),
-    radial-gradient(620px 240px at 16% 0%, rgba(238, 202, 136, 0.14), transparent 68%),
-    radial-gradient(560px 260px at 92% 4%, rgba(63, 128, 132, 0.07), transparent 64%),
-    linear-gradient(155deg, #fcf8ef 0%, #fbf7ee 46%, #f9f1ef 100%) !important;
-}
-
-body.home-ready::before {
-  opacity: 0.16 !important;
-}
-
-body.home-ready[data-weather="sunny"]::after,
-body.home-ready[data-weather="cloudy"]::after,
-body.home-ready[data-weather="rainy"]::after,
-body.home-ready[data-weather="misty"]::after {
-  opacity: 0.035 !important;
-}
-
-body.home-ready .container {
-  background:
-    linear-gradient(180deg, rgba(255, 252, 245, 0.42), rgba(255, 252, 245, 0.06) 42%, transparent) !important;
-}
-
-body.home-ready .choice-card {
-  background:
-    linear-gradient(150deg, rgba(255, 255, 251, 0.99), rgba(250, 249, 243, 0.96)) !important;
-}
-
-body.home-ready .choice-card--secondary {
-  background:
-    linear-gradient(150deg, rgba(255, 255, 253, 0.99), rgba(245, 248, 255, 0.95)) !important;
-}
-
-body.home-ready .choice-card--main {
-  background:
-    linear-gradient(150deg, rgba(255, 255, 250, 0.99), rgba(244, 250, 247, 0.95)) !important;
-}
-
-body.home-ready .choice-card--love {
-  background:
-    linear-gradient(150deg, rgba(255, 252, 252, 0.99), rgba(249, 246, 255, 0.95)) !important;
-}
-
-body.home-ready .classic-title {
-  background: linear-gradient(112deg, #4f4864 0%, #8d6132 43%, #b27b24 65%, #315f65 100%) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-}
-
-/* V1.3 主流程收束：先占问，轻入口退到次级 */
-body.home-ready .home-ritual-widget {
-  margin: 8px auto 4px !important;
-  transform: scale(0.9);
-}
-
-body.home-ready .mystical-divider {
-  margin: 6px 0 12px !important;
-}
-
-body.home-ready .hero-grid {
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr) !important;
-  grid-template-areas:
-    "quick quick"
-    "deep deep"
-    "love love" !important;
-  grid-template-rows: auto auto !important;
-  gap: 12px !important;
-}
-
-body.home-ready .card-deep {
-  grid-area: deep !important;
-  grid-row: auto !important;
-  min-height: 0 !important;
-  padding: clamp(22px, 3.5vw, 34px) !important;
-}
-
-body.home-ready .card-quick {
-  grid-area: quick !important;
-  margin-top: 0 !important;
-  padding: 18px 20px !important;
   text-align: left !important;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 12px;
-}
-
-body.home-ready .card-quick .choice-card__eyebrow,
-body.home-ready .card-quick .choice-card__desc,
-body.home-ready .card-quick .choice-card__feature {
-  margin-bottom: 4px !important;
-}
-
-body.home-ready .card-quick .choice-card__title {
-  margin-bottom: 4px !important;
-  font-size: 1.08rem !important;
-}
-
-body.home-ready .card-quick .choice-card__footer {
-  margin-top: 0 !important;
-  grid-column: 2;
-  grid-row: 1 / span 4;
-}
-
-body.home-ready .card-quick #quickDrawBtn {
-  white-space: nowrap;
-  min-width: 112px;
-}
-
-body.home-ready .card-love {
-  grid-area: love !important;
-  min-height: 0 !important;
-}
-
-body.home-ready .hero-grid:has(.choice-card--love:not(.couple-collapsed)) {
-  grid-template-areas:
-    "quick quick"
-    "deep deep"
-    "love love" !important;
-}
-
-body.home-ready .hero-grid:has(.choice-card--love:not(.couple-collapsed)) .card-love {
-  grid-column: auto !important;
-  grid-row: auto !important;
-}
-
-body.home-ready .spread-current-pick {
-  background: linear-gradient(135deg, rgba(236, 247, 244, 0.98), rgba(255, 252, 245, 0.94)) !important;
-  border-color: rgba(49, 95, 101, 0.24) !important;
-}
-
-body.home-ready .spread-recommendation {
-  border-radius: 8px !important;
-  background: rgba(236, 247, 244, 0.96) !important;
-  border-color: rgba(49, 95, 101, 0.28) !important;
-}
-
-body.home-ready .start-btn-sticky {
-  min-height: 54px;
-  font-size: 1rem;
-}
-
-.reading-answer-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(220px, 0.72fr);
-  gap: 12px;
-  align-items: stretch;
-  margin-bottom: 12px;
-}
-
-.reading-answer-hero > div {
-  border: 1px solid rgba(235, 206, 150, 0.2);
-  border-radius: 16px;
-  padding: 16px 18px;
-  background: linear-gradient(155deg, rgba(224, 177, 86, 0.2), rgba(73, 42, 99, 0.28));
-}
-
-.reading-answer-hero__label,
-.reading-answer-hero__action span {
-  display: block;
-  margin-bottom: 8px;
-  color: rgba(255, 229, 176, 0.9);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-}
-
-.reading-answer-hero__answer {
-  margin: 0;
-  color: rgba(251, 242, 225, 0.98);
-  font-size: clamp(1.06rem, 2vw, 1.36rem);
-  line-height: 1.75;
-  font-weight: 800;
-}
-
-.reading-answer-hero__action {
-  background: rgba(255, 249, 236, 0.1) !important;
-}
-
-.reading-answer-hero__action strong {
-  display: block;
-  color: rgba(251, 242, 225, 0.96);
-  line-height: 1.68;
-}
-
-body.reading-mode .reading-answer-hero {
-  grid-template-columns: minmax(0, 1.35fr) minmax(220px, 0.65fr) !important;
-}
-
-body.reading-mode .reading-answer-hero > div {
-  border-radius: 10px !important;
-  border-color: rgba(70, 62, 51, 0.14) !important;
-  background: rgba(252, 249, 241, 0.96) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78) !important;
-}
-
-body.reading-mode .reading-answer-hero > div:first-child {
-  background: linear-gradient(145deg, rgba(255, 246, 224, 0.98), rgba(238, 247, 244, 0.96)) !important;
-  border-color: rgba(178, 123, 36, 0.22) !important;
-}
-
-body.reading-mode .reading-answer-hero__label,
-body.reading-mode .reading-answer-hero__action span {
-  color: rgba(49, 95, 101, 0.88) !important;
-  letter-spacing: 0 !important;
-}
-
-body.reading-mode .reading-answer-hero__answer,
-body.reading-mode .reading-answer-hero__action strong {
-  color: #302a25 !important;
-}
-
-body.reading-mode .reading-summary-panel {
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-}
-
-@media (max-width: 760px) {
-  body.home-ready .hero-grid {
-    grid-template-columns: 1fr !important;
-    grid-template-areas:
-      "deep"
-      "quick"
-      "love" !important;
-  }
-
-  body.home-ready .card-quick {
-    grid-template-columns: 1fr;
-  }
-
-  body.home-ready .card-quick .choice-card__footer {
-    grid-column: auto;
-    grid-row: auto;
-  }
-
-  .reading-answer-hero,
-  body.reading-mode .reading-answer-hero,
-  body.reading-mode .reading-summary-panel {
-    grid-template-columns: 1fr !important;
-  }
-}
-
-/* V1.3.4 EOF override: keep the actual shipped home in deep blue */
-body.home-ready {
-  color: #f7ecd3;
-  background:
-    radial-gradient(900px 420px at 16% -8%, rgba(124, 151, 220, 0.32), transparent 62%),
-    radial-gradient(780px 360px at 88% 4%, rgba(156, 115, 214, 0.22), transparent 58%),
-    radial-gradient(620px 280px at 50% 26%, rgba(219, 176, 86, 0.10), transparent 68%),
-    linear-gradient(150deg, #071021 0%, #111c3a 43%, #1a1740 72%, #090d1b 100%) !important;
-}
-
-body.home-ready::before {
-  opacity: 0.42 !important;
-  background:
-    radial-gradient(circle at 18% 14%, rgba(255, 236, 180, 0.18), transparent 2px),
-    radial-gradient(circle at 72% 20%, rgba(207, 225, 255, 0.16), transparent 2px),
-    radial-gradient(circle at 42% 74%, rgba(255, 236, 180, 0.12), transparent 1px),
-    linear-gradient(115deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 24px) !important;
-}
-
-body.home-ready #starfield { opacity: 0.34 !important; }
-
-body.home-ready .container {
-  background: radial-gradient(680px 220px at 50% 0%, rgba(255, 228, 166, 0.08), transparent 70%) !important;
-}
-
-body.home-ready .top-nav {
-  background: linear-gradient(125deg, rgba(23, 35, 72, 0.86), rgba(16, 22, 50, 0.72)) !important;
-  border-color: rgba(218, 195, 139, 0.18) !important;
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-}
-
-body.home-ready .classic-title {
-  background: linear-gradient(112deg, #fff0c6 0%, #d5a65b 38%, #b58aff 72%, #9ec9ff 100%) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  text-shadow: 0 18px 42px rgba(8, 10, 28, 0.42) !important;
-}
-
-body.home-ready .choice-card {
-  background:
-    radial-gradient(420px 160px at 18% 0%, rgba(255, 228, 166, 0.08), transparent 68%),
-    linear-gradient(150deg, rgba(25, 35, 76, 0.88), rgba(13, 19, 46, 0.82)) !important;
-  border-color: rgba(222, 198, 145, 0.2) !important;
-  box-shadow: 0 24px 58px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-}
-
-body.home-ready .choice-card--main {
-  background:
-    radial-gradient(560px 180px at 18% 0%, rgba(231, 188, 101, 0.14), transparent 70%),
-    radial-gradient(420px 190px at 88% 8%, rgba(111, 148, 228, 0.18), transparent 72%),
-    linear-gradient(150deg, rgba(26, 43, 91, 0.92), rgba(13, 22, 55, 0.88)) !important;
-  border-color: rgba(232, 194, 112, 0.28) !important;
-}
-
-body.home-ready .choice-card--secondary {
-  background: linear-gradient(150deg, rgba(23, 36, 76, 0.82), rgba(14, 20, 48, 0.76)) !important;
-}
-
-body.home-ready .choice-card--love {
-  background: linear-gradient(150deg, rgba(48, 31, 78, 0.82), rgba(18, 20, 52, 0.76)) !important;
-}
-
-body.home-ready .choice-card__title {
-  color: rgba(255, 239, 204, 0.98) !important;
-}
-
-body.home-ready .choice-card__eyebrow,
-body.home-ready .choice-card__feature,
-body.home-ready .spread-guide-head,
-body.home-ready .input-group label {
-  color: rgba(233, 198, 124, 0.94) !important;
-}
-
-body.home-ready .choice-card__desc,
-body.home-ready .field-hint,
-body.home-ready .pay-hint,
-body.home-ready .spread-guide-text,
-body.home-ready .ritual-orb__label,
-body.home-ready .status-banner {
-  color: rgba(237, 228, 207, 0.74) !important;
-}
-
-body.home-ready .question-spark,
-body.home-ready .spread-pill,
-body.home-ready .spread-current-pick,
-body.home-ready .spread-recommendation,
-body.home-ready .spread-visual-guide,
-body.home-ready .spread-advanced-teaser {
-  background: rgba(8, 15, 35, 0.52) !important;
-  border-color: rgba(218, 195, 139, 0.16) !important;
-  color: rgba(247, 236, 212, 0.9) !important;
-}
-
-body.home-ready input,
-body.home-ready textarea,
-body.home-ready select {
-  background: rgba(7, 12, 30, 0.66) !important;
-  color: rgba(255, 246, 226, 0.96) !important;
-  border-color: rgba(218, 195, 139, 0.22) !important;
-}
-
-/* V1.3.7 final alignment: keep home entry panels on one glass rail */
-body.home-ready .home-main,
-body.home-ready .hero-grid {
-  width: min(1080px, calc(100vw - 132px)) !important;
-  max-width: 1080px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-body.home-ready .hero-grid {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) !important;
-  grid-template-areas:
-    "quick"
-    "deep"
-    "love" !important;
-  gap: 22px !important;
-}
-
-body.home-ready .hero-grid--editorial .card-deep,
-body.home-ready .card-quick,
-body.home-ready .card-deep,
-body.home-ready .card-love,
-body.home-ready .choice-card {
-  width: 100% !important;
-  max-width: none !important;
-  justify-self: stretch !important;
-  box-sizing: border-box !important;
-}
-
-body.home-ready .card-quick {
-  grid-area: quick !important;
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) auto !important;
-  align-items: center !important;
-  min-height: 170px !important;
-  padding: clamp(24px, 3vw, 34px) clamp(28px, 4vw, 42px) !important;
-  border-radius: 30px 18px 34px 18px !important;
-  background:
-    radial-gradient(420px 190px at 8% 10%, rgba(198, 170, 255, 0.18), transparent 70%),
-    radial-gradient(340px 150px at 94% 0%, rgba(255, 228, 166, 0.14), transparent 70%),
-    linear-gradient(145deg, rgba(22, 34, 76, 0.72), rgba(13, 18, 45, 0.58)) !important;
-  border-color: rgba(226, 210, 168, 0.22) !important;
-  backdrop-filter: blur(18px) saturate(1.25) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(1.25) !important;
-  box-shadow:
-    0 24px 70px rgba(2, 8, 28, 0.32),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
-}
-
-body.home-ready .card-quick .choice-card__eyebrow,
-body.home-ready .card-quick .choice-card__title,
-body.home-ready .card-quick .choice-card__desc,
-body.home-ready .card-quick .choice-card__feature,
-body.home-ready .card-deep .choice-card__eyebrow,
-body.home-ready .card-deep .choice-card__title,
-body.home-ready .card-deep .choice-card__desc {
-  text-align: left !important;
-  justify-self: start !important;
 }
 
 body.home-ready .card-quick .choice-card__footer {
@@ -7936,31 +5765,269 @@ body.home-ready .card-quick .choice-card__footer {
   margin: 0 !important;
 }
 
-body.home-ready .card-deep {
-  grid-area: deep !important;
-  padding: clamp(30px, 4vw, 44px) clamp(34px, 5vw, 54px) !important;
-  border-radius: 18px 32px 18px 32px !important;
-  background:
-    radial-gradient(520px 220px at 74% 6%, rgba(96, 129, 230, 0.22), transparent 72%),
-    radial-gradient(420px 220px at 12% 0%, rgba(224, 190, 103, 0.12), transparent 70%),
-    linear-gradient(145deg, rgba(30, 49, 101, 0.72), rgba(14, 22, 54, 0.64)) !important;
-  border-color: rgba(226, 210, 168, 0.22) !important;
-  backdrop-filter: blur(18px) saturate(1.25) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(1.25) !important;
+body.home-ready input,
+body.home-ready textarea,
+body.home-ready select {
+  background: rgba(7, 12, 30, 0.50) !important;
+  color: rgba(255, 246, 226, 0.96) !important;
+  border-color: rgba(218, 195, 139, 0.20) !important;
+  border-radius: 16px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
 }
 
-body.home-ready .card-love {
-  grid-area: love !important;
+body.home-ready input::placeholder,
+body.home-ready textarea::placeholder { color: rgba(255, 247, 229, 0.42) !important; }
+
+body.home-ready .question-spark {
+  border-color: rgba(218, 195, 139, 0.16) !important;
+  background: rgba(8, 15, 35, 0.36) !important;
+  color: rgba(247, 236, 212, 0.86) !important;
+}
+
+body.home-ready .question-spark:hover,
+body.home-ready .question-spark.active {
+  background: rgba(225, 188, 109, 0.14) !important;
+  border-color: rgba(232, 203, 133, 0.38) !important;
+  color: rgba(255, 243, 213, 0.96) !important;
+}
+
+body.home-ready .spread-visual-guide {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.home-ready .spread-current-pick,
+body.home-ready .spread-recommendation,
+body.home-ready .spread-advanced-teaser,
+body.home-ready .spread-pill {
+  border-radius: 18px !important;
+  background: rgba(8, 15, 35, 0.38) !important;
+  border-color: rgba(218, 195, 139, 0.16) !important;
+  color: rgba(247, 236, 212, 0.92) !important;
+  box-shadow: none !important;
+}
+
+body.home-ready .spread-current-pick {
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr) auto auto !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 14px 16px !important;
+}
+
+body.home-ready .spread-current-pick__name,
+body.home-ready .spread-pill__name,
+body.home-ready .spread-recommendation__main { color: rgba(255, 243, 214, 0.96) !important; }
+body.home-ready .spread-current-pick__meta,
+body.home-ready .spread-pill__desc,
+body.home-ready .spread-pill__meta,
+body.home-ready .spread-recommendation__reason,
+body.home-ready .spread-advanced-teaser__preview { color: rgba(239, 230, 212, 0.62) !important; }
+
+body.home-ready .spread-picker-drawer[hidden] { display: none !important; }
+body.home-ready .spread-picker-drawer { margin-top: 12px !important; }
+body.home-ready .spread-pills { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
+body.home-ready .spread-pill { text-align: left !important; min-height: 0 !important; padding: 14px !important; }
+body.home-ready .spread-pill__dots,
+body.home-ready .spread-pill__tags,
+body.home-ready .spread-pill__cta { display: none !important; }
+body.home-ready .spread-pill.active { border-color: rgba(232, 203, 133, 0.38) !important; background: rgba(225, 188, 109, 0.13) !important; }
+
+body.home-ready .spread-advanced-teaser {
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px 16px !important;
+  text-align: left;
+}
+
+body.home-ready .spread-advanced-teaser__cta,
+body.home-ready .spread-current-pick__change {
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(232, 203, 133, 0.18) !important;
+  color: rgba(255, 240, 209, 0.92) !important;
+}
+
+body.home-ready .main-btn,
+body.home-ready .secondary-btn,
+body.home-ready .save-btn {
+  border-radius: 999px !important;
+  letter-spacing: 0 !important;
+}
+
+body.home-ready .main-btn {
+  background: linear-gradient(135deg, rgba(255, 238, 197, 0.94), rgba(199, 150, 67, 0.9)) !important;
+  color: #241a12 !important;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22) !important;
+}
+
+body.home-ready .secondary-btn {
+  background: rgba(255, 249, 236, 0.9) !important;
+  color: #2e251c !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+}
+
+body.reading-mode {
+  color: #f8edcf;
+  background:
+    radial-gradient(760px 320px at 15% -4%, rgba(112, 145, 210, 0.20), transparent 64%),
+    radial-gradient(700px 320px at 90% 2%, rgba(151, 109, 201, 0.15), transparent 62%),
+    linear-gradient(150deg, #071020 0%, #111936 54%, #12102e 100%) !important;
+}
+
+body.reading-mode::before { opacity: 0.22 !important; }
+body.reading-mode #starfield { opacity: 0.22 !important; }
+
+body.reading-mode .immersive-container {
+  width: min(1160px, calc(100vw - 80px)) !important;
+  min-height: auto !important;
+  padding: 28px 0 56px !important;
+  margin: 0 auto !important;
+  transform: none !important;
+}
+
+body.reading-mode .flow-steps {
+  position: relative !important;
+  top: auto !important;
+  width: min(720px, 100%) !important;
+  margin: 0 auto 18px !important;
+}
+
+body.reading-mode .flow-step {
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  border-color: rgba(232, 203, 133, 0.16) !important;
+  color: rgba(240, 229, 208, 0.7) !important;
+}
+
+body.reading-mode .flow-step.active,
+body.reading-mode .flow-step.done {
+  background: rgba(225, 188, 109, 0.16) !important;
+  color: rgba(255, 241, 211, 0.95) !important;
+}
+
+body.reading-mode .energy-text,
+body.reading-mode .deck-area,
+body.reading-mode #revealInstruction,
+body.reading-mode .spread-container,
+body.reading-mode .reading-wrapper,
+body.reading-mode .action-plan-box,
+body.reading-mode .action-btns {
+  width: 100% !important;
+  max-width: 1100px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  transform: none !important;
+}
+
+body.reading-mode .deck-area {
+  position: relative !important;
+  top: auto !important;
+  min-height: 410px !important;
+  padding: 24px 0 10px !important;
+}
+
+body.reading-mode .ritual-text,
+body.reading-mode #revealInstruction {
+  color: rgba(255, 239, 204, 0.84) !important;
+  text-align: center !important;
+}
+
+body.reading-mode .deck-spread-track {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(232, 203, 133, 0.18) !important;
+}
+
+body.reading-mode .deck-spread-hint {
+  color: rgba(255, 238, 200, 0.86) !important;
+}
+
+body.reading-mode .spread-container {
+  padding: 18px 0 !important;
+}
+
+body.reading-mode.reading-text-active .spread-container {
+  width: min(260px, 24vw) !important;
+  margin-left: 0 !important;
+  margin-right: 18px !important;
+}
+
+body.reading-mode .reading-wrapper {
+  border-radius: 26px !important;
+  border: 1px solid rgba(226, 210, 168, 0.18) !important;
+  background: rgba(10, 16, 38, 0.46) !important;
+  backdrop-filter: blur(18px) saturate(1.18) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.18) !important;
+  box-shadow: 0 24px 70px rgba(2, 8, 28, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
+}
+
+body.reading-mode .parchment-box {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.reading-answer-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(220px, 0.65fr);
+  gap: 12px;
+  align-items: stretch;
+  margin-bottom: 12px;
+}
+
+.reading-answer-hero > div,
+.reading-summary-card {
+  border: 1px solid rgba(226, 210, 168, 0.16) !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: rgba(255, 244, 221, 0.94) !important;
+}
+
+.reading-answer-hero > div { padding: 16px 18px; }
+.reading-answer-hero__label,
+.reading-answer-hero__action span,
+.reading-summary-card__label { color: rgba(232, 198, 124, 0.92) !important; letter-spacing: 0.02em !important; }
+.reading-answer-hero__answer,
+.reading-answer-hero__action strong { color: rgba(255, 244, 221, 0.96) !important; }
+.reading-summary-panel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.reading-summary-card { padding: 14px 16px; }
+
+body.reading-mode #streamContent {
+  color: rgba(246, 236, 216, 0.82) !important;
+}
+
+body.reading-mode #streamContent h3,
+body.reading-mode #streamContent h4 { color: rgba(255, 241, 211, 0.96) !important; }
+body.reading-mode #streamContent blockquote { background: rgba(255, 255, 255, 0.06) !important; border-left-color: rgba(232, 198, 124, 0.55) !important; }
+body.reading-mode #streamContent.is-summary-only { display: none !important; }
+
+body.reading-mode .result-actions {
+  border-radius: 24px !important;
+  border: 1px solid rgba(226, 210, 168, 0.14) !important;
+  background: rgba(10, 16, 38, 0.40) !important;
+  backdrop-filter: blur(16px) saturate(1.12) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(1.12) !important;
 }
 
 @media (max-width: 760px) {
+  body.home-ready .top-nav,
   body.home-ready .home-main,
-  body.home-ready .hero-grid {
+  body.home-ready .hero-grid,
+  body:not(.reading-mode) .top-nav,
+  body:not(.reading-mode) .home-main,
+  body:not(.reading-mode) .hero-grid {
     width: min(100%, calc(100vw - 28px)) !important;
   }
 
+  body.home-ready .top-nav { margin-top: 16px !important; }
+  body.home-ready .classic-title { font-size: clamp(2.05rem, 12vw, 3.3rem) !important; }
+  body.home-ready .home-ritual-widget { margin-top: 4px !important; }
+
   body.home-ready .card-quick {
     grid-template-columns: 1fr !important;
+    min-height: 0 !important;
+    padding: 22px !important;
   }
 
   body.home-ready .card-quick .choice-card__footer {
@@ -7970,43 +6037,20 @@ body.home-ready .card-love {
     margin-top: 18px !important;
   }
 
-  body.home-ready .card-quick #quickDrawBtn {
-    width: 100% !important;
+  body.home-ready .card-quick #quickDrawBtn,
+  body.home-ready .main-btn { width: 100% !important; }
+  body.home-ready .card-deep { padding: 24px 20px !important; }
+  body.home-ready .spread-current-pick { grid-template-columns: auto minmax(0, 1fr) auto !important; }
+  body.home-ready .spread-current-pick__change { grid-column: 1 / -1; width: 100%; margin-top: 4px; }
+  body.home-ready .spread-pills { grid-template-columns: 1fr !important; }
+
+  body.reading-mode .immersive-container {
+    width: min(100%, calc(100vw - 24px)) !important;
+    padding-top: 18px !important;
   }
-}
 
-/* Prevent the home from flashing back to the old two-column layout before JS marks it ready. */
-body:not(.reading-mode) .home-main,
-body:not(.reading-mode) .hero-grid {
-  width: min(1080px, calc(100vw - 132px)) !important;
-  max-width: 1080px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-body:not(.reading-mode) .hero-grid {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) !important;
-  grid-template-areas:
-    "quick"
-    "deep"
-    "love" !important;
-  gap: 22px !important;
-}
-
-body:not(.reading-mode) .card-quick,
-body:not(.reading-mode) .card-deep,
-body:not(.reading-mode) .card-love,
-body:not(.reading-mode) .choice-card {
-  width: 100% !important;
-  max-width: none !important;
-  justify-self: stretch !important;
-  box-sizing: border-box !important;
-}
-
-@media (max-width: 760px) {
-  body:not(.reading-mode) .home-main,
-  body:not(.reading-mode) .hero-grid {
-    width: min(100%, calc(100vw - 28px)) !important;
-  }
+  body.reading-mode .deck-area { min-height: 360px !important; }
+  body.reading-mode.reading-text-active .spread-container { width: 100% !important; margin-right: auto !important; }
+  .reading-answer-hero,
+  .reading-summary-panel { grid-template-columns: 1fr !important; }
 }

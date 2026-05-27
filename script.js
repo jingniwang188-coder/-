@@ -202,15 +202,6 @@ function dismissIntro() {
   }, 380);
 }
 
-// script.js is at the end of <body>, so DOM is fully parsed here.
-// Bind CRITICAL nav buttons immediately, before anything else can fail.
-(function bindNavButtons() {
-  var g = document.getElementById("growthHubBtn");
-  var f = document.getElementById("feedbackBtn");
-  if (g) g.addEventListener("click", function() { openGrowthHub(); });
-  if (f) f.addEventListener("click", function() { openFeedbackModal(); });
-})();
-
 try { initEventBindings(); } catch(e) { console.error("initEventBindings:", e); }
 
 window.onload = function() {
@@ -293,7 +284,6 @@ function initEventBindings() {
   byId("closeGrowthHubBtn")?.addEventListener("click", closeGrowthHub);
   byId("closeGrowthHubPanelBtn")?.addEventListener("click", closeGrowthHub);
   byId("closeFeedbackBtn")?.addEventListener("click", closeFeedbackModal);
-  byId("closeContactBtn")?.addEventListener("click", closeContactModal);
   byId("closeCardPreviewBtn")?.addEventListener("click", closeCardPreview);
   byId("sendFeedbackBtn")?.addEventListener("click", sendFeedback);
   byId("saveBtn")?.addEventListener("click", saveAsImage);
@@ -334,9 +324,6 @@ function initEventBindings() {
 
   byId("growthHubModal")?.addEventListener("click", e => {
     if (e.target?.id === "growthHubModal") closeGrowthHub();
-  });
-  byId("contactModal")?.addEventListener("click", e => {
-    if (e.target?.id === "contactModal") closeContactModal();
   });
   byId("feedbackModal")?.addEventListener("click", e => {
     if (e.target?.id === "feedbackModal") closeFeedbackModal();
@@ -1006,7 +993,7 @@ function renderSpreadGuide() {
         <span class="spread-recommendation__reason">${recommendation.reason}</span>
       </button>
     ` : ""}
-    <div class="spread-picker-drawer">
+    <div class="spread-picker-drawer" hidden>
       <div class="spread-pills-groups">
         <div class="spread-pills spread-pills--free">${freeCards}</div>
         ${paidKeys.length ? `
@@ -1016,7 +1003,7 @@ function renderSpreadGuide() {
           <span class="spread-advanced-teaser__preview">${paidPreview}${paidKeys.length > 4 ? " · 更多" : ""}</span>
           <span class="spread-advanced-teaser__cta">查看全部进阶牌阵 <span aria-hidden="true">›</span></span>
         </button>
-        <section class="spread-section spread-section--paid" style="display:none;">
+        <section class="spread-section spread-section--paid" hidden>
           <div class="spread-pills spread-pills--paid">${paidCards}</div>
         </section>
         ` : ""}
@@ -1027,7 +1014,7 @@ function renderSpreadGuide() {
 
   wrap.querySelector(".spread-current-pick__change")?.addEventListener("click", () => {
     const drawer = wrap.querySelector(".spread-picker-drawer");
-    if (drawer) drawer.style.display = drawer.style.display === "none" ? "" : "none";
+    if (drawer) drawer.hidden = !drawer.hidden;
   });
 
   wrap.querySelector(".spread-recommendation")?.addEventListener("click", event => {
@@ -1042,8 +1029,8 @@ function renderSpreadGuide() {
     const advanced = wrap.querySelector(".spread-section--paid");
     const teaser = wrap.querySelector(".spread-advanced-teaser");
     if (!advanced || !teaser) return;
-    const isOpen = advanced.style.display !== "none";
-    advanced.style.display = isOpen ? "none" : "";
+    const isOpen = !advanced.hidden;
+    advanced.hidden = isOpen;
     teaser.classList.toggle("is-open", !isOpen);
     teaser.querySelector(".spread-advanced-teaser__cta").innerHTML = isOpen
       ? '查看全部进阶牌阵 <span aria-hidden="true">›</span>'
@@ -1314,20 +1301,6 @@ function clearHistory() {
   updateStatus("");
 }
 
-function getMoodScore(level) {
-  const moodScoreMap = {
-    calm: 3,
-    inspired: 4,
-    confused: 2,
-    excited: 5
-  };
-  const normalized = String(level || "").trim();
-  if (normalized in moodScoreMap) return moodScoreMap[normalized];
-  const numeric = Number(normalized);
-  if (Number.isFinite(numeric) && numeric > 0) return Math.max(1, Math.min(5, numeric));
-  return 3;
-}
-
 function readVaultMeta() {
   try {
     return JSON.parse(localStorage.getItem(VAULT_META_KEY) || "null");
@@ -1441,12 +1414,6 @@ function renderJournalNotes() {
   });
 }
 
-function openContactModal() {
-  const modal = document.getElementById("contactModal");
-  if (!modal) return;
-  modal.style.display = "flex";
-}
-
 function openFeedbackModal() {
   const modal = document.getElementById("feedbackModal");
   if (!modal) return;
@@ -1458,12 +1425,6 @@ function openFeedbackModal() {
 
 function closeFeedbackModal() {
   const modal = document.getElementById("feedbackModal");
-  if (!modal) return;
-  modal.style.display = "none";
-}
-
-function closeContactModal() {
-  const modal = document.getElementById("contactModal");
   if (!modal) return;
   modal.style.display = "none";
 }
@@ -1672,7 +1633,6 @@ function returnToHomePage() {
     "historyDetailModal",
     "growthHubModal",
     "feedbackModal",
-    "contactModal",
     "cardPreviewModal",
     "dailyCardArea",
     "shuffleArea",
@@ -1821,26 +1781,6 @@ function closeHistoryDetail() {
   if (modal) modal.style.display = "none";
 }
 
-function pushLatestReadingToArchive() {
-  if (!latestReadingRecord) {
-    alert("先完成一次解牌，再写入成长档案。");
-    return;
-  }
-  const summaryText = buildReadingSnippet(latestReadingRecord.reading || "", 140);
-  const emotion = latestReadingRecord.emotionLabel || "平静观察";
-  JournalService.add({
-    text: `来自解牌总结：${summaryText || "已完成一次解牌，后续可继续补充行动反馈。"}`,
-    date: new Date().toLocaleString(),
-    emotionLabel: emotion,
-    emotionLevel: latestReadingRecord.emotionLevel || "calm",
-    linkedQuestion: latestReadingRecord.question || "",
-    linkedSpread: latestReadingRecord.spread || ""
-  });
-  renderVaultMeta();
-  updateStatus("已写入成长档案，可在心境札记继续补充行动反馈。");
-  openGrowthHub();
-}
-
 function shuffle(array) { let cur = array.length, rnd; while (cur !== 0) { rnd = Math.floor(Math.random() * cur); cur--; [array[cur], array[rnd]] = [array[rnd], array[cur]]; } return array; }
 
 function playSound(id) { const audio = document.getElementById(id); audio.currentTime = 0; audio.volume = 0.4; audio.play().catch(e => {}); }
@@ -1856,6 +1796,13 @@ function renderSpread() {
   currentSpreadConfig.cards.forEach((pos, index) => {
     container.innerHTML += `<div class="card-slot" id="slot-${index}"><div class="slot-label" id="label-${index}">${pos.label}</div><div class="card" id="card-${index}"><div class="card-face card-back">✧</div><div class="card-face card-front"><div class="card-art" id="art-${index}"><img class="card-image" id="image-${index}" alt="塔罗牌面"></div><div class="emoji" id="emoji-${index}">❓</div><div class="name" id="name-${index}">等待抽取</div></div></div></div>`;
   });
+  container.onclick = event => {
+    const pendingCard = event.target?.closest?.(".card");
+    if (!pendingCard || pendingCard.classList.contains("dealt")) return;
+    const deckArea = document.getElementById("deckArea");
+    if (!deckArea || deckArea.style.display === "none") return;
+    drawFirstAvailableDeckCard();
+  };
   renderSpreadGuide();
 }
 
@@ -2501,11 +2448,11 @@ function initFanDeck() {
     fanDeck.appendChild(cardEl);
   }
   attachDeckSpreadGesture(fanDeck);
-  updateStatus("牌阵准备中，稍候自动展开…");
+  updateStatus("牌阵准备中，展开后可点牌堆，也可点下方空牌位。");
   const hint = document.getElementById("deckSpreadHint");
   if (hint) {
     hint.classList.remove("show", "unlocked", "near-unlock");
-    hint.textContent = "正在感应你的能量…";
+    hint.textContent = "正在展开牌阵…";
     window.setTimeout(() => hint.classList.add("show"), 420);
   }
 
@@ -2536,13 +2483,13 @@ function unlockDeckSpread() {
   if (deckSpreadUnlocked) return;
   deckSpreadUnlocked = true;
   setDeckSpreadProgress(1);
-  updateStatus("牌已展开，点击你感应到的那张牌。");
+  updateStatus("牌已展开，点击牌堆或下方空牌位抽牌。");
   if (navigator.vibrate) navigator.vibrate(35);
   const hint = document.getElementById("deckSpreadHint");
   if (hint) {
     hint.classList.remove("show");
     hint.classList.add("unlocked");
-    hint.textContent = "✨ 点击你感应到的那张牌";
+    hint.textContent = "✨ 点击牌堆，或点击下方空牌位";
     hint.classList.add("show");
     window.setTimeout(() => hint.classList.remove("show"), 3000);
   }
@@ -2573,6 +2520,15 @@ function unlockDeckSpread() {
     </span>
   `;
   if (deckAreaForTracker) deckAreaForTracker.appendChild(tracker);
+}
+
+function drawFirstAvailableDeckCard() {
+  const availableCards = Array.from(document.querySelectorAll("#fanDeck .deck-card:not(.drawn)"));
+  if (!availableCards.length || cardsDrawn >= requiredCardsCount) return false;
+  if (!deckSpreadUnlocked) unlockDeckSpread();
+  const middle = Math.floor(availableCards.length / 2);
+  userDrawsOneCard(availableCards[middle]);
+  return true;
 }
 
 function updateDeckSpreadHint(progress = 0) {
@@ -2975,8 +2931,9 @@ function renderFinalReading(markdownText = "", cards = drawnCardsData) {
       node.parentNode?.replaceChild(frag, node);
     });
   }
-  renderReadingSummary(markdownText);
-  wrapReadingSectionsAsCollapsible();
+  const hasSummary = renderReadingSummary(markdownText);
+  streamContent.classList.toggle("is-summary-only", Boolean(hasSummary));
+  if (!hasSummary) wrapReadingSectionsAsCollapsible();
 }
 
 function updateLatestHistoryRecord(nextReading) {
@@ -3188,7 +3145,7 @@ function extractSummaryModel(rawReading = "") {
 
 function renderReadingSummary(rawHtml) {
   const box = document.getElementById("readingSummary");
-  if (!box) return;
+  if (!box) return false;
 
   const summaryModel = extractSummaryModel(rawHtml);
   if (summaryModel) {
@@ -3224,16 +3181,17 @@ function renderReadingSummary(rawHtml) {
       </div>
     `;
     box.style.display = "block";
-    return;
+    return true;
   }
 
   // Fallback: extract first 3 sentences
   const plain = String(rawHtml || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-  if (!plain) { box.style.display = "none"; return; }
+  if (!plain) { box.style.display = "none"; return false; }
   const parts = plain.split(/(?<=[。！？!?])/).map(s => s.trim()).filter(Boolean).slice(0, 3);
-  if (!parts.length) { box.style.display = "none"; return; }
+  if (!parts.length) { box.style.display = "none"; return false; }
   box.innerHTML = `<div class="reading-summary">${parts.join("")}</div>`;
   box.style.display = "block";
+  return true;
 }
 
 const TarotApiService = {
@@ -3526,6 +3484,7 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
   const isStaleRequest = () => requestId !== activeReadingRequestId;
   const streamContent = document.getElementById("streamContent"); const cursor = document.getElementById("cursor");
   streamContent.innerHTML = ""; let htmlBuffer = "";
+  streamContent.classList.remove("is-summary-only");
   resetReadingFeedbackPanel();
   document.body.classList.add("reading-generating");
   document.getElementById("readingWrapper")?.setAttribute("aria-busy", "true");
@@ -3538,28 +3497,6 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
     return [...new Set((Array.isArray(cards) ? cards : [])
       .map(item => String(item?.cardName || "").replace(/\s*\((逆位|正位)\)\s*/g, "").trim())
       .filter(Boolean))];
-  };
-  const injectCoreQuoteBlock = (source = "") => {
-    const markdown = String(source || "").trim();
-    if (!markdown) return markdown;
-    if (/^\s*>/m.test(markdown)) return markdown;
-    // 若 AI 已输出 reading-keywords 块，不再重复注入引用
-    if (/class="reading-keywords"/.test(markdown)) return markdown;
-    const quote = extractCoreQuote(markdown);
-    if (!quote) return markdown;
-    return `> ${quote}\n\n${markdown}`;
-  };
-  const injectQuickTakeaways = (source = "") => {
-    const markdown = String(source || "").trim();
-    if (!markdown) return markdown;
-    if (/###\s*(三点速览|一句话答案|先看结论|结论)/i.test(markdown)) return markdown;
-
-    const plain = stripRichText(markdown);
-    if (!plain || plain.length < 48) return markdown;
-    const points = plain.split(/(?<=[。！？!?])/).map(s => s.trim()).filter(Boolean).slice(0, 3);
-    if (points.length < 2) return markdown;
-    const block = `### 三点速览\n${points.map(p => `- ${p}`).join("\n")}\n\n---\n\n`;
-    return `${block}${markdown}`;
   };
   const applyTarotTagHighlight = () => {
     const root = streamContent;
@@ -3618,14 +3555,13 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
       .replace(/<strong>(.*?)<\/strong>/gi, '**$1**')
       .replace(/<\/?(?:ul|ol)>/gi, '')
       .replace(/<li>(.*?)<\/li>/gi, '- $1');
-    const source = isFinal ? injectQuickTakeaways(cleaned) : cleaned;
     if (typeof marked !== "undefined" && typeof marked.parse === "function") {
-      streamContent.innerHTML = marked.parse(source);
+      streamContent.innerHTML = marked.parse(cleaned);
       sanitizeRenderedReading(streamContent);
       applyTarotTagHighlight();
       return;
     }
-    streamContent.textContent = source;
+    streamContent.textContent = cleaned;
   };
   let rafPending = false;
 
@@ -3741,7 +3677,8 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
       emotionLevel: detailContext.emotion.value
     };
     renderMarkdown(htmlBuffer, true);
-    renderReadingSummary(historyRecord.reading);
+    const hasSummary = renderReadingSummary(historyRecord.reading);
+    streamContent.classList.toggle("is-summary-only", Boolean(hasSummary));
     setFlowStep(3);
   } catch (error) {
     if (requestController.signal.aborted || isStaleRequest() || error?.name === "AbortError") {
@@ -3782,7 +3719,8 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
         emotionLabel: detailContext.emotion.label,
         emotionLevel: detailContext.emotion.value
       };
-      renderReadingSummary(historyRecord.reading);
+      const hasSummary = renderReadingSummary(historyRecord.reading);
+      streamContent.classList.toggle("is-summary-only", Boolean(hasSummary));
       setFlowStep(3);
       updateStatus("网络波动，已自动切换到稳定模式。你可以继续阅读，不影响结果。");
     } catch {
