@@ -8,6 +8,9 @@ const outDir = join(root, "ios-web");
 const files = [
   "index.html",
   "style.css",
+  "growth-hub.js",
+  "reading-engine.js",
+  "vip-payment.js",
   "script.js",
   "privacy.html",
   "support.html",
