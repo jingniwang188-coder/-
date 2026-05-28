@@ -859,6 +859,30 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
       vipToken
     }, { signal: requestController.signal });
     const reader = streamBody.getReader(); const decoder = new TextDecoder("utf-8");
+    let streamLineBuffer = "";
+    const processStreamLine = line => {
+      const trimmed = String(line || "").trim();
+      if (!trimmed || trimmed.includes("[DONE]") || !trimmed.startsWith("data: ")) return;
+      try {
+        const dataStr = trimmed.replace(/^data:\s*/, "");
+        if (dataStr.startsWith("[ERROR]")) {
+          htmlBuffer += `\n\n> ${dataStr}`;
+          renderMarkdown(htmlBuffer);
+          return;
+        }
+        const data = JSON.parse(dataStr);
+        const content = data.choices?.[0]?.delta?.content || "";
+        htmlBuffer += content;
+        if (!rafPending) {
+          rafPending = true;
+          requestAnimationFrame(() => { renderMarkdown(htmlBuffer); rafPending = false; });
+        }
+        if (cursor) cursor.style.display = "inline-block";
+      } catch (e) {
+        console.error("流数据解析失败", e);
+        updateStatus("内容加载有轻微抖动，系统正在自动修复中…");
+      }
+    };
 
     while (true) {
       if (requestController.signal.aborted || isStaleRequest()) {
@@ -866,32 +890,14 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
         throw new DOMException("Reading aborted", "AbortError");
       }
       const { done, value } = await reader.read(); if (done) break;
-      const chunk = decoder.decode(value, { stream: true }); const lines = chunk.split('\n').filter(line => line.trim() !== '');
-      for (const line of lines) {
-        if (line.includes('[DONE]')) continue;
-        if (line.startsWith('data: ')) {
-          try {
-            const dataStr = line.replace('data: ', '');
-            if(dataStr.startsWith('[ERROR]')) {
-              htmlBuffer += `\n\n> ${dataStr}`;
-              renderMarkdown(htmlBuffer);
-              continue;
-            }
-            const data = JSON.parse(dataStr);
-            const content = data.choices?.[0]?.delta?.content || "";
-            htmlBuffer += content;
-            if (!rafPending) {
-              rafPending = true;
-              requestAnimationFrame(() => { renderMarkdown(htmlBuffer); rafPending = false; });
-            }
-            if (cursor) cursor.style.display = "inline-block";
-          } catch (e) {
-            console.error("流数据解析失败", e);
-            updateStatus("内容加载有轻微抖动，系统正在自动修复中…");
-          }
-        }
+      streamLineBuffer += decoder.decode(value, { stream: true });
+      const lines = streamLineBuffer.split(/\r?\n/);
+      streamLineBuffer = lines.pop() || "";
+      for (const line of lines.map(item => item.trim()).filter(Boolean)) {
+        processStreamLine(line);
       }
     }
+    processStreamLine(streamLineBuffer);
 
     const quality = evaluateReadingQuality(htmlBuffer, userQuestionForQuality, cards);
     if (!quality.ok) {
