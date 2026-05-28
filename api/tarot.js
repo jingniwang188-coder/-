@@ -42,35 +42,77 @@ function detectQuestionFocus(question = '', isCompatibility = false) {
     {
       label: '选择判断',
       keywords: ['要不要', '该不该', '能不能', '会不会', '是否', '值不值得', '适不适合', '二选一', '选择', '还是'],
-      instruction: '结论第一句必须给出明确倾向；如果是二选一，要分别比较两个方向的收益、风险和更推荐的一边。'
+      instruction: '结论第一句必须给出明确倾向；如果是二选一，要分别比较两个方向的收益、风险和更推荐的一边。',
+      answerFrame: '结论第一句建议写成“倾向：选/不选/暂缓，因为……”。不能只说“看你的内心”。'
     },
     {
       label: '关系感情',
       keywords: ['复合', '分手', '喜欢', '爱', '暧昧', '关系', '感情', '恋爱', '前任', '伴侣', '对象', '婚姻', '他', '她', 'ta'],
-      instruction: '必须回答关系状态、对方/双方真实动力、主要阻碍和下一步沟通方式，不要泛化成个人成长鸡汤。'
+      instruction: '必须回答关系状态、对方/双方真实动力、主要阻碍和下一步沟通方式，不要泛化成个人成长鸡汤。',
+      answerFrame: '结论第一句必须点明“这段关系目前是什么状态”和“建议主动/暂缓/设边界”。'
     },
     {
       label: '事业工作',
       keywords: ['工作', '事业', 'offer', '面试', '跳槽', '老板', '同事', '项目', '副业', '客户', '合作', '升职', '辞职'],
-      instruction: '必须回答现实推进、机会风险、关键人/关键节点和下一步行动，不要转去谈感情或抽象情绪。'
+      instruction: '必须回答现实推进、机会风险、关键人/关键节点和下一步行动，不要转去谈感情或抽象情绪。',
+      answerFrame: '结论第一句必须说明“推进/暂缓/先验证”的职业判断，并给出一个现实依据。'
     },
     {
       label: '金钱财务',
       keywords: ['钱', '财', '赚钱', '收入', '投资', '存款', '涨薪', '工资', '副业', '花钱', '债', '预算'],
-      instruction: '必须回答财务趋势、风险边界和可执行的收支动作，避免给出高风险投资承诺。'
+      instruction: '必须回答财务趋势、风险边界和可执行的收支动作，避免给出高风险投资承诺。',
+      answerFrame: '结论第一句必须说明“保守/可尝试/先止损/先核算”的财务倾向，不承诺收益。'
     },
     {
       label: '时间走势',
       keywords: ['未来', '走势', '发展', '多久', '什么时候', '本月', '月运', '今年', '明年', '近期', '三个月'],
-      instruction: '必须说明阶段变化与观察信号；如果不能给精确时间，就给出最可能的节奏和触发条件。'
+      instruction: '必须说明阶段变化与观察信号；如果不能给精确时间，就给出最可能的节奏和触发条件。',
+      answerFrame: '结论第一句必须给出“近期节奏”和“观察信号”，不要假装能精确到某一天。'
     }
   ];
 
-  if (isCompatibility) return { label: '双人合盘', instruction: '必须围绕两个人的互动模式、误解来源、吸引与阻碍、下一步沟通动作回答。' };
+  if (isCompatibility) return {
+    label: '双人合盘',
+    instruction: '必须围绕两个人的互动模式、误解来源、吸引与阻碍、下一步沟通动作回答。',
+    answerFrame: '结论第一句必须直接判断两个人现在的互动质量，以及下一步该靠近、澄清还是拉开距离。'
+  };
   return rules.find(rule => includesAny(question, rule.keywords)) || {
     label: '开放探索',
-    instruction: '先界定你将按哪个具体方向解读，再给出清楚结论、主要风险和下一步行动。'
+    instruction: '先界定你将按哪个具体方向解读，再给出清楚结论、主要风险和下一步行动。',
+    answerFrame: '结论第一句必须把模糊问题收束成一个具体判断，不要只给情绪安慰。'
   };
+}
+
+function normalizeQuestion(question = '') {
+  return String(question || '').replace(/\s+/g, ' ').trim();
+}
+
+function getReadableQuestion(question = '') {
+  return normalizeQuestion(question) || '不输入具体问题，直接看当下最需要留意的信号';
+}
+
+function formatCardsForPrompt(cards = []) {
+  if (!Array.isArray(cards) || !cards.length) return '- 未抽到有效牌面';
+  return cards.map((card, index) => {
+    const position = String(card?.position || `位置${index + 1}`).trim();
+    const name = String(card?.cardName || card?.name || '未知牌').trim();
+    const meaning = String(card?.meaning || '暂无牌义').trim();
+    const direction = card?.isReversed ? '逆位' : (/\(逆位\)/.test(name) ? '逆位' : '正位/未标注');
+    return `- ${position}: ${name}（${direction}）。核心含义：${meaning}`;
+  }).join('\n');
+}
+
+function buildReadingQualityContract({ questionFocus, hasSpecificQuestion = false, fallbackShort = false } = {}) {
+  return `
+解读质量标准：
+1. 第一屏必须让用户在 10 秒内看到答案：问题复述、结论、风险、下一步都要靠前。
+2. 结论不能逃避判断。${questionFocus?.answerFrame || ''}
+3. 每个关键判断都要回扣至少一张牌或一个牌阵位置，不能只写通用心理建议。
+4. ${hasSpecificQuestion ? '必须保留用户问题里的核心对象、场景或选择项；不要换题。' : '这是轻量灵感牌，可以按“当下提醒”来解读，但仍要给出现实可做的小动作。'}
+5. “现在去做”必须是 3 条动作清单，每条都包含现实动词，例如：发、问、约、等、核对、写下、暂停、设边界、比较、准备。
+6. 禁止用“顺其自然、相信宇宙、答案在你心里、命运会安排、看见自己”代替答案。
+7. 不做医疗、法律、投资收益或绝对命运承诺；需要谨慎时，说清边界和观察信号。
+${fallbackShort ? '8. 这是修正版或稳定版，长度更短，但结构必须完整，尤其要修正偏题和无结论。' : '8. 总体克制，宁可短而清楚，不要长而飘。'}`;
 }
 
 export default async function handler(req, res) {
@@ -127,7 +169,10 @@ export default async function handler(req, res) {
       : "这是单人问题，聚焦提问者自身成长与决策。";
     const emotionLine = `当前情绪雷达：等级 ${Number(emotionLevel || 3)}（${emotionLabel || "平静观察"}）。请在语气与建议力度中体现这个状态。`;
 
-    const questionFocus = detectQuestionFocus(question, isCompatibility);
+    const safeQuestion = getReadableQuestion(question);
+    const hasSpecificQuestion = Boolean(normalizeQuestion(question));
+    const questionFocus = detectQuestionFocus(safeQuestion, isCompatibility);
+    const qualityContract = buildReadingQualityContract({ questionFocus, hasSpecificQuestion, fallbackShort });
 
     promptContext = `${soulCall}
 ${identityLine}
@@ -137,21 +182,23 @@ ${emotionLine}
 回答重点：${questionFocus.instruction}
 ${qualityIssue ? `上一版解读存在问题：${String(qualityIssue).slice(0, 420)}。这一版必须修正这个问题。` : ""}
 ${previousReading ? `上一版解读摘要：${String(previousReading).replace(/\s+/g, ' ').slice(0, 700)}。请保留有用判断，删掉偏题和空泛部分。` : ""}
-TA的疑惑：“${question}”
+TA的疑惑：“${safeQuestion}”
 抽到的阵法：
-${safeCards.map(c => `- ${c.position}: 抽到 ${c.cardName}。含义：${c.meaning}`).join('\n')}
+${formatCardsForPrompt(safeCards)}
+
+${qualityContract}
 
 你的解盘必须严格遵守以下结构：
 1. 先输出：### 我理解的问题
 用 1 句话复述用户真正想问的事。必须包含用户问题里的核心对象或关键词；如果问题很模糊，先说清你会按哪个方向解读，不能擅自换题。
 2. 然后输出：### 结论
-第一句话必须直接回答问题。能判断就明确判断（例如：能 / 不能 / 值得 / 暂缓 / 有机会但要先处理XX）。不要把结论藏在后文。
+第一句话必须直接回答问题。能判断就明确判断（例如：能 / 不能 / 值得 / 暂缓 / 有机会但要先处理XX）。不要把结论藏在后文；不要先铺垫情绪。
 3. 然后输出：### 关键提醒
-用 2-3 条短句说明最关键的信息，每条都要具体，不要空话。
+用 2-3 条短句说明最关键的信息。每条都要指向一个牌面、牌阵位置或现实信号，不要空话。
 4. 然后输出：### 为什么会这样
-用 2 个短段落解释牌面逻辑：现状、阻碍、转机分别是什么。不要讲太多背景故事，不要重复。
+用 2 个短段落解释牌面逻辑：现状、阻碍、转机分别是什么。每段至少提到一个具体牌名或位置，不要讲太多背景故事，不要重复。
 5. 最后输出：### 现在去做
-给出 3 条可执行建议，每条一句话，直接能落地。
+给出 3 条可执行建议，每条一句话，直接能落地；不要把“相信自己、保持觉察”当作行动。
 
 排版铁律：
 1. 全部使用纯 Markdown 格式：### 或 #### 做标题，> 做引用，**加粗**，- 列表。
@@ -173,7 +220,8 @@ ${safeCards.map(c => `- ${c.position}: 抽到 ${c.cardName}。含义：${c.meani
 10. 如果用户反馈“偏了”，修正版要先承认并重新对齐问题，不要为上一版辩解。`;
     promptContext += `
 11. 输出前自检：结论第一句必须能单独回答“TA到底问了什么”。如果不能，就重写结论。
-12. “现在去做”的每一条建议必须包含一个现实动作，例如发一条信息、等一个节点、核对一个事实、暂停一个决定或设一个边界。`;
+12. “现在去做”的每一条建议必须包含一个现实动作，例如发一条信息、等一个节点、核对一个事实、暂停一个决定或设一个边界。
+13. 如果用户的问题包含人名、TA、A/B、工作、复合、钱、时间等关键词，至少在“我理解的问题”和“结论”里各回应一次。`;
   }
 
   try {

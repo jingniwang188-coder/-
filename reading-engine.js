@@ -583,11 +583,11 @@ function extractQuestionSignals(question = "") {
   if (!text.trim()) return [];
 
   const groups = [
-    ["复合", "分手", "喜欢", "暧昧", "关系", "感情", "恋爱", "前任", "他", "她", "ta"],
-    ["工作", "事业", "offer", "面试", "跳槽", "老板", "同事", "项目", "副业", "收入"],
-    ["钱", "财", "赚钱", "投资", "存款", "涨薪", "工资"],
-    ["选择", "二选一", "要不要", "该不该", "能不能", "会不会", "是否"],
-    ["未来", "走势", "发展", "多久", "什么时候", "本月", "月运", "今年", "明年"]
+    ["复合", "分手", "喜欢", "爱", "暧昧", "关系", "感情", "恋爱", "前任", "伴侣", "对象", "婚姻", "他", "她", "ta"],
+    ["工作", "事业", "offer", "面试", "跳槽", "老板", "同事", "项目", "副业", "客户", "合作", "升职", "辞职", "收入"],
+    ["钱", "财", "赚钱", "投资", "存款", "涨薪", "工资", "预算", "债"],
+    ["选择", "二选一", "要不要", "该不该", "能不能", "会不会", "是否", "值不值得", "适不适合", "还是"],
+    ["未来", "走势", "发展", "多久", "什么时候", "本月", "月运", "今年", "明年", "近期", "三个月"]
   ];
 
   const signals = new Set();
@@ -596,6 +596,10 @@ function extractQuestionSignals(question = "") {
   });
   return Array.from(signals);
 }
+
+const CONCRETE_ACTION_PATTERN = /(发|问|约|等|看|列|写|核对|确认|暂停|拒绝|设|沟通|记录|复盘|比较|提交|准备|观察|整理|联系|预约|保存|删除|申请|更新|检查|预算|边界)/;
+const VAGUE_ACTION_PATTERN = /(相信|觉察|顺其自然|保持开放|接纳|臣服|提升能量|听从内心|等待宇宙|做好自己|放轻松|不要想太多)/;
+const EVASIVE_ANSWER_PATTERN = /(答案在你心里|顺其自然|相信宇宙|命运会安排|看见自己|提升能量|保持开放|一切都会好|宇宙会给|灵魂课题)/;
 
 function getQuestionIntentProfile(question = "") {
   const text = String(question || "").toLowerCase();
@@ -637,6 +641,12 @@ function extractActionLines(markdown = "") {
     .filter(Boolean);
 }
 
+function getReadingCardNames(cards = []) {
+  return [...new Set((Array.isArray(cards) ? cards : [])
+    .map(item => normalizeCardName(item?.cardName || item?.name || ""))
+    .filter(name => name && name !== "未知牌"))];
+}
+
 function getFirstSentence(text = "") {
   return String(text || "")
     .split(/(?<=[。！？!?])|\n/)
@@ -644,7 +654,7 @@ function getFirstSentence(text = "") {
     .filter(Boolean)[0] || "";
 }
 
-function evaluateReadingQuality(rawReading = "", question = "") {
+function evaluateReadingQuality(rawReading = "", question = "", cards = []) {
   const plain = stripRichText(rawReading).replace(/\s+/g, " ").trim();
   const reading = String(rawReading || "");
   const q = String(question || "").trim();
@@ -670,13 +680,22 @@ function evaluateReadingQuality(rawReading = "", question = "") {
     issues.push("结论第一句没有直接回应问题类型");
   }
 
-  if (firstConclusion && /(宇宙|命运|能量|灵魂课题|内在功课|看见自己)/.test(firstConclusion) && !/(建议|不建议|可以|不要|值得|暂缓|有机会|倾向|风险|阻碍)/.test(firstConclusion)) {
+  if (firstConclusion && (EVASIVE_ANSWER_PATTERN.test(firstConclusion) || /(宇宙|命运|能量|灵魂课题|内在功课|看见自己)/.test(firstConclusion)) && !/(建议|不建议|可以|不要|值得|暂缓|有机会|倾向|风险|阻碍|先|等|观察)/.test(firstConclusion)) {
     issues.push("结论第一句太抽象，用户可能看不出答案");
+  }
+  if (firstConclusion && firstConclusion.length > 96) {
+    issues.push("结论第一句过长，答案不够靠前");
+  }
+  if (firstConclusion && EVASIVE_ANSWER_PATTERN.test(firstConclusion)) {
+    issues.push("结论第一句存在逃避式表达");
   }
 
   const actionLines = extractActionLines(reading);
-  const concreteActions = actionLines.filter(line => /(发|问|约|等|看|列|写|核对|确认|暂停|拒绝|设|沟通|记录|复盘|比较|提交|准备|观察)/.test(line));
-  if (actionLines.length && concreteActions.length < Math.min(2, actionLines.length)) {
+  if (actionLines.length < 3) {
+    issues.push("行动建议不足 3 条");
+  }
+  const concreteActions = actionLines.filter(line => CONCRETE_ACTION_PATTERN.test(line) && !VAGUE_ACTION_PATTERN.test(line));
+  if (actionLines.length && concreteActions.length < Math.min(3, actionLines.length)) {
     issues.push("行动建议不够具体");
   }
 
@@ -691,6 +710,22 @@ function evaluateReadingQuality(rawReading = "", question = "") {
     const understoodHits = signals.filter(signal => understood.includes(signal)).length;
     if (understood && understoodHits === 0) {
       issues.push("问题复述没有对齐用户原问题");
+    }
+  }
+
+  const cardNames = getReadingCardNames(cards);
+  const reasonSection = stripRichText(extractSectionBody(reading, ["为什么会这样", "牌面逻辑"]));
+  if (cardNames.length && reasonSection) {
+    const mentionedInReason = cardNames.filter(name => reasonSection.includes(name));
+    if (!mentionedInReason.length) {
+      issues.push("牌面逻辑没有回扣具体牌名");
+    }
+  }
+  const reminderSection = stripRichText(extractSectionBody(reading, ["关键提醒", "提醒"]));
+  if (cardNames.length && reminderSection) {
+    const mentionedInReminder = cardNames.filter(name => reminderSection.includes(name));
+    if (!mentionedInReminder.length && !/(现状|阻碍|未来|支持|反对|结局|机会|风险|主题)/.test(reminderSection)) {
+      issues.push("关键提醒缺少牌面或位置依据");
     }
   }
 
@@ -858,7 +893,7 @@ async function fetchStream(question, style, cards, context = getReadingContext(q
       }
     }
 
-    const quality = evaluateReadingQuality(htmlBuffer, userQuestionForQuality);
+    const quality = evaluateReadingQuality(htmlBuffer, userQuestionForQuality, cards);
     if (!quality.ok) {
       updateStatus("解读正在校准：系统发现上一版可能不够聚焦，正在自动修正。");
       setAiStatusText("正在校准答案，让结论更贴近你的问题…");
