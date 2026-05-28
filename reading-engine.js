@@ -597,7 +597,7 @@ function extractQuestionSignals(question = "") {
   return Array.from(signals);
 }
 
-const CONCRETE_ACTION_PATTERN = /(发|问|约|等|看|列|写|核对|确认|暂停|拒绝|设|沟通|记录|复盘|比较|提交|准备|观察|整理|联系|预约|保存|删除|申请|更新|检查|预算|边界)/;
+const CONCRETE_ACTION_PATTERN = /(发|问|约|等|看|列|写|核对|确认|暂停|停止|停掉|取消|推迟|拒绝|设|沟通|记录|复盘|比较|提交|准备|观察|整理|收集|评估|联系|预约|保存|删除|申请|更新|检查|预算|边界)/;
 const VAGUE_ACTION_PATTERN = /(相信|觉察|顺其自然|保持开放|接纳|臣服|提升能量|听从内心|等待宇宙|做好自己|放轻松|不要想太多)/;
 const EVASIVE_ANSWER_PATTERN = /(答案在你心里|顺其自然|相信宇宙|命运会安排|看见自己|提升能量|保持开放|一切都会好|宇宙会给|灵魂课题)/;
 
@@ -627,7 +627,7 @@ function getQuestionIntentProfile(question = "") {
     {
       id: "timing",
       keywords: ["未来", "走势", "发展", "多久", "什么时候", "本月", "月运", "今年", "明年", "近期", "三个月"],
-      directPattern: /(阶段|近期|本月|未来|走势|发展|节点|信号|触发|时间|节奏)/
+      directPattern: /(阶段|近期|本月|未来|走势|发展|节点|信号|触发|时间|节奏|处于|状态|停滞|破局)/
     }
   ];
   return rules.find(rule => rule.keywords.some(word => text.includes(String(word).toLowerCase()))) || null;

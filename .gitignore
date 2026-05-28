@@ -1,6 +1,7 @@
 node_modules/
 ios-web/
 ios/App/App/public/
+reports/
 *.xcuserdata/
 DerivedData/
 .DS_Store

@@ -1,0 +1,144 @@
+[
+  {
+    "id": "relationship-reconnect",
+    "category": "关系感情",
+    "question": "我和前任还有复合机会吗？我该主动联系还是先等对方？",
+    "cards": [
+      { "position": "过去的因果", "cardName": "权杖侍者 (逆位)", "meaning": "热情走偏、冲动减弱", "isReversed": true },
+      { "position": "当下的现状", "cardName": "女祭司 (逆位)", "meaning": "直觉被情绪干扰、信息不透明", "isReversed": true },
+      { "position": "未来的趋势", "cardName": "星星 (逆位)", "meaning": "希望感不足、需要现实检验", "isReversed": true }
+    ],
+    "mustMention": ["前任", "复合"],
+    "expectedActionWords": ["联系", "等", "沟通", "边界", "观察"]
+  },
+  {
+    "id": "career-wait-or-move",
+    "category": "事业工作",
+    "question": "我该不该继续等这个工作机会，还是主动去找新的选择？",
+    "cards": [
+      { "position": "过去的因果", "cardName": "宝剑五 (正位)", "meaning": "竞争、沟通不畅、隐性消耗", "isReversed": false },
+      { "position": "当下的现状", "cardName": "宝剑九 (逆位)", "meaning": "焦虑缓解但仍不稳定", "isReversed": true },
+      { "position": "未来的趋势", "cardName": "月亮 (正位)", "meaning": "不确定、信息模糊、隐藏风险", "isReversed": false }
+    ],
+    "mustMention": ["工作", "机会"],
+    "expectedActionWords": ["投递", "确认", "时间", "节点", "更新"]
+  },
+  {
+    "id": "money-side-business",
+    "category": "金钱财务",
+    "question": "我现在适合开始做副业赚钱吗？会不会影响主业和现金流？",
+    "cards": [
+      { "position": "现实机会", "cardName": "星币一 (正位)", "meaning": "新的财务机会、可启动的小种子", "isReversed": false },
+      { "position": "主要风险", "cardName": "权杖十 (正位)", "meaning": "负担过重、精力被压垮", "isReversed": false },
+      { "position": "建议方向", "cardName": "节制 (正位)", "meaning": "平衡、分阶段推进、避免过量", "isReversed": false }
+    ],
+    "mustMention": ["副业", "现金流"],
+    "expectedActionWords": ["预算", "暂停", "核对", "时间", "试水"]
+  },
+  {
+    "id": "decision-two-options",
+    "category": "选择判断",
+    "question": "我应该选择留在现在的城市，还是去新的城市发展？",
+    "cards": [
+      { "position": "当前现状", "cardName": "星币四 (正位)", "meaning": "安全感、守住资源、害怕失去", "isReversed": false },
+      { "position": "选A的走向", "cardName": "皇帝 (正位)", "meaning": "稳定结构、明确秩序", "isReversed": false },
+      { "position": "选B的走向", "cardName": "愚者 (正位)", "meaning": "新开始、冒险、未知", "isReversed": false }
+    ],
+    "mustMention": ["城市", "选择"],
+    "expectedActionWords": ["比较", "列", "确认", "准备", "设"]
+  },
+  {
+    "id": "timing-relationship",
+    "category": "时间走势",
+    "question": "这段关系未来三个月会往哪里发展？",
+    "cards": [
+      { "position": "过去的因果", "cardName": "圣杯六 (正位)", "meaning": "旧情、回忆、熟悉感", "isReversed": false },
+      { "position": "当下的现状", "cardName": "宝剑二 (正位)", "meaning": "僵局、回避选择", "isReversed": false },
+      { "position": "未来的趋势", "cardName": "战车 (正位)", "meaning": "推进、方向感、主动控制", "isReversed": false }
+    ],
+    "mustMention": ["关系", "三个月"],
+    "expectedActionWords": ["观察", "沟通", "节点", "确认", "设"]
+  },
+  {
+    "id": "quick-inspiration",
+    "category": "轻量灵感牌",
+    "question": "",
+    "cards": [
+      { "position": "核心指引", "cardName": "隐士 (正位)", "meaning": "独处、内省、寻找自己的答案", "isReversed": false }
+    ],
+    "mustMention": ["当下", "指引"],
+    "expectedActionWords": ["写", "暂停", "整理", "观察", "记录"]
+  },
+  {
+    "id": "relationship-boundary",
+    "category": "关系感情",
+    "question": "对方忽冷忽热，我还要继续投入这段关系吗？",
+    "cards": [
+      { "position": "过去的因果", "cardName": "圣杯二 (逆位)", "meaning": "关系不对等、连接失衡", "isReversed": true },
+      { "position": "当下的现状", "cardName": "恶魔 (正位)", "meaning": "执着、依赖、消耗性吸引", "isReversed": false },
+      { "position": "未来的趋势", "cardName": "正义 (正位)", "meaning": "需要公平、边界和事实判断", "isReversed": false }
+    ],
+    "mustMention": ["对方", "关系"],
+    "expectedActionWords": ["边界", "暂停", "沟通", "观察", "确认"]
+  },
+  {
+    "id": "career-interview",
+    "category": "事业工作",
+    "question": "下周面试这家公司，我最需要注意什么？",
+    "cards": [
+      { "position": "过去的因果", "cardName": "魔术师 (正位)", "meaning": "技能、表达、主动创造", "isReversed": false },
+      { "position": "当下的现状", "cardName": "宝剑侍者 (正位)", "meaning": "提问、审视、信息敏感", "isReversed": false },
+      { "position": "未来的趋势", "cardName": "星币三 (正位)", "meaning": "协作、专业能力、团队认可", "isReversed": false }
+    ],
+    "mustMention": ["面试", "公司"],
+    "expectedActionWords": ["准备", "练习", "列", "确认", "提问"]
+  },
+  {
+    "id": "money-spending",
+    "category": "金钱财务",
+    "question": "我最近要不要买这件比较贵的东西？会不会让财务压力变大？",
+    "cards": [
+      { "position": "消费动机", "cardName": "圣杯九 (正位)", "meaning": "满足、愿望实现、享受", "isReversed": false },
+      { "position": "财务压力", "cardName": "星币五 (正位)", "meaning": "财务压力、短缺感、孤立", "isReversed": false },
+      { "position": "平衡建议", "cardName": "星币二 (正位)", "meaning": "预算平衡、多方权衡", "isReversed": false }
+    ],
+    "mustMention": ["买", "财务"],
+    "expectedActionWords": ["预算", "等", "核对", "暂停", "比较"]
+  },
+  {
+    "id": "choice-collaboration",
+    "category": "选择判断",
+    "question": "这个合作邀约我要不要接？对我长期发展有帮助吗？",
+    "cards": [
+      { "position": "拓展机会", "cardName": "权杖三 (正位)", "meaning": "远见、拓展、看见更大机会", "isReversed": false },
+      { "position": "隐性风险", "cardName": "宝剑七 (正位)", "meaning": "隐瞒、策略、信息不完整", "isReversed": false },
+      { "position": "合作规则", "cardName": "教皇 (正位)", "meaning": "规则、契约、标准流程", "isReversed": false }
+    ],
+    "mustMention": ["合作", "长期"],
+    "expectedActionWords": ["合同", "确认", "核对", "拒绝", "设"]
+  },
+  {
+    "id": "timing-project",
+    "category": "时间走势",
+    "question": "这个项目接下来一个月能顺利推进吗？",
+    "cards": [
+      { "position": "过去的因果", "cardName": "权杖八 (正位)", "meaning": "快速推进、消息、行动加速", "isReversed": false },
+      { "position": "当下的现状", "cardName": "倒吊人 (正位)", "meaning": "暂停、等待、换视角", "isReversed": false },
+      { "position": "未来的趋势", "cardName": "星币八 (正位)", "meaning": "持续打磨、执行、细节工作", "isReversed": false }
+    ],
+    "mustMention": ["项目", "一个月"],
+    "expectedActionWords": ["拆", "确认", "节点", "跟进", "提交", "复盘", "核对", "步骤", "暂停"]
+  },
+  {
+    "id": "self-direction",
+    "category": "开放探索",
+    "question": "我最近总觉得卡住了，最应该先调整哪一件事？",
+    "cards": [
+      { "position": "过去的因果", "cardName": "高塔 (逆位)", "meaning": "避免崩塌、抗拒改变", "isReversed": true },
+      { "position": "当下的现状", "cardName": "节制 (逆位)", "meaning": "失衡、节奏混乱", "isReversed": true },
+      { "position": "未来的趋势", "cardName": "太阳 (正位)", "meaning": "清晰、活力、重新看见方向", "isReversed": false }
+    ],
+    "mustMention": ["卡住", "调整"],
+    "expectedActionWords": ["暂停", "整理", "写", "设", "复盘"]
+  }
+]

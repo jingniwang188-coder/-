@@ -1,5 +1,7 @@
 {
   "scripts": {
+    "reading:qa": "node tools/run-reading-quality-check.mjs",
+    "reading:qa:self": "node tools/run-reading-quality-check.mjs --self-test",
     "ios:assets": "node tools/generate-ios-assets.mjs",
     "ios:prepare": "node tools/prepare-ios-web.mjs",
     "ios:sync": "npm run ios:assets && npm run ios:prepare && npx cap sync ios",
