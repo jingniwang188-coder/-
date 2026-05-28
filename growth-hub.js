@@ -1,5 +1,43 @@
 /* Growth archive: history timeline and journal features. Loaded before script.js. */
 
+let growthArchiveFilter = "all";
+
+function archiveEscapeHtml(input = "") {
+  return String(input || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function archiveStripRichText(input = "") {
+  return String(input || "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/[#>*_`~\-[\]().:：]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function archiveSectionBody(markdown = "", headings = []) {
+  const text = String(markdown || "");
+  if (!text.trim() || !Array.isArray(headings) || !headings.length) return "";
+
+  const escaped = headings.map(item => item.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const pattern = new RegExp(
+    `(?:^|\\n)#{3,4}\\s*(?:${escaped.join("|")})\\s*\\n([\\s\\S]*?)(?=\\n#{3,4}\\s+|$)`,
+    "i"
+  );
+  return text.match(pattern)?.[1]?.trim() || "";
+}
+
+function archiveFirstSentence(input = "") {
+  return archiveStripRichText(input)
+    .split(/(?<=[。！？!?])|；|;|\n/)
+    .map(item => item.trim())
+    .filter(Boolean)[0] || "";
+}
+
 function inferTimelineTopic(record) {
   const spread = String(record?.spread || "");
   const q = String(record?.question || "");
@@ -17,6 +55,97 @@ function extractTimelineTags(record) {
   return Array.from(tags);
 }
 
+function extractRecordInsights(record = {}) {
+  const reading = String(record?.reading || "");
+  const answer = archiveFirstSentence(archiveSectionBody(reading, ["结论", "一句话答案", "先看结论", "神谕总览"]));
+  const action = archiveFirstSentence(archiveSectionBody(reading, ["现在去做", "行动建议", "下一步", "凡尘指南"]));
+  const reminder = archiveFirstSentence(archiveSectionBody(reading, ["关键提醒", "提醒", "破局之眼"]));
+  const fallback = buildReadingSnippet(reading, 80);
+
+  return {
+    answer: answer || fallback || "这次答案还在整理中。",
+    action: action || "回到记录里选一个最小动作。",
+    reminder: reminder || "",
+    question: String(record?.question || "单牌速读").replace(/^\[双人合盘：.*?\]\s*/, "").trim() || "单牌速读"
+  };
+}
+
+function buildArchiveStats(records = []) {
+  const topicCounts = records.reduce((acc, item) => {
+    const topic = inferTimelineTopic(item);
+    acc[topic] = (acc[topic] || 0) + 1;
+    return acc;
+  }, {});
+  const topTopic = Object.entries(topicCounts).sort((a, b) => b[1] - a[1])[0] || null;
+  const recent = records[0] || null;
+  const recentInsights = extractRecordInsights(recent || {});
+
+  return {
+    total: records.length,
+    compatibility: records.filter(r => r.isCompatibility).length,
+    notes: Array.isArray(JournalService.notes) ? JournalService.notes.length : 0,
+    topTopic,
+    recent,
+    recentInsights,
+    topicCounts
+  };
+}
+
+function renderArchiveFocus(records = [], mapped = []) {
+  const panel = document.getElementById("archiveFocusPanel");
+  const filters = document.getElementById("archiveFilterBar");
+  if (!panel && !filters) return;
+
+  const stats = buildArchiveStats(records);
+  if (panel) {
+    if (!records.length) {
+      panel.innerHTML = `
+        <section class="archive-focus-empty">
+          <div class="archive-focus-kicker">还没有记录</div>
+          <strong>完成一次解牌后，这里会自动整理答案和下一步。</strong>
+          <span>不用手动归档，系统会替你留住每一次重要提问。</span>
+        </section>
+      `;
+    } else {
+      const topTopicText = stats.topTopic ? `${stats.topTopic[0]} · ${stats.topTopic[1]}次` : "暂无重复主题";
+      panel.innerHTML = `
+        <section class="archive-focus-card archive-focus-card--answer">
+          <div class="archive-focus-kicker">最近答案</div>
+          <strong>${archiveEscapeHtml(stats.recentInsights.answer)}</strong>
+          <span>${archiveEscapeHtml(stats.recentInsights.question)}</span>
+        </section>
+        <section class="archive-focus-card">
+          <div class="archive-focus-kicker">下一步</div>
+          <strong>${archiveEscapeHtml(stats.recentInsights.action)}</strong>
+          <span>${archiveEscapeHtml(stats.recentInsights.reminder || "先做一件最小、可验证的事。")}</span>
+        </section>
+        <section class="archive-focus-card">
+          <div class="archive-focus-kicker">重复主题</div>
+          <strong>${archiveEscapeHtml(topTopicText)}</strong>
+          <span>${stats.total} 条解牌 · ${stats.notes} 条札记</span>
+        </section>
+      `;
+    }
+  }
+
+  if (filters) {
+    const topics = [...new Set(mapped.map(item => item.topic))];
+    const options = ["all", ...topics];
+    filters.innerHTML = options.map(topic => {
+      const active = growthArchiveFilter === topic ? "active" : "";
+      const label = topic === "all" ? "全部" : topic;
+      const count = topic === "all" ? records.length : (stats.topicCounts[topic] || 0);
+      return `<button class="archive-filter-chip ${active}" type="button" data-topic="${archiveEscapeHtml(topic)}">${archiveEscapeHtml(label)} <span>${count}</span></button>`;
+    }).join("");
+    filters.querySelectorAll(".archive-filter-chip").forEach(btn => {
+      btn.addEventListener("click", () => {
+        growthArchiveFilter = btn.getAttribute("data-topic") || "all";
+        renderTimeline();
+      });
+    });
+  }
+}
+
 function renderTimeline() {
   const list = document.getElementById("timelineList");
   const summary = document.getElementById("timelineSummary");
@@ -24,19 +153,16 @@ function renderTimeline() {
   const records = Array.isArray(HistoryService.records) ? HistoryService.records : [];
   list.innerHTML = "";
 
+  const mapped = records.map(r => ({ record: r, topic: inferTimelineTopic(r), tags: extractTimelineTags(r) }));
+  renderArchiveFocus(records, mapped);
+
   if (summary) {
-    const total = records.length;
-    const compatibility = records.filter(r => r.isCompatibility).length;
-    const topicCounts = records.reduce((acc, item) => {
-      const topic = inferTimelineTopic(item);
-      acc[topic] = (acc[topic] || 0) + 1;
-      return acc;
-    }, {});
-    const topTopic = Object.entries(topicCounts).sort((a, b) => b[1] - a[1])[0];
-    const topTopicText = topTopic ? `${topTopic[0]} ${topTopic[1]}次` : "暂无";
+    const stats = buildArchiveStats(records);
+    const topTopicText = stats.topTopic ? `${stats.topTopic[0]} ${stats.topTopic[1]}次` : "暂无";
     summary.innerHTML = `
-      <div class="timeline-summary-item"><div class="timeline-summary-label">总记录</div><div class="timeline-summary-value">${total}</div></div>
-      <div class="timeline-summary-item"><div class="timeline-summary-label">双人占卜</div><div class="timeline-summary-value">${compatibility}</div></div>
+      <div class="timeline-summary-item"><div class="timeline-summary-label">总记录</div><div class="timeline-summary-value">${stats.total}</div></div>
+      <div class="timeline-summary-item"><div class="timeline-summary-label">双人占卜</div><div class="timeline-summary-value">${stats.compatibility}</div></div>
+      <div class="timeline-summary-item"><div class="timeline-summary-label">心境札记</div><div class="timeline-summary-value">${stats.notes}</div></div>
       <div class="timeline-summary-item timeline-summary-item--wide"><div class="timeline-summary-label">重复主题</div><div class="timeline-summary-value">${topTopicText}</div></div>
     `;
   }
@@ -46,32 +172,46 @@ function renderTimeline() {
     return;
   }
 
-  const mapped = records.map(r => ({ record: r, topic: inferTimelineTopic(r), tags: extractTimelineTags(r) }));
-  const filtered = mapped;
+  const filtered = growthArchiveFilter === "all"
+    ? mapped
+    : mapped.filter(item => item.topic === growthArchiveFilter);
 
   if (!filtered.length) {
-    list.innerHTML = '<div class="timeline-item"><div class="timeline-item-main">暂无记录。</div></div>';
+    list.innerHTML = '<div class="timeline-item timeline-item--empty"><div class="timeline-item-main">这个主题暂时没有记录。</div></div>';
     return;
   }
 
   filtered.forEach(({ record, tags, topic }) => {
     const item = document.createElement("div");
     item.className = "timeline-item";
-    const snippet = buildReadingSnippet(record.reading, 62);
+    item.setAttribute("role", "button");
+    item.setAttribute("tabindex", "0");
+    const insights = extractRecordInsights(record);
     item.innerHTML = `
-      <div class="timeline-item-time">${record.date || "未知时间"}</div>
-      <div class="timeline-item-main">${record.question || "单牌速读"} · ${record.spread || "未知牌阵"}</div>
-      <div class="timeline-item-snippet">${snippet ? `${snippet}…` : "无解牌节选"}</div>
+      <div class="timeline-item-top">
+        <div class="timeline-item-time">${archiveEscapeHtml(record.date || "未知时间")}</div>
+        <div class="timeline-item-open">打开</div>
+      </div>
+      <div class="timeline-item-main">${archiveEscapeHtml(insights.question)}</div>
+      <div class="timeline-item-answer">${archiveEscapeHtml(insights.answer)}</div>
+      <div class="timeline-item-snippet">下一步：${archiveEscapeHtml(insights.action)}</div>
       <div class="timeline-tags">${tags.map(t => `<span class="timeline-tag">${t}</span>`).join("")}</div>
     `;
-    item.addEventListener("click", () => openHistoryDetail({ ...record, timelineTopic: topic }));
+    const openDetail = () => openHistoryDetail({ ...record, timelineTopic: topic });
+    item.addEventListener("click", openDetail);
+    item.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openDetail();
+      }
+    });
     list.appendChild(item);
   });
 
 }
 
 function buildReadingSnippet(reading = "", maxLength = 80) {
-  const plain = stripRichText(reading)
+  const plain = archiveStripRichText(reading)
     .replace(/#{1,6}\s*/g, "")
     .replace(/\b(?:我理解的问题|理解的问题|问题理解|三点速览|结论|关键提醒|现在去做)\b/g, "")
     .replace(/\s+/g, " ")
@@ -208,11 +348,11 @@ function renderVaultMeta() {
   const totalNotes = Array.isArray(JournalService.notes) ? JournalService.notes.length : 0;
 
   if (!meta?.name) {
-    metaEl.textContent = `当前为访客档案，共保存 ${totalReadings} 条解牌记录、${totalNotes} 条札记。`;
+    metaEl.textContent = `访客档案 · ${totalReadings} 条解牌 · ${totalNotes} 条札记`;
     return;
   }
 
-  metaEl.textContent = `${meta.name} 的成长档案，当前保存 ${totalReadings} 条解牌记录、${totalNotes} 条札记。`;
+  metaEl.textContent = `${meta.name} 的成长档案 · ${totalReadings} 条解牌 · ${totalNotes} 条札记`;
 }
 
 function saveJournalNote() {
@@ -248,11 +388,11 @@ function renderJournalNotes() {
     const item = document.createElement("div");
     item.className = "timeline-item";
     item.innerHTML = `
-      <div class="timeline-item-time">${note.date}<button class="journal-delete-btn" data-idx="${idx}" title="删除" aria-label="删除此条札记">×</button></div>
-      <div class="timeline-item-main">${note.emotionLabel}${note.linkedSpread ? ` · ${note.linkedSpread}` : ""}</div>
-      <div class="timeline-item-snippet">${note.text}</div>
+      <div class="timeline-item-time">${archiveEscapeHtml(note.date)}<button class="journal-delete-btn" data-idx="${idx}" title="删除" aria-label="删除此条札记">×</button></div>
+      <div class="timeline-item-main">${archiveEscapeHtml(note.emotionLabel)}${note.linkedSpread ? ` · ${archiveEscapeHtml(note.linkedSpread)}` : ""}</div>
+      <div class="timeline-item-snippet">${archiveEscapeHtml(note.text)}</div>
       <div class="timeline-tags">
-        ${note.linkedQuestion ? `<span class="timeline-tag">${note.linkedQuestion.slice(0, 18)}</span>` : ""}
+        ${note.linkedQuestion ? `<span class="timeline-tag">${archiveEscapeHtml(note.linkedQuestion.slice(0, 18))}</span>` : ""}
       </div>
     `;
     item.querySelector(".journal-delete-btn").addEventListener("click", e => {
@@ -268,25 +408,30 @@ function openHistoryDetail(record) {
   const body = document.getElementById("historyDetailBody");
   if (!modal || !body) return;
 
+  const insights = extractRecordInsights(record);
   const cardsText = Array.isArray(record.cards) && record.cards.length
-    ? `<ul>${record.cards.map(c => `<li>${c.position || "位置"}：${c.cardName || c.name || "未知牌"}</li>`).join("")}</ul>`
+    ? `<ul>${record.cards.map(c => `<li>${archiveEscapeHtml(c.position || "位置")}：${archiveEscapeHtml(c.cardName || c.name || "未知牌")}</li>`).join("")}</ul>`
     : "<p>本次未保存牌面详情。</p>";
 
   body.innerHTML = `
-    <p><strong>时间：</strong>${record.date || "未知"}</p>
-    <p><strong>模式：</strong>${record.mode || "解牌"}</p>
-    <p><strong>问题：</strong>${record.question || "未填写"}</p>
-    <p><strong>主题：</strong>${record.timelineTopic || inferTimelineTopic(record)}</p>
-    <p><strong>解牌：</strong>精选塔罗解读</p>
-    <p><strong>情绪雷达：</strong>${record.emotionLabel || "平静观察"}</p>
-    <p><strong>双人合盘：</strong>${record.isCompatibility ? `${record.userName || "你"} × ${record.partnerName}` : "未开启"}</p>
-    <p><strong>牌阵：</strong>${record.spread || "未知"}</p>
+    <section class="history-detail-hero">
+      <div class="archive-focus-kicker">${archiveEscapeHtml(record.timelineTopic || inferTimelineTopic(record))} · ${archiveEscapeHtml(record.spread || "未知牌阵")}</div>
+      <h4>${archiveEscapeHtml(insights.question)}</h4>
+      <p>${archiveEscapeHtml(insights.answer)}</p>
+      <strong>下一步：${archiveEscapeHtml(insights.action)}</strong>
+    </section>
+    <div class="history-detail-meta">
+      <span>${archiveEscapeHtml(record.date || "未知时间")}</span>
+      <span>${archiveEscapeHtml(record.mode || "解牌")}</span>
+      <span>${archiveEscapeHtml(record.emotionLabel || "平静观察")}</span>
+      ${record.isCompatibility ? `<span>${archiveEscapeHtml(record.userName || "你")} × ${archiveEscapeHtml(record.partnerName || "对方")}</span>` : ""}
+    </div>
     <hr style="border-color: rgba(255,255,255,0.16); margin: 12px 0;">
     <p><strong>牌面详情</strong></p>
     ${cardsText}
     <hr style="border-color: rgba(255,255,255,0.16); margin: 12px 0;">
     <p><strong>解读节选</strong></p>
-    <div>${record.reading || "暂无解牌正文。"}</div>
+    <div class="history-detail-reading">${archiveEscapeHtml(buildReadingSnippet(record.reading, 420) || "暂无解牌正文。")}</div>
   `;
 
   modal.style.display = "flex";
