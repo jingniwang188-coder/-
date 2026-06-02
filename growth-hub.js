@@ -1,6 +1,12 @@
 /* Growth archive: history timeline and journal features. Loaded before script.js. */
 
 let growthArchiveFilter = "all";
+const ACTION_SECTION_HEADINGS = ["现在去做", "行动建议", "下一步", "凡尘指南"];
+const ACTION_STATUS_OPTIONS = [
+  { value: "done", label: "已完成" },
+  { value: "later", label: "暂缓" },
+  { value: "skip", label: "不适用" }
+];
 
 function archiveEscapeHtml(input = "") {
   return String(input || "")
@@ -38,6 +44,68 @@ function archiveFirstSentence(input = "") {
     .filter(Boolean)[0] || "";
 }
 
+function archiveNormalizeActionText(input = "") {
+  return String(input || "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/^\s*(?:[-*•·]|\d+[.、)]|[一二三四五六七八九十]+[、.)）])\s*/g, "")
+    .replace(/[#>*_`~[\]()]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function extractActionLinesFromBody(body = "", limit = 3) {
+  const seen = new Set();
+  const lines = String(body || "")
+    .replace(/\r/g, "\n")
+    .split(/\n+|(?<=[。！？!?])\s+|；|;/)
+    .map(archiveNormalizeActionText)
+    .filter(item => item && item.length > 2 && !/^暂无|^无$/.test(item))
+    .filter(item => {
+      const key = item.slice(0, 32);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+  return lines.slice(0, limit);
+}
+
+function extractRecordActions(record = {}, limit = 3) {
+  const body = archiveSectionBody(String(record?.reading || ""), ACTION_SECTION_HEADINGS);
+  return extractActionLinesFromBody(body, limit);
+}
+
+function getRecordActionKey(record = {}) {
+  return [
+    record?.date || "",
+    record?.spread || "",
+    record?.question || "单牌速读"
+  ].join("|").slice(0, 220);
+}
+
+function getActionStatusLabel(status = "") {
+  if (status === "done") return "已完成";
+  if (status === "later") return "暂缓";
+  if (status === "skip") return "不适用";
+  return "待行动";
+}
+
+function summarizeActionProgress(record = {}) {
+  const actions = extractRecordActions(record);
+  const progress = ActionProgressService.get(record);
+  const done = actions.filter((_, idx) => progress[idx] === "done").length;
+  const later = actions.filter((_, idx) => progress[idx] === "later").length;
+  const skip = actions.filter((_, idx) => progress[idx] === "skip").length;
+  return {
+    total: actions.length,
+    done,
+    later,
+    skip,
+    open: Math.max(actions.length - done - later - skip, 0),
+    allSettled: actions.length > 0 && actions.length === done + later + skip
+  };
+}
+
 function inferTimelineTopic(record) {
   const spread = String(record?.spread || "");
   const q = String(record?.question || "");
@@ -58,7 +126,7 @@ function extractTimelineTags(record) {
 function extractRecordInsights(record = {}) {
   const reading = String(record?.reading || "");
   const answer = archiveFirstSentence(archiveSectionBody(reading, ["结论", "一句话答案", "先看结论", "神谕总览"]));
-  const action = archiveFirstSentence(archiveSectionBody(reading, ["现在去做", "行动建议", "下一步", "凡尘指南"]));
+  const action = extractRecordActions(record, 1)[0] || archiveFirstSentence(archiveSectionBody(reading, ACTION_SECTION_HEADINGS));
   const reminder = archiveFirstSentence(archiveSectionBody(reading, ["关键提醒", "提醒", "破局之眼"]));
   const fallback = buildReadingSnippet(reading, 80);
 
@@ -79,6 +147,13 @@ function buildArchiveStats(records = []) {
   const topTopic = Object.entries(topicCounts).sort((a, b) => b[1] - a[1])[0] || null;
   const recent = records[0] || null;
   const recentInsights = extractRecordInsights(recent || {});
+  const actionTotals = records.reduce((acc, record) => {
+    const summary = summarizeActionProgress(record);
+    acc.total += summary.total;
+    acc.done += summary.done;
+    acc.open += summary.open;
+    return acc;
+  }, { total: 0, done: 0, open: 0 });
 
   return {
     total: records.length,
@@ -87,7 +162,8 @@ function buildArchiveStats(records = []) {
     topTopic,
     recent,
     recentInsights,
-    topicCounts
+    topicCounts,
+    actionTotals
   };
 }
 
@@ -108,6 +184,10 @@ function renderArchiveFocus(records = [], mapped = []) {
       `;
     } else {
       const topTopicText = stats.topTopic ? `${stats.topTopic[0]} · ${stats.topTopic[1]}次` : "暂无重复主题";
+      const recentActionProgress = summarizeActionProgress(stats.recent);
+      const actionProgressText = recentActionProgress.total
+        ? `${recentActionProgress.done}/${recentActionProgress.total} 已完成`
+        : "等待行动";
       panel.innerHTML = `
         <section class="archive-focus-card archive-focus-card--answer">
           <div class="archive-focus-kicker">最近答案</div>
@@ -117,12 +197,12 @@ function renderArchiveFocus(records = [], mapped = []) {
         <section class="archive-focus-card">
           <div class="archive-focus-kicker">下一步</div>
           <strong>${archiveEscapeHtml(stats.recentInsights.action)}</strong>
-          <span>${archiveEscapeHtml(stats.recentInsights.reminder || "先做一件最小、可验证的事。")}</span>
+          <span>${archiveEscapeHtml(actionProgressText)} · ${archiveEscapeHtml(stats.recentInsights.reminder || "先做一件最小、可验证的事。")}</span>
         </section>
         <section class="archive-focus-card">
           <div class="archive-focus-kicker">重复主题</div>
           <strong>${archiveEscapeHtml(topTopicText)}</strong>
-          <span>${stats.total} 条解牌 · ${stats.notes} 条札记</span>
+          <span>${stats.total} 条解牌 · ${stats.notes} 条札记 · ${stats.actionTotals.open} 个待行动</span>
         </section>
       `;
     }
@@ -161,7 +241,7 @@ function renderTimeline() {
     const topTopicText = stats.topTopic ? `${stats.topTopic[0]} ${stats.topTopic[1]}次` : "暂无";
     summary.innerHTML = `
       <div class="timeline-summary-item"><div class="timeline-summary-label">总记录</div><div class="timeline-summary-value">${stats.total}</div></div>
-      <div class="timeline-summary-item"><div class="timeline-summary-label">双人占卜</div><div class="timeline-summary-value">${stats.compatibility}</div></div>
+      <div class="timeline-summary-item"><div class="timeline-summary-label">行动完成</div><div class="timeline-summary-value">${stats.actionTotals.done}/${stats.actionTotals.total}</div></div>
       <div class="timeline-summary-item"><div class="timeline-summary-label">心境札记</div><div class="timeline-summary-value">${stats.notes}</div></div>
       <div class="timeline-summary-item timeline-summary-item--wide"><div class="timeline-summary-label">重复主题</div><div class="timeline-summary-value">${topTopicText}</div></div>
     `;
@@ -187,6 +267,11 @@ function renderTimeline() {
     item.setAttribute("role", "button");
     item.setAttribute("tabindex", "0");
     const insights = extractRecordInsights(record);
+    const actionProgress = summarizeActionProgress(record);
+    const actionProgressText = actionProgress.total
+      ? `行动 ${actionProgress.done}/${actionProgress.total} · ${actionProgress.open} 待处理`
+      : "暂无明确行动";
+    const progressClass = actionProgress.allSettled ? " timeline-action-progress--settled" : "";
     item.innerHTML = `
       <div class="timeline-item-top">
         <div class="timeline-item-time">${archiveEscapeHtml(record.date || "未知时间")}</div>
@@ -195,6 +280,7 @@ function renderTimeline() {
       <div class="timeline-item-main">${archiveEscapeHtml(insights.question)}</div>
       <div class="timeline-item-answer">${archiveEscapeHtml(insights.answer)}</div>
       <div class="timeline-item-snippet">下一步：${archiveEscapeHtml(insights.action)}</div>
+      <div class="timeline-action-progress${progressClass}">${archiveEscapeHtml(actionProgressText)}</div>
       <div class="timeline-tags">${tags.map(t => `<span class="timeline-tag">${t}</span>`).join("")}</div>
     `;
     const openDetail = () => openHistoryDetail({ ...record, timelineTopic: topic });
@@ -251,7 +337,53 @@ const HistoryService = {
   clear() {
     this.records = [];
     this.save();
+    ActionProgressService.clear();
     renderTimeline();
+  }
+};
+
+const ActionProgressService = {
+  progress: {},
+  storageKey() {
+    return `tarotActionProgress:${getVaultStorageSuffix()}`;
+  },
+  load() {
+    const raw = localStorage.getItem(this.storageKey());
+    if (!raw) {
+      this.progress = {};
+      return;
+    }
+    try {
+      const parsed = JSON.parse(raw);
+      this.progress = parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+    } catch {
+      this.progress = {};
+    }
+  },
+  save() {
+    localStorage.setItem(this.storageKey(), JSON.stringify(this.progress));
+  },
+  get(record) {
+    return this.progress[getRecordActionKey(record)] || {};
+  },
+  set(record, index, status) {
+    const key = getRecordActionKey(record);
+    const current = { ...(this.progress[key] || {}) };
+    if (!status) {
+      delete current[index];
+    } else {
+      current[index] = status;
+    }
+    if (Object.keys(current).length) {
+      this.progress[key] = current;
+    } else {
+      delete this.progress[key];
+    }
+    this.save();
+  },
+  clear() {
+    this.progress = {};
+    localStorage.removeItem(this.storageKey());
   }
 };
 
@@ -292,7 +424,7 @@ const JournalService = {
   }
 };
 
-function loadHistory() { HistoryService.load(); JournalService.load(); }
+function loadHistory() { HistoryService.load(); JournalService.load(); ActionProgressService.load(); }
 function addHistoryRecord(record) { HistoryService.add(record); }
 function clearHistory() {
   const count = HistoryService.records.length;
@@ -325,7 +457,6 @@ function openGrowthHub() {
   if (!modal || !panel) return;
 
   loadHistory();
-  JournalService.load();
   renderVaultMeta();
   panel.style.display = "block";
   modal.style.display = "flex";
@@ -346,13 +477,15 @@ function renderVaultMeta() {
   const meta = readVaultMeta();
   const totalReadings = Array.isArray(HistoryService.records) ? HistoryService.records.length : 0;
   const totalNotes = Array.isArray(JournalService.notes) ? JournalService.notes.length : 0;
+  const totalActions = (Array.isArray(HistoryService.records) ? HistoryService.records : [])
+    .reduce((sum, record) => sum + summarizeActionProgress(record).total, 0);
 
   if (!meta?.name) {
-    metaEl.textContent = `访客档案 · ${totalReadings} 条解牌 · ${totalNotes} 条札记`;
+    metaEl.textContent = `访客档案 · ${totalReadings} 条解牌 · ${totalNotes} 条札记 · ${totalActions} 个行动`;
     return;
   }
 
-  metaEl.textContent = `${meta.name} 的成长档案 · ${totalReadings} 条解牌 · ${totalNotes} 条札记`;
+  metaEl.textContent = `${meta.name} 的成长档案 · ${totalReadings} 条解牌 · ${totalNotes} 条札记 · ${totalActions} 个行动`;
 }
 
 function saveJournalNote() {
@@ -409,6 +542,31 @@ function openHistoryDetail(record) {
   if (!modal || !body) return;
 
   const insights = extractRecordInsights(record);
+  const actions = extractRecordActions(record);
+  const progress = ActionProgressService.get(record);
+  const progressSummary = summarizeActionProgress(record);
+  const actionList = actions.length
+    ? actions.map((action, idx) => {
+      const activeStatus = progress[idx] || "";
+      const buttons = ACTION_STATUS_OPTIONS.map(option => {
+        const active = activeStatus === option.value ? " active" : "";
+        return `<button class="history-action-status-btn${active}" type="button" data-action-index="${idx}" data-action-status="${option.value}">${option.label}</button>`;
+      }).join("");
+      return `
+        <div class="history-action-row">
+          <div class="history-action-text">
+            <span>${idx + 1}</span>
+            <strong>${archiveEscapeHtml(action)}</strong>
+            <em>${archiveEscapeHtml(getActionStatusLabel(activeStatus))}</em>
+          </div>
+          <div class="history-action-statuses">
+            ${buttons}
+            ${activeStatus ? `<button class="history-action-status-btn history-action-status-btn--clear" type="button" data-action-index="${idx}" data-action-status="">重置</button>` : ""}
+          </div>
+        </div>
+      `;
+    }).join("")
+    : `<div class="history-action-empty">这次解读没有提取到明确行动。可以回看正文，手动把最小一步写进札记。</div>`;
   const cardsText = Array.isArray(record.cards) && record.cards.length
     ? `<ul>${record.cards.map(c => `<li>${archiveEscapeHtml(c.position || "位置")}：${archiveEscapeHtml(c.cardName || c.name || "未知牌")}</li>`).join("")}</ul>`
     : "<p>本次未保存牌面详情。</p>";
@@ -426,13 +584,33 @@ function openHistoryDetail(record) {
       <span>${archiveEscapeHtml(record.emotionLabel || "平静观察")}</span>
       ${record.isCompatibility ? `<span>${archiveEscapeHtml(record.userName || "你")} × ${archiveEscapeHtml(record.partnerName || "对方")}</span>` : ""}
     </div>
-    <hr style="border-color: rgba(255,255,255,0.16); margin: 12px 0;">
+    <section class="history-action-panel">
+      <div class="history-action-panel__head">
+        <span>行动追踪</span>
+        <strong>${progressSummary.done}/${progressSummary.total} 已完成</strong>
+      </div>
+      ${actionList}
+    </section>
+    <hr class="history-detail-divider">
     <p><strong>牌面详情</strong></p>
     ${cardsText}
-    <hr style="border-color: rgba(255,255,255,0.16); margin: 12px 0;">
+    <hr class="history-detail-divider">
     <p><strong>解读节选</strong></p>
     <div class="history-detail-reading">${archiveEscapeHtml(buildReadingSnippet(record.reading, 420) || "暂无解牌正文。")}</div>
   `;
+
+  body.querySelectorAll(".history-action-status-btn").forEach(btn => {
+    btn.addEventListener("click", event => {
+      event.stopPropagation();
+      const index = Number(btn.getAttribute("data-action-index"));
+      const status = btn.getAttribute("data-action-status") || "";
+      if (!Number.isInteger(index)) return;
+      ActionProgressService.set(record, index, status);
+      renderTimeline();
+      renderVaultMeta();
+      openHistoryDetail(record);
+    });
+  });
 
   modal.style.display = "flex";
 }
