@@ -19,6 +19,17 @@ function setVipCodeHint(text, isError = false) {
 function setManualPaymentClaimVisible(visible = false) {
   const box = document.getElementById("manualPaymentClaimBox");
   if (box) box.style.display = visible ? "grid" : "none";
+  if (visible) setManualPaymentFieldsExpanded(false);
+}
+
+function setManualPaymentFieldsExpanded(expanded = false) {
+  const fields = document.getElementById("manualPaymentFields");
+  const toggle = document.getElementById("manualPaymentToggleBtn");
+  if (fields) fields.hidden = !expanded;
+  if (toggle) {
+    toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+    toggle.textContent = expanded ? "收起确认信息" : "我已付款，填写确认信息";
+  }
 }
 
 function setManualPaymentClaimHint(text = "", isError = false) {
@@ -33,6 +44,7 @@ function resetManualPaymentClaimForm() {
     const el = document.getElementById(id);
     if (el) el.value = "";
   });
+  setManualPaymentFieldsExpanded(false);
   setManualPaymentWaiting(false);
   setManualPaymentClaimHint("");
 }
@@ -40,6 +52,7 @@ function resetManualPaymentClaimForm() {
 function setManualPaymentWaiting(isWaiting = false) {
   const box = document.getElementById("manualPaymentWaitingBox");
   const submitBtn = document.getElementById("submitManualPaymentClaimBtn");
+  if (isWaiting) setManualPaymentFieldsExpanded(true);
   if (box) box.style.display = isWaiting ? "grid" : "none";
   if (submitBtn) {
     submitBtn.disabled = isWaiting;

@@ -25,8 +25,8 @@
   </noscript>
 
   <!-- 主样式表 -->
-  <link rel="preload" as="style" href="style.css?v=1.4.5">
-  <link rel="stylesheet" href="style.css?v=1.4.5">
+  <link rel="preload" as="style" href="style.css?v=1.4.6">
+  <link rel="stylesheet" href="style.css?v=1.4.6">
 
   <!-- marked.js 异步加载，非首屏依赖 -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" async defer></script>
@@ -199,22 +199,25 @@
             <p>付款后留下一个可识别的信息，我确认收款后页面会自动继续。</p>
           </div>
         </div>
-        <div class="manual-payment-steps" aria-label="人工确认流程">
-          <span>1 扫码付款</span>
-          <span>2 提交信息</span>
-          <span>3 等待确认</span>
-        </div>
-        <div class="manual-payment-claim__grid">
-          <input id="manualPayerNameInput" type="text" placeholder="付款备注/昵称">
-          <input id="manualPaidAtInput" type="text" placeholder="付款时间，如 21:36">
-        </div>
-        <input id="manualContactInput" type="text" placeholder="联系方式（可选，方便异常时联系）">
-        <textarea id="manualPaymentNoteInput" rows="2" placeholder="补充说明（可选）"></textarea>
-        <button id="submitManualPaymentClaimBtn" class="secondary-btn" type="button">我已付款，提交确认</button>
-        <div id="manualPaymentClaimHint" class="field-hint"></div>
-        <div id="manualPaymentWaitingBox" class="manual-payment-waiting" style="display:none;">
-          <strong>已进入等待确认</strong>
-          <span>请保持页面打开，不要重复付款。确认后会自动继续；如果不小心关闭，也可以重新打开同一牌阵并联系我处理。</span>
+        <button id="manualPaymentToggleBtn" class="manual-payment-toggle" type="button" aria-expanded="false">我已付款，填写确认信息</button>
+        <div id="manualPaymentFields" class="manual-payment-fields" hidden>
+          <div class="manual-payment-steps" aria-label="人工确认流程">
+            <span>1 扫码付款</span>
+            <span>2 提交信息</span>
+            <span>3 等待确认</span>
+          </div>
+          <div class="manual-payment-claim__grid">
+            <input id="manualPayerNameInput" type="text" placeholder="付款备注/昵称">
+            <input id="manualPaidAtInput" type="text" placeholder="付款时间，如 21:36">
+          </div>
+          <input id="manualContactInput" type="text" placeholder="联系方式（可选，方便异常时联系）">
+          <textarea id="manualPaymentNoteInput" rows="2" placeholder="补充说明（可选）"></textarea>
+          <button id="submitManualPaymentClaimBtn" class="secondary-btn" type="button">我已付款，提交确认</button>
+          <div id="manualPaymentClaimHint" class="field-hint"></div>
+          <div id="manualPaymentWaitingBox" class="manual-payment-waiting" style="display:none;">
+            <strong>已进入等待确认</strong>
+            <span>请保持页面打开，不要重复付款。确认后会自动继续；如果不小心关闭，也可以重新打开同一牌阵并联系我处理。</span>
+          </div>
         </div>
       </div>
       <section class="vip-code-panel">
@@ -358,6 +361,7 @@
         <div class="vault-meta" id="vaultMeta"></div>
         <div id="archiveFocusPanel" class="archive-focus-panel"></div>
         <div id="archiveFilterBar" class="archive-filter-bar" aria-label="按主题筛选成长档案"></div>
+        <div id="todayActionPanel" class="today-action-panel"></div>
         <div id="timelineSummary" class="timeline-summary"></div>
 
         <div class="journal-grid">
@@ -452,9 +456,9 @@
     </div>
   </div>
 
-  <script src="growth-hub.js?v=1.5.7"></script>
-  <script src="reading-engine.js?v=1.5.7"></script>
-  <script src="vip-payment.js?v=1.5.7"></script>
-  <script src="script.js?v=1.5.7"></script>
+  <script src="growth-hub.js?v=1.5.8"></script>
+  <script src="reading-engine.js?v=1.5.8"></script>
+  <script src="vip-payment.js?v=1.5.8"></script>
+  <script src="script.js?v=1.5.8"></script>
 </body>
 </html>

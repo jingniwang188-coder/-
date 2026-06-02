@@ -2222,6 +2222,40 @@ body[data-phase="dusk"] #starfield {
   background: rgba(255, 248, 226, 0.08);
 }
 
+.manual-payment-toggle {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid rgba(244, 220, 176, 0.24);
+  border-radius: 999px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.055));
+  color: rgba(255, 239, 202, 0.94);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.14);
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.manual-payment-toggle:hover,
+.manual-payment-toggle:focus-visible {
+  border-color: rgba(244, 220, 176, 0.42);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.075));
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.manual-payment-fields {
+  display: grid;
+  gap: 9px;
+}
+
+.manual-payment-fields[hidden] {
+  display: none !important;
+}
+
 .manual-payment-claim__title {
   color: rgba(255, 239, 202, 0.96);
   font-size: 13px;
@@ -5828,6 +5862,118 @@ body.reading-mode .result-actions {
   opacity: 0.72;
 }
 
+.today-action-panel {
+  margin: 10px 0 12px;
+}
+
+.today-action-card,
+.today-action-panel__empty {
+  border: 1px solid rgba(232, 210, 166, 0.16);
+  border-radius: 18px;
+  padding: 13px;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(232, 199, 122, 0.13), transparent 38%),
+    linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.10);
+}
+
+.today-action-panel__empty {
+  display: grid;
+  gap: 5px;
+}
+
+.today-action-panel__empty span,
+.today-action-card__head span,
+.today-action-item span {
+  color: rgba(229, 199, 132, 0.88);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.today-action-panel__empty strong {
+  color: rgba(255, 244, 219, 0.92);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.today-action-panel__empty--settled strong {
+  color: rgba(220, 231, 195, 0.9);
+}
+
+.today-action-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.today-action-card__head strong {
+  display: block;
+  margin-top: 4px;
+  color: rgba(255, 244, 219, 0.97);
+  font-size: 15px;
+}
+
+.today-action-card__head em {
+  flex: 0 0 auto;
+  border: 1px solid rgba(232, 210, 166, 0.2);
+  border-radius: 999px;
+  padding: 5px 9px;
+  color: rgba(241, 229, 202, 0.78);
+  background: rgba(255,255,255,0.055);
+  font-size: 12px;
+  font-style: normal;
+}
+
+.today-action-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.today-action-item {
+  min-width: 0;
+  border: 1px solid rgba(232, 210, 166, 0.14);
+  border-radius: 14px;
+  padding: 10px 11px;
+  text-align: left;
+  background: rgba(8, 14, 33, 0.34);
+  cursor: pointer;
+  font: inherit;
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.today-action-item:hover,
+.today-action-item:focus-visible {
+  border-color: rgba(232, 210, 166, 0.32);
+  background: rgba(255, 255, 255, 0.075);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.today-action-item strong {
+  display: -webkit-box;
+  margin-top: 6px;
+  color: rgba(255, 244, 219, 0.94);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.today-action-item em {
+  display: block;
+  margin-top: 7px;
+  color: rgba(229, 218, 196, 0.62);
+  font-size: 12px;
+  font-style: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 #growthHubModal .timeline-summary {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
@@ -6213,6 +6359,7 @@ body.reading-mode .result-actions {
   .reading-answer-hero,
   .reading-summary-panel { grid-template-columns: 1fr !important; }
   .archive-focus-panel { grid-template-columns: 1fr !important; }
+  .today-action-list { grid-template-columns: 1fr !important; }
   #growthHubModal .timeline-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .history-action-row { grid-template-columns: 1fr; }
   .history-action-statuses { justify-content: flex-start; }

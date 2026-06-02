@@ -167,6 +167,87 @@ function buildArchiveStats(records = []) {
   };
 }
 
+function collectOpenArchiveActions(records = [], limit = 3) {
+  const items = [];
+  for (const record of records) {
+    const actions = extractRecordActions(record);
+    if (!actions.length) continue;
+    const progress = ActionProgressService.get(record);
+    const insights = extractRecordInsights(record);
+    const topic = inferTimelineTopic(record);
+    actions.forEach((action, index) => {
+      if (items.length >= limit) return;
+      if (progress[index]) return;
+      items.push({
+        record,
+        action,
+        index,
+        topic,
+        question: insights.question,
+        date: record?.date || ""
+      });
+    });
+    if (items.length >= limit) break;
+  }
+  return items;
+}
+
+function renderTodayActionPanel(records = []) {
+  const panel = document.getElementById("todayActionPanel");
+  if (!panel) return;
+
+  if (!records.length) {
+    panel.innerHTML = `
+      <section class="today-action-panel__empty">
+        <span>今日待行动</span>
+        <strong>完成一次解牌后，这里会出现可执行的小步骤。</strong>
+      </section>
+    `;
+    return;
+  }
+
+  const actions = collectOpenArchiveActions(records, 3);
+  if (!actions.length) {
+    panel.innerHTML = `
+      <section class="today-action-panel__empty today-action-panel__empty--settled">
+        <span>今日待行动</span>
+        <strong>最近行动都已经处理过了。</strong>
+      </section>
+    `;
+    return;
+  }
+
+  panel.innerHTML = `
+    <section class="today-action-card">
+      <div class="today-action-card__head">
+        <div>
+          <span>今日待行动</span>
+          <strong>先完成一件最小的事</strong>
+        </div>
+        <em>${actions.length} 条</em>
+      </div>
+      <div class="today-action-list">
+        ${actions.map((item, idx) => `
+          <button class="today-action-item" type="button" data-action-open="${idx}">
+            <span>${archiveEscapeHtml(item.topic)} · ${archiveEscapeHtml(item.date || "最近")}</span>
+            <strong>${archiveEscapeHtml(item.action)}</strong>
+            <em>${archiveEscapeHtml(item.question)}</em>
+          </button>
+        `).join("")}
+      </div>
+    </section>
+  `;
+
+  panel.querySelectorAll("[data-action-open]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const index = Number(btn.getAttribute("data-action-open"));
+      const item = actions[index];
+      if (!item) return;
+      openHistoryDetail({ ...item.record, timelineTopic: item.topic });
+    });
+  });
+}
+
 function renderArchiveFocus(records = [], mapped = []) {
   const panel = document.getElementById("archiveFocusPanel");
   const filters = document.getElementById("archiveFilterBar");
@@ -235,6 +316,7 @@ function renderTimeline() {
 
   const mapped = records.map(r => ({ record: r, topic: inferTimelineTopic(r), tags: extractTimelineTags(r) }));
   renderArchiveFocus(records, mapped);
+  renderTodayActionPanel(records);
 
   if (summary) {
     const stats = buildArchiveStats(records);

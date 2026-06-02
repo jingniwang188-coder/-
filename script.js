@@ -262,6 +262,10 @@ function initEventBindings() {
 
   byId("saveJournalNoteBtn")?.addEventListener("click", saveJournalNote);
   byId("confirmVipPaidBtn")?.addEventListener("click", confirmVipOrderBeforeContinue);
+  byId("manualPaymentToggleBtn")?.addEventListener("click", () => {
+    const fields = byId("manualPaymentFields");
+    setManualPaymentFieldsExpanded(Boolean(fields?.hidden));
+  });
   byId("submitManualPaymentClaimBtn")?.addEventListener("click", submitManualPaymentClaim);
   byId("submitVipCodeBtn")?.addEventListener("click", submitVipCode);
   byId("vipCodeInput")?.addEventListener("keydown", event => {
