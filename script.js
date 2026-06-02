@@ -321,6 +321,32 @@ function initEventBindings() {
   byId("cardPreviewModal")?.addEventListener("click", e => {
     if (e.target?.id === "cardPreviewModal") closeCardPreview();
   });
+  document.addEventListener("keydown", event => {
+    if (event.key !== "Escape") return;
+    const isVisible = id => {
+      const el = byId(id);
+      return Boolean(el && getComputedStyle(el).display !== "none");
+    };
+    if (isVisible("cardPreviewModal")) {
+      event.preventDefault();
+      closeCardPreview();
+    } else if (isVisible("historyDetailModal")) {
+      event.preventDefault();
+      closeHistoryDetail();
+    } else if (isVisible("vipConfirmModal")) {
+      event.preventDefault();
+      closeVipConfirmModal();
+    } else if (isVisible("vipModal")) {
+      event.preventDefault();
+      closeVipModal();
+    } else if (isVisible("feedbackModal")) {
+      event.preventDefault();
+      closeFeedbackModal();
+    } else if (isVisible("growthHubModal")) {
+      event.preventDefault();
+      closeGrowthHub();
+    }
+  });
 
   // Card preview prev/next navigation
   byId("cardPreviewPrev")?.addEventListener("click", () => {

@@ -608,6 +608,9 @@ function openHistoryDetail(record) {
       ActionProgressService.set(record, index, status);
       renderTimeline();
       renderVaultMeta();
+      if (typeof updateStatus === "function") {
+        updateStatus(status ? `行动已标记为${getActionStatusLabel(status)}。` : "行动状态已重置。");
+      }
       openHistoryDetail(record);
     });
   });
