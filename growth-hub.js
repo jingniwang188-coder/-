@@ -572,7 +572,8 @@ function openHistoryDetail(record) {
     : "<p>本次未保存牌面详情。</p>";
 
   body.innerHTML = `
-    <section class="history-detail-hero">
+    <section class="history-detail-hero history-detail-section">
+      <div class="history-detail-section__label">答案</div>
       <div class="archive-focus-kicker">${archiveEscapeHtml(record.timelineTopic || inferTimelineTopic(record))} · ${archiveEscapeHtml(record.spread || "未知牌阵")}</div>
       <h4>${archiveEscapeHtml(insights.question)}</h4>
       <p>${archiveEscapeHtml(insights.answer)}</p>
@@ -584,19 +585,26 @@ function openHistoryDetail(record) {
       <span>${archiveEscapeHtml(record.emotionLabel || "平静观察")}</span>
       ${record.isCompatibility ? `<span>${archiveEscapeHtml(record.userName || "你")} × ${archiveEscapeHtml(record.partnerName || "对方")}</span>` : ""}
     </div>
-    <section class="history-action-panel">
+    <section class="history-action-panel history-detail-section">
       <div class="history-action-panel__head">
-        <span>行动追踪</span>
+        <span>行动</span>
         <strong>${progressSummary.done}/${progressSummary.total} 已完成</strong>
       </div>
       ${actionList}
     </section>
-    <hr class="history-detail-divider">
-    <p><strong>牌面详情</strong></p>
-    ${cardsText}
-    <hr class="history-detail-divider">
-    <p><strong>解读节选</strong></p>
-    <div class="history-detail-reading">${archiveEscapeHtml(buildReadingSnippet(record.reading, 420) || "暂无解牌正文。")}</div>
+    <section class="history-origin-panel history-detail-section">
+      <div class="history-detail-section__label">原文</div>
+      <div class="history-origin-grid">
+        <div>
+          <div class="history-origin-title">牌面详情</div>
+          ${cardsText}
+        </div>
+        <div>
+          <div class="history-origin-title">解读节选</div>
+          <div class="history-detail-reading">${archiveEscapeHtml(buildReadingSnippet(record.reading, 560) || "暂无解牌正文。")}</div>
+        </div>
+      </div>
+    </section>
   `;
 
   body.querySelectorAll(".history-action-status-btn").forEach(btn => {

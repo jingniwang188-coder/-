@@ -25,8 +25,8 @@
   </noscript>
 
   <!-- 主样式表 -->
-  <link rel="preload" as="style" href="style.css?v=1.4.4">
-  <link rel="stylesheet" href="style.css?v=1.4.4">
+  <link rel="preload" as="style" href="style.css?v=1.4.5">
+  <link rel="stylesheet" href="style.css?v=1.4.5">
 
   <!-- marked.js 异步加载，非首屏依赖 -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" async defer></script>
@@ -176,15 +176,29 @@
     <div class="modal-content vip-modal-content">
       <h3 class="classic-title" id="vipModalTitle" style="font-size: 1.5rem; margin-top:0;">👑 解锁进阶牌阵</h3>
       <div id="vipUnlockSummary" class="vip-unlock-summary"></div>
-      <div class="qr-container"><img id="qrImage" src="https://i.postimg.cc/P525Vk7w/IMG-9071.png" alt="支付宝收款码"></div>
-      <a id="qrFallbackLink" class="qr-fallback-link" href="#" target="_blank" rel="noopener" style="display:none;">二维码加载失败？点击打开支付宝支付链接</a>
-      <div id="vipOrderStatusBox" class="vip-order-status" style="display:none;">
-        <div id="vipOrderStatusText">状态：等待扫码支付</div>
-        <div id="vipOrderMeta" class="vip-order-meta"></div>
-      </div>
+      <section class="vip-payment-stage vip-payment-stage--pay">
+        <div class="vip-payment-stage__head">
+          <span class="vip-stage-index">1</span>
+          <div>
+            <strong>扫码付款</strong>
+            <p>先完成本次牌阵付款，页面会保留订单状态。</p>
+          </div>
+        </div>
+        <div class="qr-container"><img id="qrImage" src="https://i.postimg.cc/P525Vk7w/IMG-9071.png" alt="支付宝收款码"></div>
+        <a id="qrFallbackLink" class="qr-fallback-link" href="#" target="_blank" rel="noopener" style="display:none;">二维码加载失败？点击打开支付宝支付链接</a>
+        <div id="vipOrderStatusBox" class="vip-order-status" style="display:none;">
+          <div id="vipOrderStatusText">状态：等待扫码支付</div>
+          <div id="vipOrderMeta" class="vip-order-meta"></div>
+        </div>
+      </section>
       <div id="manualPaymentClaimBox" class="manual-payment-claim" style="display:none;">
-        <div class="manual-payment-claim__title">已付款？提交确认信息</div>
-        <p class="manual-payment-claim__desc">当前为人工确认模式：扫码付款后提交下面信息，我确认收款后，你的页面会自动继续解牌。</p>
+        <div class="vip-payment-stage__head">
+          <span class="vip-stage-index">2</span>
+          <div>
+            <strong>提交确认</strong>
+            <p>付款后留下一个可识别的信息，我确认收款后页面会自动继续。</p>
+          </div>
+        </div>
         <div class="manual-payment-steps" aria-label="人工确认流程">
           <span>1 扫码付款</span>
           <span>2 提交信息</span>
@@ -203,11 +217,13 @@
           <span>请保持页面打开，不要重复付款。确认后会自动继续；如果不小心关闭，也可以重新打开同一牌阵并联系我处理。</span>
         </div>
       </div>
-      <div class="vip-code-divider"><span>或输入口令</span></div>
-      <div class="input-group vip-code-group">
-        <input id="vipCodeInput" type="text" placeholder="VIP 口令 / 测试码">
-        <div class="field-hint" id="vipCodeHint"></div>
-      </div>
+      <section class="vip-code-panel">
+        <div class="vip-code-divider"><span>或输入口令</span></div>
+        <div class="input-group vip-code-group">
+          <input id="vipCodeInput" type="text" placeholder="VIP 口令 / 测试码">
+          <div class="field-hint" id="vipCodeHint"></div>
+        </div>
+      </section>
       <div class="modal-btns" style="margin-top: 15px;">
         <button id="closeVipBtn" class="cancel-btn">再想想</button>
         <button id="submitVipCodeBtn" class="secondary-btn">口令解锁</button>
@@ -436,9 +452,9 @@
     </div>
   </div>
 
-  <script src="growth-hub.js?v=1.5.6"></script>
-  <script src="reading-engine.js?v=1.5.6"></script>
-  <script src="vip-payment.js?v=1.5.6"></script>
-  <script src="script.js?v=1.5.6"></script>
+  <script src="growth-hub.js?v=1.5.7"></script>
+  <script src="reading-engine.js?v=1.5.7"></script>
+  <script src="vip-payment.js?v=1.5.7"></script>
+  <script src="script.js?v=1.5.7"></script>
 </body>
 </html>

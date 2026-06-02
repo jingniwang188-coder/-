@@ -2167,6 +2167,52 @@ body[data-phase="dusk"] #starfield {
   margin-bottom: 0;
 }
 
+.vip-payment-stage,
+.vip-code-panel {
+  margin-top: 12px;
+  border: 1px solid rgba(244, 220, 176, 0.16);
+  border-radius: 18px;
+  padding: 12px;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(244, 220, 176, 0.10), transparent 42%),
+    rgba(255, 255, 255, 0.055);
+}
+
+.vip-payment-stage__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  text-align: left;
+}
+
+.vip-payment-stage__head strong {
+  display: block;
+  color: rgba(255, 239, 202, 0.96);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.vip-payment-stage__head p {
+  margin: 3px 0 0;
+  color: rgba(246, 230, 197, 0.68);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.vip-stage-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  color: rgba(28, 24, 38, 0.94);
+  background: linear-gradient(135deg, rgba(244, 220, 176, 0.96), rgba(214, 190, 255, 0.9));
+  font-size: 12px;
+  font-weight: 900;
+}
+
 .manual-payment-claim {
   gap: 9px;
   margin-top: 12px;
@@ -5912,6 +5958,24 @@ body.reading-mode .result-actions {
   font-size: 12px;
 }
 
+.history-detail-section {
+  position: relative;
+}
+
+.history-detail-section__label {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-bottom: 8px;
+  border: 1px solid rgba(232, 210, 166, 0.16);
+  border-radius: 999px;
+  padding: 4px 9px;
+  color: rgba(229, 199, 132, 0.9);
+  background: rgba(255,255,255,0.055);
+  font-size: 12px;
+  font-weight: 800;
+}
+
 .history-action-panel {
   margin-top: 12px;
   border: 1px solid rgba(232, 210, 166, 0.16);
@@ -6031,6 +6095,33 @@ body.reading-mode .result-actions {
   margin: 12px 0;
 }
 
+.history-origin-panel {
+  margin-top: 12px;
+  border: 1px solid rgba(232, 210, 166, 0.16);
+  border-radius: 18px;
+  padding: 12px;
+  background: rgba(255,255,255,0.045);
+}
+
+.history-origin-grid {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.68fr) minmax(0, 1.32fr);
+  gap: 12px;
+}
+
+.history-origin-title {
+  margin-bottom: 8px;
+  color: rgba(229, 199, 132, 0.88);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.history-origin-panel ul {
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(246, 236, 216, 0.82);
+}
+
 .history-detail-reading {
   color: rgba(246, 236, 216, 0.82);
   line-height: 1.75;
@@ -6125,4 +6216,5 @@ body.reading-mode .result-actions {
   #growthHubModal .timeline-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .history-action-row { grid-template-columns: 1fr; }
   .history-action-statuses { justify-content: flex-start; }
+  .history-origin-grid { grid-template-columns: 1fr; }
 }
