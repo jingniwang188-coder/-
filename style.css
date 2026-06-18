@@ -5459,13 +5459,13 @@ body.home-ready .card-quick {
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) auto !important;
   align-items: center !important;
-  min-height: 142px !important;
-  padding: clamp(24px, 3vw, 34px) clamp(30px, 4vw, 46px) !important;
-  border-radius: 30px !important;
+  min-height: 124px !important;
+  padding: clamp(22px, 2.8vw, 30px) clamp(30px, 4vw, 44px) !important;
+  border-radius: 28px !important;
   background:
     radial-gradient(520px 220px at 8% 10%, rgba(209, 189, 255, 0.18), transparent 72%),
     radial-gradient(380px 180px at 94% 0%, rgba(255, 231, 180, 0.16), transparent 70%),
-    linear-gradient(145deg, rgba(75, 93, 156, 0.30), rgba(19, 28, 66, 0.24)) !important;
+    linear-gradient(145deg, rgba(75, 93, 156, 0.24), rgba(19, 28, 66, 0.18)) !important;
 }
 
 body.home-ready .card-deep {
@@ -5483,6 +5483,31 @@ body.home-ready .card-love {
   grid-area: love !important;
   min-height: 0 !important;
   border-radius: 22px !important;
+}
+
+body.home-ready .card-quick .choice-card__title {
+  font-size: clamp(1.75rem, 2.35vw, 2.35rem) !important;
+}
+
+body.home-ready .card-quick .choice-card__desc {
+  max-width: 36em !important;
+  font-size: 15px !important;
+}
+
+body.home-ready .card-quick .choice-card__feature {
+  display: inline-flex !important;
+  align-items: center !important;
+  width: fit-content !important;
+  min-height: 32px !important;
+  margin-top: 10px !important;
+  padding: 0 13px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(232, 203, 133, 0.16) !important;
+}
+
+body.home-ready .card-deep .choice-card__title {
+  font-size: clamp(2.2rem, 3.35vw, 3rem) !important;
 }
 
 body.home-ready .choice-card__eyebrow,
@@ -6337,6 +6362,11 @@ body.reading-mode .result-actions {
 }
 
 @media (max-width: 760px) {
+  #uiElements {
+    padding-top: 10px !important;
+    padding-bottom: 48px !important;
+  }
+
   body.home-ready .top-nav,
   body.home-ready .home-main,
   body.home-ready .hero-grid,
@@ -6346,26 +6376,130 @@ body.reading-mode .result-actions {
     width: min(100%, calc(100vw - 28px)) !important;
   }
 
-  body.home-ready .top-nav { margin-top: 16px !important; }
-  body.home-ready .classic-title { font-size: clamp(2.05rem, 12vw, 3.3rem) !important; }
-  body.home-ready .home-ritual-widget { margin-top: 4px !important; }
+  body.home-ready .top-nav {
+    margin-top: 10px !important;
+    padding: 10px 12px !important;
+    border-radius: 20px !important;
+  }
+
+  body.home-ready .phase-chip {
+    min-height: 34px !important;
+    padding: 0 12px !important;
+    font-size: 12px !important;
+  }
+
+  body.home-ready .date-chip {
+    display: none !important;
+  }
+
+  body.home-ready .classic-title {
+    font-size: clamp(1.85rem, 9.5vw, 2.65rem) !important;
+    letter-spacing: 0.06em !important;
+  }
+
+  body.home-ready .classic-title .title-en {
+    margin-top: 7px !important;
+    font-size: 0.30em !important;
+    letter-spacing: 0.34em !important;
+  }
+
+  body.home-ready .hero-header {
+    margin-top: 8px !important;
+  }
+
+  body.home-ready .home-ritual-widget {
+    margin: 2px auto 8px !important;
+  }
+
+  body.home-ready .ritual-orb {
+    width: 68px !important;
+    height: 68px !important;
+  }
+
+  body.home-ready .ritual-orb__label {
+    font-size: 12px !important;
+  }
+
+  body.home-ready .mystical-divider {
+    margin: 5px auto 9px !important;
+  }
+
+  body.home-ready .hero-grid,
+  body:not(.reading-mode) .hero-grid {
+    gap: 16px !important;
+  }
 
   body.home-ready .card-quick {
     grid-template-columns: 1fr !important;
     min-height: 0 !important;
-    padding: 22px !important;
+    padding: 18px 20px !important;
+    border-radius: 24px !important;
+  }
+
+  body.home-ready .card-quick .choice-card__title {
+    font-size: clamp(1.58rem, 8vw, 2.05rem) !important;
+  }
+
+  body.home-ready .card-quick .choice-card__desc {
+    font-size: 14px !important;
+  }
+
+  body.home-ready .card-quick .choice-card__feature {
+    min-height: 30px !important;
+    margin-top: 8px !important;
+    font-size: 13px !important;
   }
 
   body.home-ready .card-quick .choice-card__footer {
     grid-column: 1 !important;
     grid-row: auto !important;
     justify-self: stretch !important;
-    margin-top: 18px !important;
+    margin-top: 14px !important;
   }
 
   body.home-ready .card-quick #quickDrawBtn,
   body.home-ready .main-btn { width: 100% !important; }
-  body.home-ready .card-deep { padding: 24px 20px !important; }
+
+  body.home-ready .card-deep {
+    padding: 22px 20px !important;
+    border-radius: 26px !important;
+  }
+
+  body.home-ready .card-deep .choice-card__title {
+    font-size: clamp(1.85rem, 9vw, 2.35rem) !important;
+  }
+
+  body.home-ready .choice-card__desc,
+  body.home-ready .field-hint,
+  body.home-ready .pay-hint,
+  body.home-ready .spread-guide-text,
+  body.home-ready .couple-toggle__desc {
+    font-size: 14px !important;
+    line-height: 1.58 !important;
+  }
+
+  body.home-ready .choice-card__body {
+    gap: 16px !important;
+  }
+
+  body.home-ready input,
+  body.home-ready textarea,
+  body.home-ready select {
+    min-height: 50px !important;
+    font-size: 16px !important;
+    border-radius: 18px !important;
+  }
+
+  body.home-ready .question-spark-row {
+    gap: 8px !important;
+  }
+
+  body.home-ready .question-spark {
+    min-height: 36px !important;
+    padding: 0 12px !important;
+    font-size: 13px !important;
+  }
+
   body.home-ready .spread-current-pick { grid-template-columns: auto minmax(0, 1fr) auto !important; }
   body.home-ready .spread-current-pick__change { grid-column: 1 / -1; width: 100%; margin-top: 4px; }
   body.home-ready .spread-pills { grid-template-columns: 1fr !important; }
