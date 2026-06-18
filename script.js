@@ -1941,7 +1941,7 @@ async function startDailyDraw(sourceButton = null) {
   setButtonBusy(sourceButton, true, "抽取中…");
   enterDailyMode();
   document.getElementById("dailyCardArea").style.display = "grid";
-  smoothScrollToElement("#dailyCardArea", { delay: 120, block: "center" });
+  window.setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 120);
   const today = new Date();
   const dayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
   const dateCN = `${today.getFullYear()}年${today.getMonth()+1}月${today.getDate()}日`;
