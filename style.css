@@ -5656,9 +5656,46 @@ body.home-ready .spread-recommendation__reason,
 body.home-ready .spread-advanced-teaser__preview { color: rgba(244, 235, 217, 0.68) !important; }
 
 body.home-ready .spread-picker-drawer[hidden] { display: none !important; }
-body.home-ready .spread-picker-drawer { margin-top: 12px !important; }
-body.home-ready .spread-pills { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 12px !important; }
-body.home-ready .spread-pill { text-align: left !important; min-height: 0 !important; padding: 16px !important; }
+body.home-ready .spread-picker-drawer {
+  margin-top: 14px !important;
+  border: 1px solid rgba(226, 206, 158, 0.16) !important;
+  border-radius: 26px !important;
+  padding: 14px !important;
+  background:
+    radial-gradient(460px 180px at 12% 0%, rgba(255, 236, 190, 0.09), transparent 72%),
+    rgba(255, 255, 255, 0.045) !important;
+  backdrop-filter: blur(22px) saturate(1.12) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(1.12) !important;
+}
+
+body.home-ready .spread-pills-groups {
+  display: grid !important;
+  gap: 12px !important;
+}
+
+body.home-ready .spread-pills {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+}
+
+body.home-ready .spread-pill {
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr) !important;
+  align-items: center !important;
+  column-gap: 10px !important;
+  row-gap: 4px !important;
+  text-align: left !important;
+  min-height: 92px !important;
+  padding: 13px 14px !important;
+}
+
+body.home-ready .spread-pill__icon {
+  grid-row: span 2 !important;
+  font-size: 22px !important;
+  opacity: 0.96 !important;
+}
+
 body.home-ready .spread-pill__dots,
 body.home-ready .spread-pill__tags,
 body.home-ready .spread-pill__cta { display: none !important; }
@@ -5666,9 +5703,37 @@ body.home-ready .spread-pill.active { border-color: rgba(232, 203, 133, 0.38) !i
 
 body.home-ready .spread-advanced-teaser {
   width: 100%;
-  margin-top: 10px;
-  padding: 14px 16px !important;
+  margin-top: 0;
+  padding: 16px 18px !important;
   text-align: left;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 4px 14px !important;
+}
+
+body.home-ready .spread-advanced-teaser__label,
+body.home-ready .spread-advanced-teaser__preview {
+  grid-column: 1 !important;
+}
+
+body.home-ready .spread-advanced-teaser__main {
+  grid-column: 1 !important;
+  font-size: 16px !important;
+}
+
+body.home-ready .spread-advanced-teaser__cta {
+  grid-column: 2 !important;
+  grid-row: 1 / span 3 !important;
+  align-self: center !important;
+  white-space: nowrap !important;
+}
+
+body.home-ready .spread-section--paid {
+  margin-top: 0 !important;
+  border: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
 }
 
 body.home-ready .spread-advanced-teaser__cta,
@@ -6502,7 +6567,39 @@ body.reading-mode .result-actions {
 
   body.home-ready .spread-current-pick { grid-template-columns: auto minmax(0, 1fr) auto !important; }
   body.home-ready .spread-current-pick__change { grid-column: 1 / -1; width: 100%; margin-top: 4px; }
-  body.home-ready .spread-pills { grid-template-columns: 1fr !important; }
+
+  body.home-ready .spread-picker-drawer {
+    padding: 11px !important;
+    border-radius: 22px !important;
+  }
+
+  body.home-ready .spread-pills {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  body.home-ready .spread-pill {
+    min-height: 74px !important;
+    padding: 12px 13px !important;
+  }
+
+  body.home-ready .spread-pill__icon {
+    font-size: 20px !important;
+  }
+
+  body.home-ready .spread-advanced-teaser {
+    grid-template-columns: 1fr !important;
+    padding: 14px !important;
+  }
+
+  body.home-ready .spread-advanced-teaser__cta {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+    justify-self: stretch !important;
+    text-align: center !important;
+    margin-top: 6px !important;
+  }
+
   body.home-ready .top-nav-actions .icon-btn {
     flex: 1;
     display: inline-flex;
