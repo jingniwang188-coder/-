@@ -3135,90 +3135,6 @@ body.daily-mode .daily-date {
   color: rgba(248, 237, 214, 0.96);
 }
 
-.hero-grid {
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-  grid-template-areas:
-    "quick deep"
-    "love  deep";
-  grid-template-rows: auto 1fr;
-  gap: 14px;
-}
-
-.card-quick {
-  grid-area: quick;
-  align-self: stretch;
-}
-
-.card-deep {
-  grid-area: deep;
-  grid-row: 1 / 3;
-  align-self: stretch;
-}
-
-.card-love {
-  grid-area: love;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  align-self: stretch;
-}
-
-/* Expanded: love spans full width, deep returns to row 1 */
-.hero-grid:has(.choice-card--love:not(.couple-collapsed)) .card-deep {
-  grid-row: 1 / 2;
-}
-
-.hero-grid:has(.choice-card--love:not(.couple-collapsed)) .card-love {
-  grid-column: 1 / -1;
-  grid-row: 2 / 3;
-  align-items: stretch;
-  display: block;
-}
-
-.hero-grid .card-quick {
-  margin-top: 0;
-}
-
-.card-love {
-  min-height: unset;
-}
-
-/* Hero size hierarchy: quick > deep > love */
-.card-quick {
-  padding: 34px 30px !important;
-}
-
-/* card-deep: standard, stretches to fill both grid rows */
-.card-deep {
-  padding: 26px 24px !important;
-  height: 100%;
-  box-sizing: border-box;
-}
-
-/* card-love: compact pill, handled by couple-collapsed styles */
-
-.choice-card {
-  background: linear-gradient(155deg, rgba(136, 146, 191, 0.34), rgba(95, 104, 147, 0.22)) !important;
-}
-
-/* Single card: hero prominence */
-.choice-card--secondary {
-  background: linear-gradient(150deg, rgba(190, 165, 240, 0.44), rgba(138, 108, 210, 0.30)) !important;
-  border-color: rgba(210, 185, 255, 0.32) !important;
-  box-shadow: 0 14px 40px rgba(120, 80, 200, 0.18), inset 0 1px 0 rgba(255, 250, 255, 0.15) !important;
-}
-
-/* Theme question: standard */
-.choice-card--main {
-  background: linear-gradient(155deg, rgba(154, 164, 208, 0.38), rgba(110, 118, 159, 0.24)) !important;
-}
-
-/* Couple card: rose tone */
-.choice-card--love {
-  background: linear-gradient(150deg, rgba(200, 142, 175, 0.34), rgba(155, 100, 145, 0.22)) !important;
-  border-color: rgba(230, 170, 195, 0.32) !important;
-}
-
 .choice-card__title,
 .classic-title,
 .daily-title,
@@ -5646,7 +5562,6 @@ body.home-ready .spread-recommendation__main {
 }
 
 body.home-ready .spread-current-pick__name {
-  color: rgba(255, 243, 214, 0.96) !important;
   font-size: 17px !important;
 }
 body.home-ready .spread-current-pick__meta,
