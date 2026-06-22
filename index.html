@@ -25,8 +25,8 @@
   </noscript>
 
   <!-- 主样式表 -->
-  <link rel="preload" as="style" href="style.css?v=1.5.2">
-  <link rel="stylesheet" href="style.css?v=1.5.2">
+  <link rel="preload" as="style" href="style.css?v=1.5.5">
+  <link rel="stylesheet" href="style.css?v=1.5.5">
 
   <!-- marked.js 异步加载，非首屏依赖 -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" async defer></script>
@@ -87,84 +87,84 @@
       <div class="home-orbit">
         <div class="home-main">
           <div class="hero-grid hero-grid--editorial">
-        <div class="choice-card choice-card--secondary card-quick">
-          <div class="choice-card__eyebrow">轻量入口</div>
-          <h2 class="choice-card__title">抽一张灵感牌</h2>
-          <p class="choice-card__desc">不输入问题，直接看见当下信号。</p>
-          <div class="choice-card__feature">约30秒 · 免费</div>
-          <div class="choice-card__footer">
-            <button id="quickDrawBtn" class="secondary-btn">立刻抽牌</button>
-          </div>
-        </div>
-
-        <div class="choice-card choice-card--main card-deep">
-          <div class="choice-card__eyebrow">主题占问</div>
-          <h2 class="choice-card__title">写下问题，开启占问</h2>
-          <p class="choice-card__desc">适合认真梳理一件事：选阵、抽牌、解牌，再落到行动。</p>
-          <div class="choice-card__body" id="deepSettings">
-              <div class="input-group">
-                <label>你此刻最想照见什么？</label>
-                <input type="text" id="questionInput" placeholder="越具体，牌意越清晰…">
-                <div class="question-spark-row" id="questionSparkRow" aria-label="问题灵感">
-                  <button class="question-spark" type="button" data-spread="relationship" data-question="我和TA接下来这段关系会怎样发展？">感情走向</button>
-                  <button class="question-spark" type="button" data-spread="career" data-question="我现在的工作机会和风险分别是什么？">事业机会</button>
-                  <button class="question-spark" type="button" data-spread="choice" data-question="我该选择A，还是选择B？">二选一</button>
-                  <button class="question-spark" type="button" data-spread="time" data-question="这件事接下来三个月会怎样发展？">未来趋势</button>
-                </div>
-                <div class="field-hint" id="questionHint">你的问题仅用于本次解牌，不会公开展示。</div>
+            <div class="choice-card choice-card--secondary card-quick">
+              <div class="choice-card__eyebrow">轻量入口</div>
+              <h2 class="choice-card__title">抽一张灵感牌</h2>
+              <p class="choice-card__desc">不输入问题，直接看见当下信号。</p>
+              <div class="choice-card__feature">约30秒 · 免费</div>
+              <div class="choice-card__footer">
+                <button id="quickDrawBtn" class="secondary-btn">立刻抽牌</button>
               </div>
-            <div class="spread-guide-head">先选择牌阵（推荐）</div>
-            <div class="spread-visual-guide" id="spreadVisualGuide" aria-live="polite"></div>
-            <select id="spreadSelect" style="display:none;">
-              <optgroup label="基础指引">
-                <option value="single">单牌神谕（1张：直觉指引）</option>
-                <option value="yesno">是非决断阵（3张：支持/反对/答案）</option>
-                <option value="time" selected>时间之流（3张：过去/现在/未来）</option>
-              </optgroup>
-              <optgroup label="深度专栏">
-                <option value="relationship">情感透视阵（4张：你/对方/阻碍/未来）</option>
-                <option value="career">财富事业阵（4张：现状/机遇/风险/走向）</option>
-                <option value="monthly">月运导航阵（5张：主题/感情/事业/挑战/行动）</option>
-                <option value="choice">二选一岔路阵（5张：现状/选A/选B/A结局/B结局）</option>
-                <option value="cross">灵感十字阵（5张：核心/阻碍/目标/潜意识/结局）</option>
-              </optgroup>
-            </select>
-            <div class="pay-hint" id="payHintText">当前牌阵无需解锁。</div>
-            <button id="startBtn" class="main-btn start-btn-sticky" type="button">🔮 开启解牌</button>
-          </div>
-        </div>
-
-        <div class="choice-card choice-card--love card-love couple-collapsed" id="coupleCard">
-          <button class="couple-toggle" id="coupleToggleBtn" type="button" aria-label="展开双人关系合盘">
-            <span class="couple-toggle__heart" aria-hidden="true">💗</span>
-            <span class="couple-toggle__text">双人关系合盘</span>
-            <span class="price-tag">进阶 ¥5/次</span>
-            <span class="couple-toggle__expand-hint">点击展开</span>
-            <span class="couple-toggle__arrow">▾</span>
-          </button>
-          <p class="couple-toggle__desc">看清你与 TA 的当下状态、关系阻碍与未来走向</p>
-          <div class="couple-expand" id="couplePanel">
-            <p class="choice-card__desc">聚焦关系课题，查看彼此状态与走向。</p>
-            <div class="choice-card__body">
-              <div class="input-group dual-inputs">
-                <div>
-                  <label>你的昵称</label>
-                  <input type="text" id="coupleUserInput" placeholder="例如：小宇">
-                </div>
-                <div>
-                  <label>TA 的昵称</label>
-                  <input type="text" id="couplePartnerInput" placeholder="例如：阿南">
-                </div>
-              </div>
-              <div class="input-group">
-                <label>你想照见这段关系的什么课题？</label>
-                <input type="text" id="coupleQuestionInput" placeholder="例如：我们接下来该如何靠近彼此？">
-                <div class="field-hint" id="coupleQuestionHint">双人信息仅用于本次解牌，不会公开。</div>
-              </div>
-              <button id="startCoupleBtn" class="secondary-btn">💞 开启双人合盘</button>
             </div>
-          </div>
-        </div>
+
+            <div class="choice-card choice-card--main card-deep">
+              <div class="choice-card__eyebrow">主题占问</div>
+              <h2 class="choice-card__title">写下问题，开启占问</h2>
+              <p class="choice-card__desc">适合认真梳理一件事：选阵、抽牌、解牌，再落到行动。</p>
+              <div class="choice-card__body" id="deepSettings">
+                <div class="input-group">
+                  <label>你此刻最想照见什么？</label>
+                  <input type="text" id="questionInput" placeholder="越具体，牌意越清晰…">
+                  <div class="question-spark-row" id="questionSparkRow" aria-label="问题灵感">
+                    <button class="question-spark" type="button" data-spread="relationship" data-question="我和TA接下来这段关系会怎样发展？">感情走向</button>
+                    <button class="question-spark" type="button" data-spread="career" data-question="我现在的工作机会和风险分别是什么？">事业机会</button>
+                    <button class="question-spark" type="button" data-spread="choice" data-question="我该选择A，还是选择B？">二选一</button>
+                    <button class="question-spark" type="button" data-spread="time" data-question="这件事接下来三个月会怎样发展？">未来趋势</button>
+                  </div>
+                  <div class="field-hint" id="questionHint">你的问题仅用于本次解牌，不会公开展示。</div>
+                </div>
+                <div class="spread-guide-head">先选择牌阵（推荐）</div>
+                <div class="spread-visual-guide" id="spreadVisualGuide" aria-live="polite"></div>
+                <select id="spreadSelect" style="display:none;">
+                  <optgroup label="基础指引">
+                    <option value="single">单牌神谕（1张：直觉指引）</option>
+                    <option value="yesno">是非决断阵（3张：支持/反对/答案）</option>
+                    <option value="time" selected>时间之流（3张：过去/现在/未来）</option>
+                  </optgroup>
+                  <optgroup label="深度专栏">
+                    <option value="relationship">情感透视阵（4张：你/对方/阻碍/未来）</option>
+                    <option value="career">财富事业阵（4张：现状/机遇/风险/走向）</option>
+                    <option value="monthly">月运导航阵（5张：主题/感情/事业/挑战/行动）</option>
+                    <option value="choice">二选一岔路阵（5张：现状/选A/选B/A结局/B结局）</option>
+                    <option value="cross">灵感十字阵（5张：核心/阻碍/目标/潜意识/结局）</option>
+                  </optgroup>
+                </select>
+                <div class="pay-hint" id="payHintText">当前牌阵无需解锁。</div>
+                <button id="startBtn" class="main-btn start-btn-sticky" type="button">🔮 开启解牌</button>
+              </div>
+            </div>
+
+            <div class="choice-card choice-card--love card-love couple-collapsed" id="coupleCard">
+              <button class="couple-toggle" id="coupleToggleBtn" type="button" aria-label="展开双人关系合盘">
+                <span class="couple-toggle__heart" aria-hidden="true">💗</span>
+                <span class="couple-toggle__text">双人关系合盘</span>
+                <span class="price-tag">进阶 ¥5/次</span>
+                <span class="couple-toggle__expand-hint">点击展开</span>
+                <span class="couple-toggle__arrow">▾</span>
+              </button>
+              <p class="couple-toggle__desc">看清你与 TA 的当下状态、关系阻碍与未来走向</p>
+              <div class="couple-expand" id="couplePanel">
+                <p class="choice-card__desc">聚焦关系课题，查看彼此状态与走向。</p>
+                <div class="choice-card__body">
+                  <div class="input-group dual-inputs">
+                    <div>
+                      <label>你的昵称</label>
+                      <input type="text" id="coupleUserInput" placeholder="例如：小宇">
+                    </div>
+                    <div>
+                      <label>TA 的昵称</label>
+                      <input type="text" id="couplePartnerInput" placeholder="例如：阿南">
+                    </div>
+                  </div>
+                  <div class="input-group">
+                    <label>你想照见这段关系的什么课题？</label>
+                    <input type="text" id="coupleQuestionInput" placeholder="例如：我们接下来该如何靠近彼此？">
+                    <div class="field-hint" id="coupleQuestionHint">双人信息仅用于本次解牌，不会公开。</div>
+                  </div>
+                  <button id="startCoupleBtn" class="secondary-btn">💞 开启双人合盘</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

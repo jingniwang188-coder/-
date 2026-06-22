@@ -3424,58 +3424,18 @@ body.reading-mode .action-btns {
   .home-ritual-widget {
     margin-bottom: 14px;
   }
-
-  .choice-card {
-    padding: 18px 16px;
-  }
 }
 
 @media (max-width: 640px) {
-  .top-nav-actions {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
   .phase-chip-wrap {
     justify-content: center;
   }
 
-  .hero-grid {
-    gap: 12px;
-  }
-
-  .choice-card {
-    padding: 16px 14px;
-  }
-
-  /* Keep quick-card hero padding on mobile */
-  .card-quick {
-    padding: 24px 18px !important;
-  }
-
-  .card-deep {
-    padding: 18px 14px !important;
-  }
-
-  .choice-card__title {
-    font-size: 1.18rem;
-  }
-
-  .choice-card__desc,
   .growth-intro,
   .timeline-item-snippet,
   .daily-copy__hint,
   .spread-guide-text {
     font-size: 12.5px;
-  }
-
-  .spread-current-pick {
-    align-items: flex-start;
-    flex-wrap: wrap;
-    border-radius: 18px;
-  }
-
-  .spread-current-pick__change {
-    margin-left: 0;
   }
 
   .daily-card-area,
@@ -5009,20 +4969,6 @@ button {
     font-size: 15px;
   }
 
-  /* 选择卡片 */
-  .choice-card {
-    padding: 12px 10px !important;
-    border-radius: 12px !important;
-  }
-
-  .card-quick {
-    padding: 18px 12px !important;
-  }
-
-  .card-deep {
-    padding: 14px 10px !important;
-  }
-
   /* 价格标签在窄屏换行显示 */
   .couple-toggle {
     flex-wrap: wrap !important;
@@ -6483,7 +6429,7 @@ body.daily-mode .save-btn.restart {
 
 @media (max-width: 760px) {
   #uiElements {
-    padding-top: 10px !important;
+    padding-top: 6px !important;
     padding-bottom: 48px !important;
   }
 
@@ -6497,14 +6443,23 @@ body.daily-mode .save-btn.restart {
   }
 
   body.home-ready .top-nav {
-    margin-top: 10px !important;
-    padding: 10px 12px !important;
+    display: grid !important;
+    grid-template-columns: auto minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-top: 6px !important;
+    padding: 8px 10px !important;
     border-radius: 20px !important;
+  }
+
+  body.home-ready .phase-chip-wrap {
+    justify-content: flex-start !important;
+    min-width: 0 !important;
   }
 
   body.home-ready .phase-chip {
     min-height: 34px !important;
-    padding: 0 12px !important;
+    padding: 0 10px !important;
     font-size: 12px !important;
   }
 
@@ -6513,35 +6468,35 @@ body.daily-mode .save-btn.restart {
   }
 
   body.home-ready .classic-title {
-    font-size: clamp(1.85rem, 9.5vw, 2.65rem) !important;
+    font-size: clamp(1.68rem, 8.5vw, 2.42rem) !important;
     letter-spacing: 0.06em !important;
   }
 
   body.home-ready .classic-title .title-en {
-    margin-top: 7px !important;
+    margin-top: 5px !important;
     font-size: 0.30em !important;
     letter-spacing: 0.34em !important;
   }
 
   body.home-ready .hero-header {
-    margin-top: 8px !important;
+    margin-top: 2px !important;
   }
 
   body.home-ready .home-ritual-widget {
-    margin: 2px auto 8px !important;
+    margin: 0 auto 4px !important;
   }
 
   body.home-ready .ritual-orb {
-    width: 68px !important;
-    height: 68px !important;
+    width: 58px !important;
+    height: 58px !important;
   }
 
   body.home-ready .ritual-orb__label {
-    font-size: 12px !important;
+    font-size: 11px !important;
   }
 
   body.home-ready .mystical-divider {
-    margin: 5px auto 9px !important;
+    display: none !important;
   }
 
   body.home-ready .hero-grid,
@@ -6550,34 +6505,43 @@ body.daily-mode .save-btn.restart {
   }
 
   body.home-ready .card-quick {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: minmax(0, 1fr) minmax(128px, auto) !important;
     min-height: 0 !important;
-    padding: 20px 22px !important;
-    border-radius: 26px !important;
+    padding: 17px 22px 18px !important;
+    border-radius: 24px !important;
   }
 
   body.home-ready .card-quick .choice-card__title {
-    font-size: clamp(1.58rem, 8vw, 2.05rem) !important;
+    margin-bottom: 7px !important;
+    font-size: clamp(1.46rem, 7.4vw, 1.86rem) !important;
   }
 
   body.home-ready .card-quick .choice-card__desc {
-    font-size: 15px !important;
+    margin-bottom: 10px !important;
+    font-size: 14px !important;
+    line-height: 1.58 !important;
   }
 
   body.home-ready .card-quick .choice-card__feature {
-    min-height: 30px !important;
-    margin-top: 8px !important;
-    font-size: 13px !important;
+    min-height: 28px !important;
+    margin-top: 2px !important;
+    font-size: 12px !important;
   }
 
   body.home-ready .card-quick .choice-card__footer {
-    grid-column: 1 !important;
-    grid-row: auto !important;
-    justify-self: stretch !important;
-    margin-top: 14px !important;
+    grid-column: 2 !important;
+    grid-row: 1 / span 4 !important;
+    align-self: center !important;
+    justify-self: end !important;
+    margin: 0 !important;
   }
 
-  body.home-ready .card-quick #quickDrawBtn,
+  body.home-ready .card-quick #quickDrawBtn {
+    min-height: 48px !important;
+    padding: 11px 18px !important;
+    width: auto !important;
+  }
+
   body.home-ready .main-btn { width: 100% !important; }
 
   body.home-ready .card-deep {
@@ -6659,14 +6623,22 @@ body.daily-mode .save-btn.restart {
   }
 
   body.home-ready .top-nav-actions .icon-btn {
-    flex: 1;
+    flex: none !important;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
     min-width: 0;
+    min-height: 34px !important;
     padding: 9px 8px !important;
     font-size: 12px !important;
+  }
+
+  body.home-ready .top-nav-actions {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+    min-width: 0 !important;
   }
   body.home-ready .top-nav-actions .icon-btn::before {
     content: attr(data-icon);
@@ -6680,6 +6652,44 @@ body.daily-mode .save-btn.restart {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  @media (max-width: 520px) {
+    body.home-ready .top-nav {
+      grid-template-columns: 1fr !important;
+      gap: 7px !important;
+      width: calc(100vw - 28px) !important;
+      overflow: hidden !important;
+    }
+
+    body.home-ready .phase-chip-wrap {
+      justify-content: center !important;
+    }
+
+    body.home-ready .top-nav-actions {
+      width: 100% !important;
+    }
+
+    body.home-ready .top-nav-actions .icon-btn {
+      gap: 4px !important;
+      padding: 8px 4px !important;
+      font-size: 11px !important;
+    }
+
+    body.home-ready .card-quick {
+      grid-template-columns: 1fr !important;
+    }
+
+    body.home-ready .card-quick .choice-card__footer {
+      grid-column: 1 !important;
+      grid-row: auto !important;
+      justify-self: stretch !important;
+      margin-top: 12px !important;
+    }
+
+    body.home-ready .card-quick #quickDrawBtn {
+      width: 100% !important;
+    }
   }
 
   .vip-modal-content {
