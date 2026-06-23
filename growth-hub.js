@@ -167,6 +167,50 @@ function buildArchiveStats(records = []) {
   };
 }
 
+function buildArchivePatternCards(stats) {
+  const totalActions = stats.actionTotals.total || 0;
+  const doneRate = totalActions ? Math.round((stats.actionTotals.done / totalActions) * 100) : 0;
+  const topicEntries = Object.entries(stats.topicCounts || {})
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 4);
+  const topTopic = stats.topTopic?.[0] || "尚未形成";
+  const actionTone = totalActions
+    ? `${doneRate}% 已推进 · ${stats.actionTotals.open} 个待行动`
+    : "等待第一条行动";
+  const noteTone = stats.notes
+    ? `${stats.notes} 条札记正在补足答案背后的心境`
+    : "还没有心境札记";
+
+  return `
+    <section class="archive-pattern-card archive-pattern-card--density">
+      <div class="archive-pattern-card__label">档案密度</div>
+      <strong>${stats.total}</strong>
+      <span>${noteTone}</span>
+    </section>
+    <section class="archive-pattern-card">
+      <div class="archive-pattern-card__label">行动推进</div>
+      <strong>${actionTone}</strong>
+      <span>把解读落到生活里，档案才会真正长出来。</span>
+    </section>
+    <section class="archive-pattern-card archive-pattern-card--topics">
+      <div class="archive-pattern-card__label">主题星图</div>
+      <strong>${archiveEscapeHtml(topTopic)}</strong>
+      <div class="archive-topic-bars">
+        ${topicEntries.length ? topicEntries.map(([topic, count]) => {
+          const width = stats.total ? Math.max(16, Math.round((count / stats.total) * 100)) : 16;
+          return `
+            <div class="archive-topic-bar">
+              <span>${archiveEscapeHtml(topic)}</span>
+              <i style="--topic-width:${width}%"></i>
+              <em>${count}</em>
+            </div>
+          `;
+        }).join("") : `<div class="archive-topic-empty">完成几次解牌后，这里会出现你的重复主题。</div>`}
+      </div>
+    </section>
+  `;
+}
+
 function collectOpenArchiveActions(records = [], limit = 3) {
   const items = [];
   for (const record of records) {
@@ -251,7 +295,8 @@ function renderTodayActionPanel(records = []) {
 function renderArchiveFocus(records = [], mapped = []) {
   const panel = document.getElementById("archiveFocusPanel");
   const filters = document.getElementById("archiveFilterBar");
-  if (!panel && !filters) return;
+  const patterns = document.getElementById("archivePatternPanel");
+  if (!panel && !filters && !patterns) return;
 
   const stats = buildArchiveStats(records);
   if (panel) {
@@ -276,7 +321,7 @@ function renderArchiveFocus(records = [], mapped = []) {
           <span>${archiveEscapeHtml(stats.recentInsights.question)}</span>
         </section>
         <section class="archive-focus-card">
-          <div class="archive-focus-kicker">下一步</div>
+          <div class="archive-focus-kicker">可执行一步</div>
           <strong>${archiveEscapeHtml(stats.recentInsights.action)}</strong>
           <span>${archiveEscapeHtml(actionProgressText)} · ${archiveEscapeHtml(stats.recentInsights.reminder || "先做一件最小、可验证的事。")}</span>
         </section>
@@ -286,6 +331,20 @@ function renderArchiveFocus(records = [], mapped = []) {
           <span>${stats.total} 条解牌 · ${stats.notes} 条札记 · ${stats.actionTotals.open} 个待行动</span>
         </section>
       `;
+    }
+  }
+
+  if (patterns) {
+    if (!records.length) {
+      patterns.innerHTML = `
+        <section class="archive-pattern-empty">
+          <div class="archive-focus-kicker">档案脉络</div>
+          <strong>这里会自动生成你的主题分布、行动推进和复盘密度。</strong>
+          <span>先完成一次解牌，成长档案会开始记录你的提问路径。</span>
+        </section>
+      `;
+    } else {
+      patterns.innerHTML = buildArchivePatternCards(stats);
     }
   }
 
