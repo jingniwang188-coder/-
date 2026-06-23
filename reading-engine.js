@@ -378,20 +378,20 @@ function renderReadingSummary(rawHtml) {
     const answerText = summaryModel.answer || "答案已经浮现，重点在于别再拖延关键一步。";
     const firstAction = summaryModel.firstAction || "把答案落成一个今天就能执行的小动作。";
     const reminderHtml = summaryModel.reminders.length
-      ? `<ul>${summaryModel.reminders.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`
+      ? `<div class="reading-reminder-list">${summaryModel.reminders.map(item => `<div class="reading-reminder-item">${escapeHtml(item)}</div>`).join("")}</div>`
       : `<p>先处理最卡住你的那一个点，再往下推进。</p>`;
     const actionHtml = summaryModel.actions.length
-      ? `<ul>${summaryModel.actions.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`
+      ? `<ol class="reading-action-steps">${summaryModel.actions.map((item, index) => `<li><span>${index + 1}</span><strong>${escapeHtml(item)}</strong></li>`).join("")}</ol>`
       : `<p>把答案落成一个今天就能执行的小动作。</p>`;
 
     box.innerHTML = `
       <section class="reading-answer-hero" aria-label="本次解牌核心答案">
-        <div>
+        <div class="reading-answer-hero__main">
           <div class="reading-answer-hero__label">这次先看这里</div>
           <p class="reading-answer-hero__answer">${escapeHtml(answerText)}</p>
         </div>
         <div class="reading-answer-hero__action">
-          <span>下一步</span>
+          <span>第一步行动</span>
           <strong>${escapeHtml(firstAction)}</strong>
         </div>
       </section>
