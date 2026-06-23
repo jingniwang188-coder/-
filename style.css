@@ -5851,11 +5851,26 @@ body.daily-mode .daily-date {
 }
 
 body.daily-mode .daily-emoji-card {
+  position: relative !important;
+  overflow: hidden !important;
   border-radius: 24px !important;
   background:
     radial-gradient(circle at 35% 18%, rgba(255,255,255,0.34), transparent 32%),
     rgba(255,255,255,0.07) !important;
   border: 1px solid rgba(226, 206, 158, 0.16) !important;
+}
+
+body.daily-mode .daily-card-area.is-loading .daily-emoji-card::before {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 239, 198, 0.20), transparent 34%),
+    linear-gradient(105deg, transparent 0 32%, rgba(255,255,255,0.14) 46%, transparent 60% 100%);
+  transform: translateX(-42%);
+  animation: dailyCardGlimmer 1.8s ease-in-out infinite;
+  pointer-events: none;
 }
 
 body.daily-mode .daily-name {
@@ -5873,6 +5888,48 @@ body.daily-mode .daily-quote {
   font-family: "Kaiti SC", "STKaiti", "KaiTi", "Songti SC", "Noto Serif SC", serif !important;
   font-size: clamp(1.65rem, 3vw, 2.35rem) !important;
   line-height: 1.65 !important;
+}
+
+.daily-loading-note {
+  display: none;
+  margin-top: 12px;
+  width: fit-content;
+  border: 1px solid rgba(232, 210, 166, 0.18);
+  border-radius: 999px;
+  padding: 7px 12px;
+  color: rgba(232, 198, 124, 0.88);
+  background: rgba(255,255,255,0.055);
+  font-size: 13px;
+}
+
+body.daily-mode .daily-card-area.is-loading .daily-loading-note {
+  display: inline-flex;
+}
+
+body.daily-mode .daily-card-area.is-loading .daily-quote,
+body.daily-mode .daily-card-area.is-loading .daily-name {
+  color: rgba(244, 235, 217, 0.70) !important;
+}
+
+body.daily-mode .daily-card-area.is-loading .daily-emoji {
+  animation: dailyOrbPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes dailyCardGlimmer {
+  0%, 100% { opacity: 0.34; transform: translateX(-42%); }
+  50% { opacity: 0.72; transform: translateX(26%); }
+}
+
+@keyframes dailyOrbPulse {
+  0%, 100% { transform: scale(0.94); opacity: 0.62; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.daily-mode .daily-card-area.is-loading .daily-emoji-card::before,
+  body.daily-mode .daily-card-area.is-loading .daily-emoji {
+    animation: none !important;
+  }
 }
 
 body.daily-mode .daily-copy__hint,

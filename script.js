@@ -1940,8 +1940,21 @@ async function triggerFinalRevealAndReading(question, style, cards, context) {
 async function startDailyDraw(sourceButton = null) {
   setButtonBusy(sourceButton, true, "抽取中…");
   enterDailyMode();
-  document.getElementById("dailyCardArea").style.display = "grid";
-  window.setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 120);
+  const dailyArea = document.getElementById("dailyCardArea");
+  const dailyName = document.getElementById("dailyName");
+  const dailyQuote = document.getElementById("dailyQuote");
+  const dailyEmoji = document.getElementById("dailyEmoji");
+  const dailyImage = document.getElementById("dailyImage");
+  dailyArea.style.display = "grid";
+  dailyArea.classList.add("is-loading");
+  dailyName.innerText = "牌面显影中";
+  dailyQuote.innerText = "今日神谕正在靠近，请稍等片刻。";
+  dailyEmoji.innerText = "✦";
+  if (dailyImage) {
+    dailyImage.removeAttribute("src");
+    dailyImage.style.display = "none";
+  }
+  smoothScrollToElement("#dailyCardArea", { delay: 460, block: "center" });
   const today = new Date();
   const dayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
   const dateCN = `${today.getFullYear()}年${today.getMonth()+1}月${today.getDate()}日`;
@@ -1983,8 +1996,9 @@ async function startDailyDraw(sourceButton = null) {
   }
 
   applyDailyCardArtwork(dailyData.cardName, dailyData.cardEmoji);
-  document.getElementById("dailyName").innerText = dailyData.cardName;
-  document.getElementById("dailyQuote").innerText = dailyData.reading;
+  dailyName.innerText = dailyData.cardName;
+  dailyQuote.innerText = dailyData.reading;
+  dailyArea.classList.remove("is-loading");
   setButtonBusy(sourceButton, false);
 }
 

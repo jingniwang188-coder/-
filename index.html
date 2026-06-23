@@ -25,8 +25,8 @@
   </noscript>
 
   <!-- 主样式表 -->
-  <link rel="preload" as="style" href="style.css?v=1.5.6">
-  <link rel="stylesheet" href="style.css?v=1.5.6">
+  <link rel="preload" as="style" href="style.css?v=1.5.7">
+  <link rel="stylesheet" href="style.css?v=1.5.7">
 
   <!-- marked.js 异步加载，非首屏依赖 -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" async defer></script>
@@ -258,10 +258,11 @@
           <div id="dailyName" class="daily-name">牌名</div>
         </div>
       </div>
-      <div class="daily-copy">
-        <div class="daily-copy__eyebrow">今天这张牌，想先轻轻提醒你</div>
-        <div class="daily-quote" id="dailyQuote">今日牌面正在为你写下一句日签…</div>
-        <div class="daily-copy__hint">如果这句话刚好击中你，今天就把它当成一个温柔但明确的行动提示。</div>
+        <div class="daily-copy">
+          <div class="daily-copy__eyebrow">今天这张牌，想先轻轻提醒你</div>
+          <div class="daily-quote" id="dailyQuote">今日牌面正在为你写下一句日签…</div>
+          <div class="daily-loading-note" id="dailyLoadingNote" aria-live="polite">正在洗牌与对齐今日能量…</div>
+          <div class="daily-copy__hint">如果这句话刚好击中你，今天就把它当成一个温柔但明确的行动提示。</div>
         <button id="dailyReminderBtn" class="daily-reminder-btn native-only" type="button">每日 9:00 提醒我抽牌</button>
         <div id="dailyReminderStatus" class="daily-reminder-status native-only" aria-live="polite"></div>
         <button id="dailyBackBtn" class="save-btn restart">回到主页</button>
@@ -460,6 +461,6 @@
   <script src="growth-hub.js?v=1.5.9"></script>
   <script src="reading-engine.js?v=1.5.8"></script>
   <script src="vip-payment.js?v=1.5.8"></script>
-  <script src="script.js?v=1.5.9"></script>
+  <script src="script.js?v=1.5.10"></script>
 </body>
 </html>
