@@ -135,9 +135,7 @@ let vipOrderStatusRequestPending = false;
 let vipAutoUnlockPending = false;
 let vipPaymentFlowId = 0;
 let currentVipPaymentMode = "static_qr";
-let startHoldTimer = null;
-let startHoldStartedAt = 0;
-let startHoldCommitted = false;
+let preReadingRitualTimer = null;
 let deckSpreadProgress = 0;
 let deckSpreadUnlocked = false;
 let deckGestureCleanup = null;
@@ -159,7 +157,6 @@ const DAILY_REMINDER_ID = 901018;
 const LIVE_SITE_ORIGIN = "https://tarotwheel.vercel.app";
 const HISTORY_LIMIT = 20;
 const NOTES_LIMIT = 40;
-const START_HOLD_MS = 2000;
 const DECK_SPREAD_THRESHOLD = 140;
 const SCRIPT_LOAD_TIMEOUT_MS = 12000;
 const STREAM_REQUEST_TIMEOUT_MS = 30000;
@@ -168,6 +165,27 @@ const DAILY_REQUEST_TIMEOUT_MS = 15000;
 const CARD_IMAGE_LOAD_TIMEOUT_MS = 6000;
 const VIP_ORDER_REQUEST_TIMEOUT_MS = 15000;
 const VIP_ORDER_POLL_INTERVAL_MS = 3000;
+const PRE_READING_RITUAL_SECONDS = 3;
+const STAR_ORACLE_ITEMS = [
+  { keyword: "边界", copy: "今天先确认自己的感受，再回应外界。" },
+  { keyword: "靠近", copy: "适合主动发出一个温柔但明确的信号。" },
+  { keyword: "等待", copy: "别急着定论，答案还在路上。" },
+  { keyword: "表达", copy: "把真实想法说得简单一点，事情会松动。" },
+  { keyword: "选择", copy: "不要同时抓住所有可能，先选最重要的那一个。" },
+  { keyword: "整理", copy: "先把混乱排开，直觉会变得更清楚。" },
+  { keyword: "勇气", copy: "今天适合做一个小而确定的行动。" },
+  { keyword: "观察", copy: "多看一眼细节，少急着给自己答案。" }
+];
+const QUESTION_ANGLE_PROMPTS = [
+  { spread: "relationship", question: "这段关系里，我真正需要看清的边界是什么？" },
+  { spread: "relationship", question: "我和TA之间现在最需要被理解的部分是什么？" },
+  { spread: "career", question: "这件工作机会背后，真正值得投入的部分是什么？" },
+  { spread: "career", question: "我现在的事业选择里，最大的机会和风险分别是什么？" },
+  { spread: "choice", question: "如果我选择A或B，各自会付出什么代价？" },
+  { spread: "choice", question: "我现在不敢做决定的真正原因是什么？" },
+  { spread: "time", question: "这件事接下来三个月会怎样发展，我该注意什么？" },
+  { spread: "time", question: "现在这个阶段，我最应该先处理哪一步？" }
+];
 function apiUrl(path = "") {
   const value = String(path || "");
   if (!value.startsWith("/api/")) return value;
@@ -246,7 +264,7 @@ function initEventBindings() {
   byId("growthHubBtn")?.addEventListener("click", openGrowthHub);
   byId("feedbackBtn")?.addEventListener("click", openFeedbackModal);
   byId("quickDrawBtn")?.addEventListener("click", event => quickDrawSingleCard(event.currentTarget));
-  initStartHoldGesture();
+  initHomeStarOracle();
   byId("startBtn")?.addEventListener("click", event => {
     checkVipAndStart({ requireQuestion: true, mode: "standard", sourceButton: event.currentTarget });
   });
@@ -294,9 +312,10 @@ function initEventBindings() {
       updateStatus("可以继续写下新的问题，越具体越容易得到清楚答案。");
     }, 300);
   });
-  document.querySelectorAll(".question-spark").forEach(btn => {
+  document.querySelectorAll(".question-spark:not(.question-spark--shuffle)").forEach(btn => {
     btn.addEventListener("click", () => applyQuestionSpark(btn));
   });
+  byId("questionAngleBtn")?.addEventListener("click", inspireQuestionAngle);
   document.querySelectorAll(".reading-feedback-choice").forEach(btn => {
     btn.addEventListener("click", () => sendReadingFeedback(btn));
   });
@@ -493,104 +512,29 @@ async function toggleDailyReminder(button = null) {
   }
 }
 
-/* Old ritual-hold-btn functions removed — start button is now a normal click,
-   ritual orb on homepage handles hold gesture separately. */
-
-function clearStartHoldTimer() {
-  if (startHoldTimer) {
-    clearInterval(startHoldTimer);
-    startHoldTimer = null;
-  }
+function initHomeStarOracle() {
+  document.querySelectorAll(".star-oracle__star").forEach(button => {
+    button.addEventListener("click", () => revealHomeStarOracle(button));
+  });
 }
 
-function initStartHoldGesture() {
-  const btn = document.getElementById("ritualOrbBtn");
-  if (!btn) return;
-
-  const energyMessages = [
-    "✦ 今日能量：热情与创造力在涌动",
-    "✦ 今日能量：你的直觉比平时更敏锐",
-    "✦ 今日能量：适合静心，答案会自己浮现",
-    "✦ 今日能量：改变正在悄悄靠近你",
-    "✦ 今日能量：放下执念，好运自然来",
-    "✦ 今日能量：今天适合做一个小小的冒险",
-    "✦ 今日能量：身边有人正想着你",
-    "✦ 今日能量：你比自己以为的更强大",
-  ];
-
-  const onDown = e => {
-    if (e?.cancelable) e.preventDefault();
-    if (startHoldTimer || startHoldCommitted) return;
-    startHoldStartedAt = performance.now();
-    setRitualOrbProgress(0.02);
-    setRitualOrbLabel("感应中…");
-    btn.classList.add("is-charging");
-
-    startHoldTimer = setInterval(() => {
-      const elapsed = performance.now() - startHoldStartedAt;
-      const progress = Math.min(1, elapsed / START_HOLD_MS);
-      setRitualOrbProgress(progress);
-      if (progress < 1) {
-        const leftSec = Math.max(0, Math.ceil((START_HOLD_MS - elapsed) / 1000));
-        setRitualOrbLabel(`能量校准中… ${leftSec}s`);
-        return;
-      }
-      startHoldCommitted = true;
-      clearStartHoldTimer();
-      btn.classList.remove("is-charging");
-      btn.classList.add("is-ready");
-      if (navigator.vibrate) navigator.vibrate([60, 40, 60]);
-      const msg = energyMessages[Math.floor(Math.random() * energyMessages.length)];
-      setRitualOrbLabel(msg);
-      setTimeout(() => {
-        resetRitualOrbState();
-        setRitualOrbLabel("再按一次，感应新的能量");
-      }, 4000);
-    }, 16);
-  };
-
-  const onUp = () => {
-    if (startHoldCommitted) return;
-    clearStartHoldTimer();
-    setRitualOrbProgress(0);
-    setRitualOrbLabel("松开了…再试一次");
-    btn.classList.remove("is-charging");
-    setTimeout(() => setRitualOrbLabel("长按水晶球，感应今日能量"), 1800);
-  };
-
-  btn.addEventListener("mousedown", onDown);
-  btn.addEventListener("touchstart", onDown, { passive: false });
-  btn.addEventListener("mouseup", onUp);
-  btn.addEventListener("mouseleave", onUp);
-  btn.addEventListener("touchend", onUp);
-  btn.addEventListener("touchcancel", onUp);
-  btn.addEventListener("contextmenu", e => e.preventDefault());
+function revealHomeStarOracle(button) {
+  const result = document.getElementById("starOracleResult");
+  if (!button || !result) return;
+  const index = Number(button.getAttribute("data-star") || "0");
+  const seed = (new Date().getDate() + index + Math.floor(Math.random() * STAR_ORACLE_ITEMS.length)) % STAR_ORACLE_ITEMS.length;
+  const item = STAR_ORACLE_ITEMS[seed];
+  document.querySelectorAll(".star-oracle__star").forEach(star => {
+    star.classList.toggle("is-lit", star === button);
+  });
+  result.innerHTML = `<strong>${item.keyword}</strong><span>${item.copy}</span>`;
+  updateStatus(`今日关键词：${item.keyword}。${item.copy}`);
 }
 
-function setRitualOrbProgress(progress = 0) {
-  const ring = document.getElementById("ritualOrbProgress");
-  const btn = document.getElementById("ritualOrbBtn");
-  if (!ring) return;
-  const p = Math.max(0, Math.min(1, Number(progress) || 0));
-  ring.style.transform = `scaleX(${p})`;
-  if (btn) {
-    btn.classList.toggle("is-charging", p > 0 && p < 1);
-    btn.classList.toggle("is-ready", p >= 1);
-  }
-}
-
-function setRitualOrbLabel(text) {
-  const label = document.getElementById("ritualOrbLabel");
-  if (label) label.textContent = text;
-}
-
-function resetRitualOrbState() {
-  clearStartHoldTimer();
-  startHoldStartedAt = 0;
-  startHoldCommitted = false;
-  setRitualOrbProgress(0);
-  const btn = document.getElementById("ritualOrbBtn");
-  if (btn) btn.classList.remove("is-charging", "is-ready");
+function resetHomeStarOracle() {
+  document.querySelectorAll(".star-oracle__star").forEach(star => star.classList.remove("is-lit"));
+  const result = document.getElementById("starOracleResult");
+  if (result) result.textContent = "点一颗星，拿到今天的关键词。";
 }
 
 function setFlowStep(step) {
@@ -614,14 +558,39 @@ function hideFlowSteps() {
 function updateQuestionHint(isError = false) {
   const hint = document.getElementById("questionHint");
   const input = document.getElementById("questionInput");
+  const clarity = document.getElementById("questionClarity");
   if (!hint || !input) return;
+  const value = input.value.trim();
+  const group = input.closest(".input-group");
   if (isError && !input.value.trim()) {
     hint.textContent = "请先写下你的问题，再开启解牌。";
     hint.classList.add("error");
+    if (clarity) clarity.textContent = "先写一句你真正想照见的问题。";
+    group?.classList.add("question-is-empty");
+    group?.classList.remove("question-is-clear", "question-is-growing");
     return;
   }
   hint.textContent = "你的问题仅用于本次解牌，不会公开展示。";
   hint.classList.remove("error");
+  const hasTime = /今天|最近|接下来|未来|三个月|一个月|今年|明年|什么时候|多久/.test(value);
+  const hasSubject = /我|TA|ta|他|她|对方|工作|关系|感情|事业|选择|A|B|a|b/.test(value);
+  const hasDecision = /要不要|该不该|选择|选|是否|会不会|能不能|还是|或者/.test(value);
+  const score = (value.length >= 8 ? 1 : 0) + (value.length >= 18 ? 1 : 0) + (hasTime ? 1 : 0) + (hasSubject ? 1 : 0) + (hasDecision ? 1 : 0);
+  group?.classList.toggle("question-is-empty", !value);
+  group?.classList.toggle("question-is-growing", Boolean(value) && score < 3);
+  group?.classList.toggle("question-is-clear", score >= 3);
+  if (!clarity) return;
+  if (!value) {
+    clarity.textContent = "写下对象、时间或选择，答案会更贴近你。";
+  } else if (score >= 4) {
+    clarity.textContent = "这个问题已经很清楚，可以开始解牌。";
+  } else if (!hasSubject) {
+    clarity.textContent = "可以补充对象或主题，比如关系、工作、选择。";
+  } else if (!hasTime && value.length < 18) {
+    clarity.textContent = "可以再补充时间范围或你最在意的部分。";
+  } else {
+    clarity.textContent = "方向已经出现，再具体一点会更准。";
+  }
 }
 
 function applyQuestionSpark(button) {
@@ -643,6 +612,31 @@ function applyQuestionSpark(button) {
   updateQuestionHint(false);
   renderSpreadGuide();
   updateStatus("已帮你填入一个问题模板，可以直接修改成更贴近自己的版本。");
+}
+
+function inspireQuestionAngle() {
+  const input = document.getElementById("questionInput");
+  const select = document.getElementById("spreadSelect");
+  const current = input?.value?.trim() || "";
+  const recommendation = getRecommendedSpread(current);
+  const pool = recommendation
+    ? QUESTION_ANGLE_PROMPTS.filter(item => item.spread === recommendation.spread)
+    : QUESTION_ANGLE_PROMPTS;
+  const list = pool.length ? pool : QUESTION_ANGLE_PROMPTS;
+  const next = list[Math.floor(Math.random() * list.length)];
+  if (input) {
+    input.value = next.question;
+    input.focus();
+  }
+  if (select && next.spread && select.querySelector(`option[value="${next.spread}"]`)) {
+    select.value = next.spread;
+    renderSpread();
+  }
+  document.querySelectorAll(".question-spark").forEach(item => item.classList.remove("active"));
+  document.getElementById("questionAngleBtn")?.classList.add("active");
+  updateQuestionHint(false);
+  renderSpreadGuide();
+  updateStatus("已换成一个更适合解牌的提问角度，你可以继续改成自己的话。");
 }
 
 function updateCoupleHint(isError = false) {
@@ -1343,7 +1337,8 @@ function enterDailyMode() {
 function returnToHomePage() {
   stopVipOrderPolling();
   setReadingFlowBusy(false);
-  resetRitualOrbState();
+  resetHomeStarOracle();
+  hidePreReadingRitual();
   resetDeckSpreadState();
   finalRevealTransitionRunning = false;
   // Clear VIP token so each paid reading requires fresh payment
@@ -1532,7 +1527,7 @@ function checkVipAndStart({ requireQuestion = true, mode = "standard", sourceBut
     prepareVipPaymentFlow();
     return;
   }
-  showEnergyEffect(requiresVip && hasValidVipToken());
+  beginReadingWithRitual({ isVip: requiresVip && hasValidVipToken(), mode });
 }
 
 function quickDrawSingleCard(sourceButton = null) {
@@ -1545,7 +1540,57 @@ function quickDrawSingleCard(sourceButton = null) {
   document.getElementById("questionInput").value = "";
   updateStatus("单牌速读准备中，抽取你的灵感之牌…");
   updateQuestionHint();
-  showEnergyEffect();
+  beginReadingWithRitual({ isVip: false, mode: "quick" });
+}
+
+function beginReadingWithRitual({ isVip = false, mode = activeReadingMode } = {}) {
+  showPreReadingRitual(() => showEnergyEffect(isVip), { isVip, mode });
+}
+
+function showPreReadingRitual(done, options = {}) {
+  const overlay = document.getElementById("preReadingRitual");
+  const countEl = document.getElementById("preReadingRitualCount");
+  const copyEl = document.getElementById("preReadingRitualCopy");
+  if (!overlay || !countEl || typeof done !== "function") {
+    done?.();
+    return;
+  }
+  hidePreReadingRitual(false);
+  let remaining = PRE_READING_RITUAL_SECONDS;
+  countEl.textContent = String(remaining);
+  if (copyEl) {
+    copyEl.textContent = options.mode === "quick"
+      ? "三秒后，为你抽出一张灵感牌。"
+      : options.isVip
+        ? "三秒后，进入进阶牌阵。"
+        : "三秒后，开始洗牌。";
+  }
+  overlay.style.display = "grid";
+  overlay.setAttribute("aria-hidden", "false");
+  document.body.classList.add("ritual-counting");
+  preReadingRitualTimer = window.setInterval(() => {
+    remaining -= 1;
+    if (remaining > 0) {
+      countEl.textContent = String(remaining);
+      return;
+    }
+    hidePreReadingRitual(false);
+    done();
+  }, 1000);
+}
+
+function hidePreReadingRitual(resetBusy = false) {
+  if (preReadingRitualTimer) {
+    clearInterval(preReadingRitualTimer);
+    preReadingRitualTimer = null;
+  }
+  document.body.classList.remove("ritual-counting");
+  const overlay = document.getElementById("preReadingRitual");
+  if (overlay) {
+    overlay.style.display = "none";
+    overlay.setAttribute("aria-hidden", "true");
+  }
+  if (resetBusy) setReadingFlowBusy(false);
 }
 
 // Paid readings return to the shared draw flow after unlock succeeds.

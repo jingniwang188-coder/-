@@ -25,8 +25,8 @@
   </noscript>
 
   <!-- 主样式表 -->
-  <link rel="preload" as="style" href="style.css?v=1.5.9">
-  <link rel="stylesheet" href="style.css?v=1.5.9">
+  <link rel="preload" as="style" href="style.css?v=1.6.0">
+  <link rel="stylesheet" href="style.css?v=1.6.0">
 
   <!-- marked.js 异步加载，非首屏依赖 -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" async defer></script>
@@ -70,14 +70,17 @@
       </div>
       <div id="statusBanner" class="status-banner" aria-live="polite"></div>
 
-      <!-- 主页小互动：能量水晶球 -->
+      <!-- 主页小互动：点亮今日星星 -->
       <div class="home-ritual-widget" id="homeRitualWidget">
-        <button class="ritual-orb" id="ritualOrbBtn" type="button" aria-label="长按感应能量">
-          <span class="ritual-orb__glow" aria-hidden="true"></span>
-          <span class="ritual-orb__icon">🔮</span>
-          <span class="ritual-orb__ring" aria-hidden="true"><span id="ritualOrbProgress"></span></span>
-        </button>
-        <div class="ritual-orb__label" id="ritualOrbLabel">长按水晶球，感应今日能量</div>
+        <div class="star-oracle" id="starOracle" aria-live="polite">
+          <div class="star-oracle__label">今日星签</div>
+          <div class="star-oracle__stars" aria-label="点亮一颗星星，抽取今日关键词">
+            <button class="star-oracle__star" type="button" data-star="0" aria-label="点亮第一颗星">✦</button>
+            <button class="star-oracle__star" type="button" data-star="1" aria-label="点亮第二颗星">✧</button>
+            <button class="star-oracle__star" type="button" data-star="2" aria-label="点亮第三颗星">✦</button>
+          </div>
+          <div class="star-oracle__result" id="starOracleResult">点一颗星，拿到今天的关键词。</div>
+        </div>
       </div>
 
       <div class="mystical-divider" aria-hidden="true">
@@ -110,7 +113,9 @@
                     <button class="question-spark" type="button" data-spread="career" data-question="我现在的工作机会和风险分别是什么？">事业机会</button>
                     <button class="question-spark" type="button" data-spread="choice" data-question="我该选择A，还是选择B？">二选一</button>
                     <button class="question-spark" type="button" data-spread="time" data-question="这件事接下来三个月会怎样发展？">未来趋势</button>
+                    <button class="question-spark question-spark--shuffle" id="questionAngleBtn" type="button">换个角度问</button>
                   </div>
+                  <div class="question-clarity" id="questionClarity" aria-live="polite">写下对象、时间或选择，答案会更贴近你。</div>
                   <div class="field-hint" id="questionHint">你的问题仅用于本次解牌，不会公开展示。</div>
                 </div>
                 <div class="spread-guide-head">先选择牌阵（推荐）</div>
@@ -243,6 +248,15 @@
         <button id="cancelVipConfirmBtn" class="cancel-btn">取消</button>
         <button id="confirmVipContinueBtn" class="confirm-btn" disabled>确认并继续（2）</button>
       </div>
+    </div>
+  </div>
+
+  <div id="preReadingRitual" class="pre-reading-ritual" style="display:none;" aria-live="polite" aria-hidden="true">
+    <div class="pre-reading-ritual__panel">
+      <div class="pre-reading-ritual__stars" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="pre-reading-ritual__title">先把问题放进心里</div>
+      <div class="pre-reading-ritual__copy" id="preReadingRitualCopy">三秒后开始洗牌。</div>
+      <div class="pre-reading-ritual__count" id="preReadingRitualCount">3</div>
     </div>
   </div>
 
@@ -460,7 +474,7 @@
 
   <script src="growth-hub.js?v=1.5.9"></script>
   <script src="reading-engine.js?v=1.5.9"></script>
-  <script src="vip-payment.js?v=1.5.8"></script>
-  <script src="script.js?v=1.5.10"></script>
+  <script src="vip-payment.js?v=1.5.9"></script>
+  <script src="script.js?v=1.5.11"></script>
 </body>
 </html>
