@@ -5162,11 +5162,11 @@ button {
 body.home-ready {
   color: #f8edcf;
   background:
-    radial-gradient(860px 380px at 16% -8%, rgba(136, 174, 255, 0.30), transparent 66%),
-    radial-gradient(760px 340px at 92% 0%, rgba(198, 166, 255, 0.24), transparent 62%),
-    radial-gradient(620px 280px at 50% 22%, rgba(246, 211, 144, 0.13), transparent 72%),
-    radial-gradient(900px 520px at 58% 92%, rgba(74, 95, 170, 0.20), transparent 72%),
-    linear-gradient(150deg, #0d1830 0%, #17244d 48%, #211b4c 78%, #11172d 100%) !important;
+    radial-gradient(900px 420px at 14% -8%, rgba(142, 180, 255, 0.32), transparent 66%),
+    radial-gradient(820px 360px at 92% 2%, rgba(202, 179, 255, 0.24), transparent 64%),
+    radial-gradient(680px 320px at 48% 16%, rgba(248, 222, 164, 0.14), transparent 74%),
+    radial-gradient(940px 560px at 58% 92%, rgba(87, 113, 188, 0.18), transparent 74%),
+    linear-gradient(150deg, #101a35 0%, #1b2954 48%, #241f50 78%, #131a34 100%) !important;
 }
 
 body.home-ready::before {
@@ -5192,33 +5192,33 @@ body.home-ready .top-nav,
 body:not(.reading-mode) .top-nav {
   position: relative !important;
   top: auto !important;
-  width: min(1060px, calc(100vw - 116px));
-  margin: 22px auto 0;
-  padding: 12px 18px !important;
-  border-radius: 24px !important;
-  background: linear-gradient(125deg, rgba(64, 81, 136, 0.36), rgba(18, 27, 62, 0.28)) !important;
-  border-color: rgba(238, 220, 178, 0.20) !important;
-  backdrop-filter: blur(28px) saturate(1.22) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(1.22) !important;
-  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
+  width: min(1040px, calc(100vw - 104px));
+  margin: 16px auto 0;
+  padding: 10px 14px !important;
+  border-radius: 22px !important;
+  background: linear-gradient(125deg, rgba(87, 104, 162, 0.25), rgba(17, 26, 60, 0.20)) !important;
+  border-color: rgba(238, 220, 178, 0.16) !important;
+  backdrop-filter: blur(24px) saturate(1.16) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(1.16) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.13) !important;
 }
 
 body.home-ready .phase-chip {
-  min-height: 38px !important;
-  padding: 0 16px !important;
-  background: rgba(255, 255, 255, 0.10) !important;
-  border-color: rgba(232, 203, 133, 0.20) !important;
+  min-height: 34px !important;
+  padding: 0 14px !important;
+  background: rgba(255, 255, 255, 0.075) !important;
+  border-color: rgba(232, 203, 133, 0.16) !important;
   color: rgba(255, 243, 212, 0.94) !important;
-  font-size: 14px !important;
+  font-size: 13px !important;
 }
 
 body.home-ready .top-nav-actions .icon-btn {
-  min-height: 42px !important;
-  padding: 0 16px !important;
-  background: rgba(255, 255, 255, 0.10) !important;
-  border-color: rgba(232, 203, 133, 0.20) !important;
+  min-height: 36px !important;
+  padding: 0 14px !important;
+  background: rgba(255, 255, 255, 0.075) !important;
+  border-color: rgba(232, 203, 133, 0.16) !important;
   color: rgba(255, 242, 214, 0.88) !important;
-  font-size: 14px !important;
+  font-size: 13px !important;
   box-shadow: none !important;
 }
 
@@ -5227,6 +5227,7 @@ body.home-ready .classic-title {
   font-weight: 520 !important;
   letter-spacing: 0.08em !important;
   line-height: 1.02 !important;
+  font-size: clamp(2.1rem, 4.2vw, 3.65rem) !important;
   background: linear-gradient(112deg, #fff1c9 0%, #d7a85f 38%, #c6a3ff 72%, #9cc8ff 100%) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
@@ -5236,7 +5237,7 @@ body.home-ready .classic-title {
 
 body.home-ready .classic-title .title-en {
   display: block;
-  margin-top: 10px;
+  margin-top: 8px;
   font-family: "Manrope", "PingFang SC", sans-serif !important;
   font-size: 0.34em !important;
   font-weight: 650 !important;
@@ -5246,18 +5247,23 @@ body.home-ready .classic-title .title-en {
 }
 
 body.home-ready .hero-header::after {
+  content: "" !important;
+  display: block !important;
   width: min(150px, 38vw) !important;
+  height: 1px !important;
+  margin: 12px auto 0 !important;
   background: linear-gradient(90deg, transparent, rgba(232, 195, 113, 0.48), rgba(156, 191, 255, 0.32), transparent) !important;
+  letter-spacing: 0 !important;
 }
 
 body.home-ready .home-ritual-widget {
-  margin: 16px auto 18px !important;
+  margin: 12px auto 12px !important;
   transform: none !important;
 }
 
 body.home-ready .ritual-orb {
-  width: 86px !important;
-  height: 86px !important;
+  width: 76px !important;
+  height: 76px !important;
   border-color: rgba(220, 197, 151, 0.22) !important;
   background:
     radial-gradient(circle at 36% 30%, rgba(255, 255, 255, 0.92), rgba(190, 150, 219, 0.58) 32%, rgba(66, 78, 132, 0.8) 70%) !important;
@@ -5276,8 +5282,8 @@ body.home-ready .home-main,
 body.home-ready .hero-grid,
 body:not(.reading-mode) .home-main,
 body:not(.reading-mode) .hero-grid {
-  width: min(1060px, calc(100vw - 116px)) !important;
-  max-width: 1060px !important;
+  width: min(1040px, calc(100vw - 104px)) !important;
+  max-width: 1040px !important;
   margin-left: auto !important;
   margin-right: auto !important;
 }
@@ -5290,7 +5296,7 @@ body:not(.reading-mode) .hero-grid {
     "quick"
     "deep"
     "love" !important;
-  gap: 30px !important;
+  gap: 22px !important;
 }
 
 body.home-ready .choice-card,
@@ -5321,9 +5327,9 @@ body.home-ready .card-quick {
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) auto !important;
   align-items: center !important;
-  min-height: 124px !important;
-  padding: clamp(22px, 2.8vw, 30px) clamp(30px, 4vw, 44px) !important;
-  border-radius: 28px !important;
+  min-height: 106px !important;
+  padding: clamp(20px, 2.4vw, 26px) clamp(26px, 3.5vw, 38px) !important;
+  border-radius: 26px !important;
   background:
     radial-gradient(520px 220px at 8% 10%, rgba(209, 189, 255, 0.19), transparent 72%),
     radial-gradient(380px 180px at 94% 0%, rgba(255, 231, 180, 0.17), transparent 70%),
@@ -5332,9 +5338,18 @@ body.home-ready .card-quick {
 
 body.home-ready .card-deep {
   grid-area: deep !important;
+  display: grid !important;
+  grid-template-columns: minmax(210px, 0.74fr) minmax(0, 1.26fr) !important;
+  grid-template-areas:
+    "eyebrow body"
+    "title body"
+    "desc body" !important;
+  column-gap: clamp(28px, 4.4vw, 54px) !important;
+  row-gap: 10px !important;
+  align-items: start !important;
   min-height: 0 !important;
-  padding: clamp(38px, 5vw, 62px) clamp(38px, 5.8vw, 72px) !important;
-  border-radius: 34px !important;
+  padding: clamp(34px, 4.4vw, 50px) clamp(34px, 5vw, 58px) !important;
+  border-radius: 32px !important;
   background:
     radial-gradient(760px 320px at 78% 2%, rgba(149, 181, 255, 0.21), transparent 74%),
     radial-gradient(560px 280px at 8% 0%, rgba(250, 220, 154, 0.13), transparent 72%),
@@ -5347,13 +5362,20 @@ body.home-ready .card-love {
   border-radius: 22px !important;
 }
 
+body.home-ready .card-deep > .choice-card__eyebrow { grid-area: eyebrow !important; }
+body.home-ready .card-deep > .choice-card__title { grid-area: title !important; }
+body.home-ready .card-deep > .choice-card__desc { grid-area: desc !important; }
+body.home-ready .card-deep > .choice-card__body { grid-area: body !important; }
+body.home-ready .card-deep .choice-title-line { display: block; }
+
 body.home-ready .card-quick .choice-card__title {
-  font-size: clamp(1.75rem, 2.35vw, 2.35rem) !important;
+  font-size: clamp(1.58rem, 2.05vw, 2.12rem) !important;
 }
 
 body.home-ready .card-quick .choice-card__desc {
   max-width: 36em !important;
-  font-size: 15px !important;
+  font-size: 14.5px !important;
+  line-height: 1.62 !important;
 }
 
 body.home-ready .card-quick .choice-card__feature {
@@ -5369,7 +5391,8 @@ body.home-ready .card-quick .choice-card__feature {
 }
 
 body.home-ready .card-deep .choice-card__title {
-  font-size: clamp(2.1rem, 3.05vw, 2.78rem) !important;
+  max-width: 8.6em !important;
+  font-size: clamp(2rem, 2.75vw, 2.55rem) !important;
 }
 
 body.home-ready .choice-card__eyebrow,
@@ -5377,7 +5400,7 @@ body.home-ready .choice-card__feature,
 body.home-ready .spread-guide-head,
 body.home-ready .input-group label {
   color: rgba(232, 198, 124, 0.92) !important;
-  font-size: 16px !important;
+  font-size: 14px !important;
   font-style: normal !important;
   letter-spacing: 0.04em !important;
   text-align: left !important;
@@ -5388,8 +5411,8 @@ body.home-ready .choice-card__title {
   font-family: "Kaiti SC", "STKaiti", "KaiTi", "Songti SC", "Noto Serif SC", serif !important;
   font-weight: 560 !important;
   letter-spacing: 0.02em !important;
-  font-size: clamp(2rem, 3.1vw, 2.85rem) !important;
-  line-height: 1.2 !important;
+  font-size: clamp(1.9rem, 2.9vw, 2.65rem) !important;
+  line-height: 1.18 !important;
   text-align: left !important;
 }
 
@@ -5399,8 +5422,8 @@ body.home-ready .pay-hint,
 body.home-ready .spread-guide-text,
 body.home-ready .couple-toggle__desc {
   color: rgba(244, 235, 217, 0.74) !important;
-  font-size: 17px !important;
-  line-height: 1.78 !important;
+  font-size: 15px !important;
+  line-height: 1.74 !important;
   letter-spacing: 0 !important;
   text-align: left !important;
 }
@@ -5413,7 +5436,7 @@ body.home-ready .card-quick .choice-card__footer {
 }
 
 body.home-ready .choice-card__body {
-  gap: 24px !important;
+  gap: 18px !important;
 }
 
 body.home-ready .input-group {
@@ -5429,14 +5452,14 @@ body.home-ready .question-spark-row {
 body.home-ready input,
 body.home-ready textarea,
 body.home-ready select {
-  min-height: 58px !important;
+  min-height: 54px !important;
   padding-left: 20px !important;
   padding-right: 20px !important;
   background: rgba(10, 18, 42, 0.28) !important;
   color: rgba(255, 246, 226, 0.96) !important;
   border-color: rgba(226, 206, 158, 0.23) !important;
-  border-radius: 24px !important;
-  font-size: 18px !important;
+  border-radius: 22px !important;
+  font-size: 16px !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.11), 0 12px 28px rgba(2, 8, 28, 0.10) !important;
 }
 
@@ -5444,13 +5467,13 @@ body.home-ready input::placeholder,
 body.home-ready textarea::placeholder { color: rgba(255, 247, 229, 0.52) !important; }
 
 body.home-ready .question-spark {
-  min-height: 42px !important;
-  padding: 0 16px !important;
+  min-height: 38px !important;
+  padding: 0 14px !important;
   border-radius: 999px !important;
   border-color: rgba(218, 195, 139, 0.18) !important;
   background: rgba(255, 255, 255, 0.085) !important;
   color: rgba(247, 236, 212, 0.88) !important;
-  font-size: 15px !important;
+  font-size: 14px !important;
 }
 
 body.home-ready .question-spark:hover,
@@ -5497,18 +5520,18 @@ body.home-ready .spread-current-pick {
   grid-template-columns: auto minmax(0, 1fr) auto auto !important;
   align-items: center !important;
   gap: 16px !important;
-  padding: 20px 22px !important;
+  padding: 16px 18px !important;
 }
 
 body.home-ready .spread-current-pick__name,
 body.home-ready .spread-pill__name,
 body.home-ready .spread-recommendation__main {
   color: rgba(255, 243, 214, 0.96) !important;
-  font-size: 16px !important;
+  font-size: 15px !important;
 }
 
 body.home-ready .spread-current-pick__name {
-  font-size: 17px !important;
+  font-size: 16px !important;
 }
 body.home-ready .spread-current-pick__meta,
 body.home-ready .spread-pill__desc,
@@ -5518,7 +5541,7 @@ body.home-ready .spread-advanced-teaser__preview { color: rgba(244, 235, 217, 0.
 
 body.home-ready .spread-picker-drawer[hidden] { display: none !important; }
 body.home-ready .spread-picker-drawer {
-  margin-top: 14px !important;
+  margin-top: 12px !important;
   border: 1px solid rgba(226, 206, 158, 0.16) !important;
   border-radius: 26px !important;
   padding: 14px !important;
@@ -5547,8 +5570,8 @@ body.home-ready .spread-pill {
   column-gap: 10px !important;
   row-gap: 4px !important;
   text-align: left !important;
-  min-height: 92px !important;
-  padding: 13px 14px !important;
+  min-height: 78px !important;
+  padding: 12px 13px !important;
 }
 
 body.home-ready .spread-pill__icon {
@@ -5609,8 +5632,8 @@ body.home-ready .main-btn,
 body.home-ready .secondary-btn,
 body.home-ready .save-btn {
   border-radius: 999px !important;
-  min-height: 58px !important;
-  font-size: 16px !important;
+  min-height: 52px !important;
+  font-size: 15px !important;
   letter-spacing: 0 !important;
 }
 
@@ -5722,6 +5745,7 @@ body.reading-mode .reading-wrapper {
 body.reading-mode .parchment-box {
   background: transparent !important;
   box-shadow: none !important;
+  padding: clamp(22px, 3.2vw, 36px) !important;
 }
 
 .reading-answer-hero {
@@ -5823,11 +5847,22 @@ body.reading-mode .parchment-box {
 
 body.reading-mode #streamContent {
   color: rgba(246, 236, 216, 0.82) !important;
+  max-width: 76ch;
+  margin: 0 auto;
+  font-size: clamp(1rem, 1.2vw, 1.08rem);
+  line-height: 1.92 !important;
 }
 
 body.reading-mode #streamContent h3,
-body.reading-mode #streamContent h4 { color: rgba(255, 241, 211, 0.96) !important; }
-body.reading-mode #streamContent blockquote { background: rgba(255, 255, 255, 0.06) !important; border-left-color: rgba(232, 198, 124, 0.55) !important; }
+body.reading-mode #streamContent h4 {
+  color: rgba(255, 241, 211, 0.96) !important;
+  letter-spacing: 0.01em !important;
+}
+body.reading-mode #streamContent blockquote {
+  background: rgba(255, 255, 255, 0.055) !important;
+  border-left-color: rgba(232, 198, 124, 0.46) !important;
+  box-shadow: none !important;
+}
 body.reading-mode #streamContent.is-summary-only { display: none !important; }
 
 body.reading-mode .result-actions {
@@ -6795,11 +6830,14 @@ body.daily-mode .save-btn.restart {
   body.home-ready .main-btn { width: 100% !important; }
 
   body.home-ready .card-deep {
+    display: block !important;
+    grid-template-columns: 1fr !important;
     padding: 26px 22px !important;
     border-radius: 28px !important;
   }
 
   body.home-ready .card-deep .choice-card__title {
+    max-width: none !important;
     font-size: clamp(1.85rem, 8.2vw, 2.24rem) !important;
   }
 
